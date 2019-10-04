@@ -1,0 +1,7 @@
+---
+- name: Includes the all development tasks
+  block:
+    - name: Includes SpaceVim related tasks
+      include_tasks: spacevim.yml
+
+

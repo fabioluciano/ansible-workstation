@@ -1,0 +1,17 @@
+---
+
+- name: Ensure that the user font directory exists
+  file:
+    state: directory
+    path: ~/.fonts
+  become: no
+
+- name: Ensure the download of MS Cascadia font
+  get_url:
+    url: https://github.com/microsoft/cascadia-code/releases/download/v1910.04/Cascadia.ttf
+    dest: ~/.fonts
+  become: no
+
+- name: Ensure that the font cache is updated
+  shell: fc-cache -f -v
+  become: no

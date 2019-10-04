@@ -1,0 +1,33 @@
+---
+- name: Ensure that vim package is installed
+  package: 
+    name: vim
+    state: present 
+    force_apt_get: yes
+
+- name: Ensure that git package is installed
+  package: 
+    name: git
+    state: present 
+    force_apt_get: yes
+
+- name: Ensure that curl package is installed
+  package: 
+    name: curl
+    state: present 
+    force_apt_get: yes
+
+- name: Download the SpaceVim installer
+  get_url:
+    url: https://spacevim.org/install.sh
+    dest: /tmp/spacevim-installer.sh
+    mode: '0555'
+
+- name: Execute the installer
+  shell: bash /tmp/spacevim-installer.sh
+  become: no
+
+- name: Remove the SpaceVim installer
+  file:
+    state: absent
+    path: /tmp/spacevim-installer.sh

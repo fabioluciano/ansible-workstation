@@ -1,0 +1,9 @@
+---
+- name: Ensures that the package flatpak is installed
+  package:
+    name: "{{ item }}"
+    state: present
+    force_apt_get: yes
+  with_list:
+    - flatpak
+    - gnome-software-plugin-flatpak
