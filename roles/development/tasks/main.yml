@@ -3,6 +3,8 @@
   block:
     - name: Includes HashiCorp related tasks
       include_tasks: hashicorp.yml
+    - name: Includes Cloud Vendor cli tasks
+      include_tasks: cloud_provider_cli.yml
 
 
 

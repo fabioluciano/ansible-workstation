@@ -1,0 +1,7 @@
+---
+- name: Install or Upgrade AWS cli
+  block:
+  - name: Install or Upgrade AWS cli
+    pip:
+      name: awscli
+      state: latest
