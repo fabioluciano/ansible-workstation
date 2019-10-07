@@ -11,6 +11,33 @@
     url: https://github.com/microsoft/cascadia-code/releases/download/v1910.04/Cascadia.ttf
     dest: ~/.fonts
   become: no
+  tags:
+    - fonts
+    - cascadia
+
+- name: Downloads and install FiraCode font
+  block:
+  - name: Create temporary directory
+    tempfile:
+      state: directory
+    register: firacode_tempdirectory
+  - name: Unzip the FiraCode archive
+    unarchive:
+      src: https://github.com/tonsky/FiraCode/releases/download/2/FiraCode_2.zip
+      dest: "{{ firacode_tempdirectory.path }}"
+      remote_src: true
+  - name: Ensure that the ttf fonts are moved to the fonts directory
+    synchronize:
+      src: "{{ firacode_tempdirectory.path }}/ttf/"
+      dest: ~/.fonts
+  - name: Ensure that the temporary dictory is removed
+    file:
+      path: "{{ firacode_tempdirectory.path }}"
+      state: absent
+  become: no
+  tags:
+    - fonts
+    - firacode
 
 - name: Ensure that the font cache is updated
   shell: fc-cache -f -v
