@@ -1,0 +1,39 @@
+---
+- name: Install or Upgrade Terraform
+  block:
+  - name: Verify the existence of Terraform binary
+    command: which terraform
+    register: terraform_is_installed
+    ignore_errors: yes
+
+  - name: Check avaliable Terraform version
+    command: terraform -v
+    when: terraform_is_installed.rc == 0
+    register: terraform_local_version
+
+  - name: Request Terraform download page content
+    uri:
+      url: https://www.terraform.io/downloads.html
+      return_content: yes
+    register: terraform_download_page
+
+  - name: Define Terraform latest avaliable version fact
+    set_fact:
+      terraform_download_url: "{{ terraform_download_page.content | regex_findall('(https:\/\/.*?terraform_[\\d.]+_linux_amd64.zip)') | first }}"
+      terraform_latest_avaliable_version: "{{ terraform_download_page.content | regex_findall('terraform_([\\d.]+)_linux_amd64.zip') | first }}"
+
+  - name: If installed, set the local Terraform version fact
+    set_fact:
+      terraform_local_version: "{{ terraform_local_version.stdout | regex_findall('Terraform v([\\d+.]+)') | first }}"
+    when: terraform_is_installed.rc == 0 and terraform_local_version.rc == 0
+
+  - name: Ensure that the Terraform binary is avaliable on /usr/local/bin directory
+    unarchive:
+      src: "{{ terraform_download_url }}"
+      dest: /usr/local/bin/
+      remote_src: true
+    become: yes
+    when: terraform_latest_avaliable_version != terraform_local_version
+  tags:
+    - hashicorp
+    - terraform
