@@ -7,5 +7,5 @@
       include_tasks: cloud_provider_cli.yml
     - name: Includes Java tasks
       include_tasks: java.yml
-
-
+    - name: Includes IDE tasks
+      include_tasks: ide.yml
