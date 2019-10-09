@@ -1,0 +1,16 @@
+---
+- name: Install JDK8
+  block:
+  - name: Recover JDK8 download page
+    uri:
+      url: https://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+      return_content: yes
+    register: jdk8_download_page
+  - name: teste
+    uri:
+      url: "{{ jdk8_download_page.content | regex_findall('(https:\/\/.*?-linux-x64.tar.gz)') | first}}"
+      return_content: yes
+    register: jdk8_prelogin_page
+  - set_fact: 
+    hidden_inputs: "{{ jdk8_prelogin_page.content | regex_findall('<input type=\"hidden\" name=\"(.*?)\" value=\"(.*?)\"') }}"
+    

@@ -5,6 +5,7 @@
       include_tasks: hashicorp.yml
     - name: Includes Cloud Vendor cli tasks
       include_tasks: cloud_provider_cli.yml
-
+    - name: Includes Java tasks
+      include_tasks: java.yml
 
 

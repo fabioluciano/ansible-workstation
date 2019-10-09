@@ -37,3 +37,81 @@
   tags:
     - hashicorp
     - terraform
+
+- name: Install or Upgrade Packer
+  block:
+  - name: Verify the existence of Packer binary
+    command: which packer
+    register: packer_is_installed
+    ignore_errors: yes
+
+  - name: Check avaliable Packer version
+    command: packer -v
+    when: packer_is_installed.rc == 0
+    register: packer_local_version
+
+  - name: Request Packer download page content
+    uri:
+      url: https://www.packer.io/downloads.html
+      return_content: yes
+    register: packer_download_page
+
+  - name: Define Packer latest avaliable version fact
+    set_fact:
+      packer_download_url: "{{ packer_download_page.content | regex_findall('(https:\/\/.*?packer_[\\d.]+_linux_amd64.zip)') | first }}"
+      packer_latest_avaliable_version: "{{ packer_download_page.content | regex_findall('packer_([\\d.]+)_linux_amd64.zip') | first }}"
+
+  - name: If installed, set the local Packer version fact
+    set_fact:
+      packer_local_version: "{{ packer_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
+    when: packer_is_installed.rc == 0 and packer_local_version.rc == 0
+
+  - name: Ensure that the Packer binary is avaliable on /usr/local/bin directory
+    unarchive:
+      src: "{{ packer_download_url }}"
+      dest: /usr/local/bin/
+      remote_src: true
+    become: yes
+    when: packer_latest_avaliable_version != packer_local_version
+  tags:
+    - hashicorp
+    - packer
+
+- name: Install or Upgrade Vagrant
+  block:
+  - name: Verify the existence of Vagrant binary
+    command: which vagrant
+    register: vagrant_is_installed
+    ignore_errors: yes
+
+  - name: Check avaliable Vagrant version
+    command: vagrant -v
+    when: vagrant_is_installed.rc == 0
+    register: vagrant_local_version
+
+  - name: Request Vagrant download page content
+    uri:
+      url: https://www.vagrantup.com/downloads.html
+      return_content: yes
+    register: vagrant_download_page
+
+  - name: Define Vagrant latest avaliable version fact
+    set_fact:
+      vagrant_download_url: "{{ vagrant_download_page.content | regex_findall('(https:\/\/.*?vagrant_[\\d.]+_linux_amd64.zip)') | first }}"
+      vagrant_latest_avaliable_version: "{{ vagrant_download_page.content | regex_findall('vagrant_([\\d.]+)_linux_amd64.zip') | first }}"
+
+  - name: If installed, set the local Vagrant version fact
+    set_fact:
+      vagrant_local_version: "{{ vagrant_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
+    when: vagrant_is_installed.rc == 0 and vagrant_local_version.rc == 0
+
+  - name: Ensure that the Vagrant binary is avaliable on /usr/local/bin directory
+    unarchive:
+      src: "{{ vagrant_download_url }}"
+      dest: /usr/local/bin/
+      remote_src: true
+    become: yes
+    when: vagrant_latest_avaliable_version != vagrant_local_version
+  tags:
+    - hashicorp
+    - vagrant

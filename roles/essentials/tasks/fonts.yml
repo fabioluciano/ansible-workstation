@@ -41,6 +41,21 @@
     - fonts
     - firacode
 
+- name: Configure and install MS Fonts
+  block:
+    - name: Programaticaly accept the eula agreement
+      shell: echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+      become: yes
+    - name: Ensures that the ttf-mscorefonts-installer is installed
+      package:
+        name: ttf-mscorefonts-installer
+        state: latest
+        force_apt_get: yes
+      become: yes
+  tags:
+    - fonts
+    - mscorefonts
+
 - name: Ensure that the font cache is updated
   shell: fc-cache -f -v
   become: no
