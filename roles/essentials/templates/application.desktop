@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name={{ name }}
+Comment={{ description }}
+Categories=Utility;
+Type=Application
+Exec={{ executable }}
+Icon={{ icon }}
+Terminal=false
+NoDisplay=false

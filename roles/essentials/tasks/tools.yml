@@ -1,0 +1,55 @@
+---
+- name: Apache Directory | Check if there is a previous installation
+  stat:
+    path: /opt/ApacheDirectoryStudio/
+  register: apachedirectory_installation_dir
+- name: Install or Upgrade Apache Directory Studio
+  block:
+    - name: Apache Directory | Create temporary directory
+      tempfile:
+        state: directory
+      register: apachedirectory_directory
+    - name: Apache Directory | Get download page
+      uri:
+        url: https://directory.apache.org/studio/download/download-linux.html
+        return_content: yes
+      register: apachedirectory_download_page
+    - name: Apache Directory | Set archive download link
+      set_fact: 
+        apachedirectory_archive_url: "{{ apachedirectory_download_page.content | regex_findall('(https?:\/\/.*linux.gtk.x86_64.tar.gz)') | first }}"
+    - name: Apache Directory | Get archive
+      get_url:
+        url: "{{ apachedirectory_archive_url }}"
+        dest: "{{ apachedirectory_directory.path }}/apachestudio.tar.gz"
+      async: 1000
+      poll: 0
+      register: apachestudio_download_action
+    - name: Apache Directory | Wait for download to end
+      async_status:
+        jid: '{{ apachestudio_download_action.ansible_job_id }}'
+      register: apachestudio_job_result
+      until: apachestudio_job_result.finished
+      retries: 30
+    - name: Apache Directory | Unarchive file
+      unarchive:
+        src: "{{ apachedirectory_directory.path }}/apachestudio.tar.gz"
+        dest: "{{ apachedirectory_directory.path }}"
+    - name: Apache Directory | Ensure that package directory is in /opt directory
+      synchronize:
+        src: "{{ apachedirectory_directory.path }}/ApacheDirectoryStudio"
+        dest: /opt/
+      become: yes
+    - name: Ensure that there is a directory to store shortcuts
+      file:
+        path: ~/.local/share/applications/
+        state: directory
+    - name: Apache Directory | Ensure that there is a shortcut to binary
+      template:
+        src: application.desktop
+        dest: ~/.local/share/applications/apache-directory.desktop
+      vars:
+        name: Apache Directory Studio
+        description: Apache Directory Studio
+        executable: /opt/ApacheDirectoryStudio/ApacheDirectoryStudio
+        icon: /opt/ApacheDirectoryStudio/icon.xpm
+  when: apachedirectory_installation_dir.stat.exists == False

@@ -1,11 +1,14 @@
 ---
 - name: Includes the all essential tasks
   block:
-    - name: Includes the flatpak related tasks
+    - name: Includes the Essentials related tasks
       include_tasks: "{{ item }}"
       with_items:
-        - flatpak.yml
-        - spacevim.yml
-        - fonts.yml
-
-
+        # - flatpak.yml
+        # - spacevim.yml
+        # - fonts.yml
+        # - hashicorp.yml
+        # - cloud_provider_cli.yml
+        - java.yml
+        # - ide.yml
+        # - tools.yml
