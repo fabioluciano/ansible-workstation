@@ -8,39 +8,43 @@
     register: jdk8_download_page
   - name: teste
     uri:
-      url: "{{ jdk8_download_page.content | regex_findall('(https:\/\/.*?-linux-x64.tar.gz)') | first}}"
+      url: "{{ jdk8_download_page.content | regex_findall('(https:\/\/.*?-linux-x64.tar.gz)') | first }}"
       return_content: yes
+      headers:
+        Cookies: "oraclelicense=accept-securebackup-cookie; path=/; secure; HttpOnly, testSessionCookie=Enabled; path=/technetwork/java/javase/downloads; secure; HttpOnly"
     register: jdk8_prelogin_page
   - set_fact:
       hidden_pre_inputs: "{{ jdk8_prelogin_page.content | regex_findall('<input type=\"hidden\" name=\"(.*?)\" value=\"(.*?)\"') }}"
-- name: Populate payload to post
-  set_fact:
-    jdk8_to_post_payload: "{{ jdk8_to_post_payload|default('') }}{{ (index > 0)|ternary('&','') }}{{ item.0 }}={{ item.1 }}"
-  loop: "{{ hidden_pre_inputs }}"
-  loop_control:
-    index_var: index
-- name: JAVA | Do post to login page
-  uri:
-    url: https://login.oracle.com/mysso/signon.jsp
-    body: "{{ jdk8_to_post_payload }}"
-    method: POST
-    return_content: yes
-  register: jdk8_login_page
-- set_fact:
-    hidden_login_inputs: "{{ jdk8_login_page.content | regex_findall('<input type=\"hidden\" name=\"(.*?)\" value=\"(.*?)\"') }}"
-- set_fact:
-    jdk8_to_login_payload: "{{ jdk8_to_login_payload|default('') }}{{ (index > 0)|ternary('&','') }}{{ item.0 }}={{ item.1 }}"
-  loop: "{{ hidden_login_inputs }}"
-  loop_control:
-    index_var: index
-- set_fact:
-    jdk8_to_login_payload: "{{ jdk8_to_login_payload }}"
-- name: JAVA | Do post to login page
-  uri:
-    url: https://login.oracle.com/oam/server/sso/auth_cred_submit
-    body: "{{ jdk8_to_login_payload }}"
-    method: POST
-    return_content: yes
-    headers:
-      Cookies: "{{ jdk8_login_page.set_cookie }}"
+  - name: Populate payload to post
+    set_fact:
+      jdk8_to_post_payload: "{{ jdk8_to_post_payload|default('') }}{{ (index > 0)|ternary('&','') }}{{ item.0 }}={{ item.1 }}"
+    loop: "{{ hidden_pre_inputs }}"
+    loop_control:
+      index_var: index
+  - name: JAVA | Do post to login page
+    uri:
+      url: https://login.oracle.com/mysso/signon.jsp
+      body: "{{ jdk8_to_post_payload }}"
+      method: POST
+      return_content: yes
+      headers:
+        Cookies: "{{ jdk8_prelogin_page.set_cookie }}, oraclelicense=accept-securebackup-cookie; path=/; secure; HttpOnly"
+    register: jdk8_login_page
+  - set_fact:
+      hidden_login_inputs: "{{ jdk8_login_page.content | regex_findall('<input type=\"hidden\" name=\"(.*?)\" value=\"(.*?)\"') }}"
+  - set_fact:
+      jdk8_to_login_payload: "{{ jdk8_to_login_payload|default('') }}{{ (index > 0)|ternary('&','') }}{{ item.0 }}={{ item.1 }}"
+    loop: "{{ hidden_login_inputs }}"
+    loop_control:
+      index_var: index
+  - set_fact:
+      jdk8_to_login_payload: "{{ jdk8_to_login_payload }}"
+  - name: JAVA | Do post to login page
+    uri:
+      url: https://login.oracle.com/oam/server/sso/auth_cred_submit
+      body: "{{ jdk8_to_login_payload }}"
+      method: POST
+      return_content: yes
+      headers:
+        Cookies: "{{ jdk8_login_page.set_cookie }}"
 
