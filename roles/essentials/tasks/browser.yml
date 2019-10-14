@@ -1,4 +1,16 @@
 ---
+
+- name: Check if Firefox is present
+  stat:
+    path: /usr/bin/firefox
+  register: firefox_exists
+
+- name: Firefox | Install Firefox
+  package:
+    name: firefox
+    state: preset
+  when: firefox_exists.stat.exists == False
+  
 - name: Check if Google Chrome is present
   stat:
     path: /usr/bin/google-chrome
@@ -105,3 +117,4 @@
         force_apt_get: true
       become: yes
   when: brave_exists.stat.exists == False
+
