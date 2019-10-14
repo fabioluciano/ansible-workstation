@@ -4,12 +4,13 @@
     - name: Includes the Essentials related tasks
       include_tasks: "{{ item }}"
       with_items:
+        - flatpak.yml    
         - browser.yml
-        # - flatpak.yml
         # - spacevim.yml
         # - fonts.yml
-        # - hashicorp.yml
-        # - cloud_provider_cli.yml
+        - hashicorp.yml
+        - cloud_provider_cli.yml
         # - ide.yml
-        # - tools.yml
+        - tools.yml
+        - obsstudio.yml
         # - nvm.yml

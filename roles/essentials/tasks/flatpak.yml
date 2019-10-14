@@ -1,16 +1,28 @@
 ---
-- name: Ensure that the repository is present
-  apt_repository:
-    repo: ppa:alexlarsson/flatpak
-    state: present
-    update_cache: yes
-  become: yes
-- name: Ensures that the package flatpak is installed
-  package:
-    name: "{{ item }}"
-    state: present
-    force_apt_get: yes
-  become: yes
-  with_list:
-    - flatpak
-    - gnome-software-plugin-flatpak
+- name: Check if flatpak repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/flatpak.list
+  register: flatpak_exists
+
+- name: Flatpak | Ensure that the updated repository is present
+  block:
+  - name: Ensure that the repository is present
+    apt_repository:
+      repo: ppa:alexlarsson/flatpak
+      state: present
+      update_cache: yes
+      filename: flatpak
+    become: yes
+  - name: Ensures that the package flatpak is installed
+    package:
+      name: "{{ flatpak_depedency }}"
+      state: latest
+      force_apt_get: yes
+    become: yes
+    with_list:
+      - flatpak
+      - gnome-software-plugin-flatpak
+    loop_control:
+      loop_var: flatpak_depedency
+  when: flatpak_exists.stat.exists == False
+

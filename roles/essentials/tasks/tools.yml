@@ -54,6 +54,11 @@
         icon: /opt/ApacheDirectoryStudio/icon.xpm
   when: apachedirectory_installation_dir.stat.exists == False
 
+- name: Check if Telegram is present
+  stat:
+    path: /opt/telegram/Telegram
+  register: telegram_exists
+
 - name: Telegram | Install the package
   block:
     - name: Telegram | add package repository
@@ -61,12 +66,15 @@
         repo: "ppa:atareao/telegram"
         state: present
         update_cache: yes
+        filename: telegram
       become: yes
     - name: Telegram | Install the package
       package:
         name: telegram
         state: present
         force_apt_get: true
-      become: yes
+      become: 
+  when: telegram_exists.stat.exists == False
+
 
 

@@ -1,16 +1,27 @@
 ---
+- name: Check if AWS Cli is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/aws"
+  register: awscli_exists
 - name: Install or Upgrade AWS cli
   block:
   - name: Install or Upgrade AWS cli
     pip:
       name: awscli
       state: latest
+  when: awscli_exists.stat.exists == False
+
+
+- name: Check if Azure Cli is present
+  stat:
+    path: "/usr/bin/az"
+  register: azurecli_exists
 
 - name: Install or Upgrade Azure cli
   block:
   - name: Ensures that the dependencies for Azure cli is installed
     package:
-      name: "{{ item }}"
+      name: "{{ azure_depedency }}"
       state: latest
       force_apt_get: yes
     become: yes
@@ -20,6 +31,8 @@
       - apt-transport-https
       - lsb-release
       - gnupg
+    loop_control:
+      loop_var: azure_depedency
   - name: Add an Apt signing key for Azure cli
     apt_key:
       url: https://packages.microsoft.com/keys/microsoft.asc
@@ -37,6 +50,12 @@
       state: latest
       force_apt_get: yes
     become: yes
+  when: azurecli_exists.stat.exists == False
+
+- name: Check if Google Cloud Cli is present
+  stat:
+    path: "/usr/bin/gcloud"
+  register: gcloud_exists
 
 - name: Install or Upgrade Azure cli
   block:
@@ -57,3 +76,4 @@
       state: latest
       force_apt_get: yes
     become: yes
+  when: gcloud_exists.stat.exists == False

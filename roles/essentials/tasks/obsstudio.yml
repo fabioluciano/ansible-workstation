@@ -1,0 +1,22 @@
+---
+- name: Check if OBS Studio is present
+  stat:
+    path: /usr/bin/obs
+  register: obsstudio_exists
+
+- name: OBS Studio | Install OBS Studio
+  block:
+  - name: OBS Studio | Add package repository
+    apt_repository:
+      repo: "ppa:obsproject/obs-studio"
+      filename: obs-studio
+      update_cache: yes
+      state: present
+    become: yes
+  - name: OBS Studio | Install the package
+    package:
+      name: obs-studio
+      state: present
+      force_apt_get: true
+    become: yes
+  when: obsstudio_exists.stat.exists == False
