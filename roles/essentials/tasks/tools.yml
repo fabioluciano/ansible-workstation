@@ -39,7 +39,7 @@
         src: "{{ apachedirectory_directory.path }}/ApacheDirectoryStudio"
         dest: /opt/
       become: yes
-    - name: Ensure that there is a directory to store shortcuts
+    - name: Apache Directory | Ensure that there is a directory to store shortcuts
       file:
         path: ~/.local/share/applications/
         state: directory
@@ -61,7 +61,7 @@
 
 - name: Telegram | Install the package
   block:
-    - name: Telegram | add package repository
+    - name: Telegram | Add package repository
       apt_repository:
         repo: "ppa:atareao/telegram"
         state: present
@@ -73,8 +73,56 @@
         name: telegram
         state: present
         force_apt_get: true
-      become: 
+      become:  yes
   when: telegram_exists.stat.exists == False
+
+- name: Dive | Check if is present
+  stat:
+    path: /usr/local/bin/dive
+  register: dive_exists
+
+- name: Dive | Install or Upgrade
+  block:
+    - name: Dive | Recover all releases
+      uri:
+        url: https://api.github.com/repos/wagoodman/dive/releases
+        return_content: true
+        body_format: json
+      register: dive_releases_response
+    - name: Dive | Get deb url from latest version
+      set_fact:
+        dive_deb_download_url: "{{ dive_releases_response.content | from_json | first | json_query('assets[?content_type==`application/vnd.debian.binary-package`].browser_download_url') | first }}"
+    - name: Dive | Install deb file
+      apt:
+        deb: "{{ dive_deb_download_url }}"
+      become: yes
+  when: dive_exists.stat.exists == False 
+
+- name: Exa | Check if is present
+  stat:
+    path: /usr/local/bin/exa
+  register: exa_exists
+
+- name: Exa | Install or Upgrade
+  block:
+    - name: Exa | Recover all releases
+      uri:
+        url: https://api.github.com/repos/ogham/exa/releases
+        return_content: true
+        body_format: json
+      register: exa_releases_response
+    - name: Exa | Get deb url from latest version
+      set_fact:
+        exa_zip_download_url: "{{ exa_releases_response.content | from_json | first | json_query('assets[?content_type==`application/zip`].browser_download_url') | first }}"
+    - unarchive:
+        src: "{{ exa_zip_download_url }}"
+        dest: /usr/local/bin
+        remote_src: true
+      become: yes
+
+    - debug: var=exa_zip_download_url
+
+  when: exa_exists.stat.exists == False  
 
 
 

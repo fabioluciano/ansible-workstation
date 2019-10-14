@@ -8,7 +8,8 @@
 - name: Firefox | Install Firefox
   package:
     name: firefox
-    state: preset
+    state: latest
+  become: yes
   when: firefox_exists.stat.exists == False
   
 - name: Check if Google Chrome is present
