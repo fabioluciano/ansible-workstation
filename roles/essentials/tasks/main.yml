@@ -10,7 +10,7 @@
         # - fonts.yml
         - hashicorp.yml
         - cloud_provider_cli.yml
-        # - ide.yml
+        - ide.yml
         - tools.yml
         - obsstudio.yml
         # - nvm.yml

@@ -1,25 +1,24 @@
 ---
-- name: Check if AWS Cli is present
+- name: AWS CLI | Check if AWS Cli is present
   stat:
     path: "{{ ansible_env.HOME }}/.local/bin/aws"
   register: awscli_exists
-- name: Install or Upgrade AWS cli
+- name: AWS CLI | Install or Upgrade AWS cli
   block:
-  - name: Install or Upgrade AWS cli
+  - name: AWS CLI | Install or Upgrade AWS cli
     pip:
       name: awscli
       state: latest
   when: awscli_exists.stat.exists == False
 
 
-- name: Check if Azure Cli is present
+- name: Azure CLI | Check if Azure Cli is present
   stat:
     path: "/usr/bin/az"
   register: azurecli_exists
-
-- name: Install or Upgrade Azure cli
+- name: Azure CLI | Install or Upgrade Azure cli
   block:
-  - name: Ensures that the dependencies for Azure cli is installed
+  - name: Azure CLI | Ensures that the dependencies for Azure cli is installed
     package:
       name: "{{ azure_depedency }}"
       state: latest
@@ -33,18 +32,18 @@
       - gnupg
     loop_control:
       loop_var: azure_depedency
-  - name: Add an Apt signing key for Azure cli
+  - name: Azure CLI | Add an Apt signing key for Azure cli
     apt_key:
       url: https://packages.microsoft.com/keys/microsoft.asc
       state: present
     become: yes
-  - name: Configure Azure cli repository
+  - name: Azure CLI | Configure Azure cli repository
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
       state: present
       update_cache: true
     become: yes
-  - name: Install or Upgrade Azure cli
+  - name: Azure CLI | Install or Upgrade Azure cli
     package:
       name: azure-cli
       state: latest
@@ -52,25 +51,24 @@
     become: yes
   when: azurecli_exists.stat.exists == False
 
-- name: Check if Google Cloud Cli is present
+- name: Google Cloud Cli | Check if Google Cloud Cli is present
   stat:
     path: "/usr/bin/gcloud"
   register: gcloud_exists
-
-- name: Install or Upgrade Azure cli
+- name: Google Cloud Cli | Install or Upgrade Azure cli
   block:
-  - name: Add an Apt signing key for Google Cloud 
+  - name: Google Cloud Cli | Add an Apt signing key for Google Cloud 
     apt_key:
       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
       state: present
     become: yes
-  - name: Configure Google Cloud repository
+  - name: Google Cloud Cli | Configure Google Cloud repository
     apt_repository:
       repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
       state: present
       update_cache: true
     become: yes
-  - name: Install or Upgrade Google Cloud cli
+  - name: Google Cloud Cli | Install or Upgrade Google Cloud cli
     package:
       name: google-cloud-sdk
       state: latest

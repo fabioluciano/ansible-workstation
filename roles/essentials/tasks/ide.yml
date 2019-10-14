@@ -1,21 +1,28 @@
 ---
-- name: Install Visual Code
+- name: Check if Visual Code Studio is present
+  stat:
+    path: /usr/bin/code
+  register: vscode_exists
+
+- name: Visual Code Studio | Install Visual Code
   block:
-  - name: Add Visual Code apt key
+  - name: Visual Code Studio | Add Visual Code apt key
     apt_key:
       url: https://packages.microsoft.com/keys/microsoft.asc
       state: present
     become: yes
-  - name: Add Visual Code repository
+  - name: Visual Code Studio | Add Visual Code repository
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
       filename: vscode
       update_cache: yes
       state: present
     become: yes
-  - name: Install Visual Code
+  - name: Visual Code Studio | Install Visual Code
     package:
       name: code
       state: present
       force_apt_get: true
     become: yes
+  when: vscode_exists.stat.exists == False
+
