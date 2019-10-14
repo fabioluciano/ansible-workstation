@@ -20,20 +20,17 @@
       - apt-transport-https
       - lsb-release
       - gnupg
-
   - name: Add an Apt signing key for Azure cli
     apt_key:
       url: https://packages.microsoft.com/keys/microsoft.asc
       state: present
     become: yes
-
   - name: Configure Azure cli repository
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
       state: present
       update_cache: true
     become: yes
-
   - name: Install or Upgrade Azure cli
     package:
       name: azure-cli
@@ -48,14 +45,12 @@
       url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
       state: present
     become: yes
-
   - name: Configure Google Cloud repository
     apt_repository:
       repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
       state: present
       update_cache: true
     become: yes
-
   - name: Install or Upgrade Google Cloud cli
     package:
       name: google-cloud-sdk

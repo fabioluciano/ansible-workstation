@@ -53,3 +53,20 @@
         executable: /opt/ApacheDirectoryStudio/ApacheDirectoryStudio
         icon: /opt/ApacheDirectoryStudio/icon.xpm
   when: apachedirectory_installation_dir.stat.exists == False
+
+- name: Telegram | Install the package
+  block:
+    - name: Telegram | add package repository
+      apt_repository:
+        repo: "ppa:atareao/telegram"
+        state: present
+        update_cache: yes
+      become: yes
+    - name: Telegram | Install the package
+      package:
+        name: telegram
+        state: present
+        force_apt_get: true
+      become: yes
+
+
