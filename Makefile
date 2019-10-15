@@ -13,4 +13,4 @@ install_ansible: install_pip
 	pip install ansible --upgrade --user
 
 execute_playbook: install_ansible
-	ansible-playbook workstation.yml -vvv
+	ansible-playbook workstation.yml

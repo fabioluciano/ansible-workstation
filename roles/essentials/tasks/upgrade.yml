@@ -1,0 +1,30 @@
+---
+- name: Upgrade the Apt related packages
+  block:
+    - name: Update APT package cache
+      apt: 
+        update_cache: yes
+        cache_valid_time: 600
+      become: yes
+    - name: Upgrade APT to the latest packages
+      apt: 
+        upgrade: dist
+      register: apt_result
+      become: yes
+    - name: Autoremove unused packages
+      apt: 
+        autoremove: yes
+      register: apt_result
+      changed_when: "'packages will be REMOVED' in apt_result.stdout"
+      become: yes
+
+- name: Upgrade Flatpak related packages
+  block:
+    - name: Execute
+      shell: flatpak update -y
+
+- name: Upgrade Snap related packages
+  block:
+    - name: Execute
+      shell: snap refresh
+      become: yes

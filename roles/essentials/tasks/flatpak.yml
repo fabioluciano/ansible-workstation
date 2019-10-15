@@ -24,5 +24,11 @@
       - gnome-software-plugin-flatpak
     loop_control:
       loop_var: flatpak_depedency
+  - name: Add the flathub flatpak repository remote to the user installation
+    flatpak_remote:
+      name: flathub
+      state: present
+      flatpakrepo_url: https://flathub.org/repo/flathub.flatpakrepo
+      method: user
   when: flatpak_exists.stat.exists == False
 
