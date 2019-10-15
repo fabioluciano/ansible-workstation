@@ -76,28 +76,6 @@
       become:  yes
   when: telegram_exists.stat.exists == False
 
-- name: Dive | Check if is present
-  stat:
-    path: /usr/local/bin/dive
-  register: dive_exists
-
-- name: Dive | Install or Upgrade
-  block:
-    - name: Dive | Recover all releases
-      uri:
-        url: https://api.github.com/repos/wagoodman/dive/releases
-        return_content: true
-        body_format: json
-      register: dive_releases_response
-    - name: Dive | Get deb url from latest version
-      set_fact:
-        dive_deb_download_url: "{{ dive_releases_response.content | from_json | first | json_query('assets[?content_type==`application/vnd.debian.binary-package`].browser_download_url') | first }}"
-    - name: Dive | Install deb file
-      apt:
-        deb: "{{ dive_deb_download_url }}"
-      become: yes
-  when: dive_exists.stat.exists == False 
-
 - name: Exa | Check if is present
   stat:
     path: /usr/local/bin/exa
@@ -119,9 +97,6 @@
         dest: /usr/local/bin
         remote_src: true
       become: yes
-
-    - debug: var=exa_zip_download_url
-
   when: exa_exists.stat.exists == False  
 
 

@@ -1,15 +1,22 @@
 ---
+- name: Check if Spacevim exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.SpaceVim/"
+  register: spacevim_exists
+
 - name: SpaceVim | Install or Upgrade SpaceVim
   block:
   - name: SpaceVim | Ensure that vim package is installed
     package: 
-      name: "{{ item }}"
+      name: "{{ spacevim_dependency }}"
       state: present 
       force_apt_get: yes
     loop:
       - vim
       - git 
       - curl
+    loop_control:
+      loop_var: spacevim_dependency
     become: yes
   - name: SpaceVim | Download the installer
     get_url:
@@ -23,3 +30,8 @@
     file:
       state: absent
       path: /tmp/spacevim-installer.sh
+  - name: SpaceVim | Copy configuration file
+    synchronize:
+      src: "init.toml"
+      dest: "{{ ansible_env.HOME }}/.SpaceVim.d/"
+  when: spacevim_exists.stat.exists == False

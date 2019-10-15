@@ -6,6 +6,9 @@
       with_items:
         - upgrade.yml
         - flatpak.yml
+        - alacritty.yml
+        - libreoffice.yml
+        - container.yml
         - browser.yml
         - spacevim.yml
         - fonts.yml

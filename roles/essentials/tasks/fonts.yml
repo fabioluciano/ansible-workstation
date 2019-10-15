@@ -1,21 +1,29 @@
 ---
-
 - name: Ensure that the user font directory exists
   file:
     state: directory
-    path: ~/.fonts
-  become: no
+    path: "{{ ansible_env.HOME }}/.fonts"
   tags:
     - fonts
+
+- name: Check if Cascadia font exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.fonts/Cascadia.ttf"
+  register: fontscascadia_exists
 
 - name: Ensure the download of MS Cascadia font
   get_url:
     url: https://github.com/microsoft/cascadia-code/releases/download/v1910.04/Cascadia.ttf
-    dest: ~/.fonts
-  become: no
+    dest: "{{ ansible_env.HOME }}/.fonts"
   tags:
     - fonts
     - cascadia
+  when: fontscascadia_exists.stat.exists == False
+
+- name: Check if FiraCode font exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.fonts/FiraCode-Regular.ttf"
+  register: fontsfiracode_exists
 
 - name: Downloads and install FiraCode font
   block:
@@ -31,15 +39,20 @@
   - name: Ensure that the ttf fonts are moved to the fonts directory
     synchronize:
       src: "{{ firacode_tempdirectory.path }}/ttf/"
-      dest: ~/.fonts
+      dest: "{{ ansible_env.HOME }}/.fonts"
   - name: Ensure that the temporary dictory is removed
     file:
       path: "{{ firacode_tempdirectory.path }}"
       state: absent
-  become: no
   tags:
     - fonts
     - firacode
+  when: fontsfiracode_exists.stat.exists == False
+
+- name: Check if FiraCode font exists
+  stat:
+    path: "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"
+  register: msttcorefonts_exists
 
 - name: Configure and install MS Fonts
   block:
@@ -55,6 +68,7 @@
   tags:
     - fonts
     - mscorefonts
+  when: msttcorefonts_exists.stat.exists == False
 
 - name: Ensure that the font cache is updated
   shell: fc-cache -f -v

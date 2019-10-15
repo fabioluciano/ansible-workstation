@@ -1,0 +1,22 @@
+---
+- name: Check if Alacritty is present
+  stat:
+    path: /usr/bin/alacritty
+  register: alacritty_exists
+
+- name: Alacritty | Install Alacritty
+  block:
+  - name: Allacritty | Add package repository
+    apt_repository:
+      repo: "ppa:mmstick76/alacritty"
+      filename: alacritty
+      update_cache: yes
+      state: present
+    become: yes
+  - name: Allacritty | Install the package
+    package:
+      name: alacritty
+      state: present
+      force_apt_get: true
+    become: yes
+  when: alacritty_exists.stat.exists == False
