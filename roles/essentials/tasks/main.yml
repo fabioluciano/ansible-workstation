@@ -15,6 +15,7 @@
         # - spotify.yml
         # - ulauncher.yml
         - virtualbox.yml
+        - plank.yml
         # - spacevim.yml
         # - fonts.yml
         # - hashicorp.yml
