@@ -1,0 +1,22 @@
+---
+- name: Whisker | Check if Wisker is present
+  stat:
+    path: /etc/apt/sources.list.d/whisker.list
+  register: whisker_exists
+
+- name: Whisker | Install Wisker
+  block:
+  - name: Whisker | Add the repository
+    apt_repository:
+      repo: "ppa:gottcode/gcppa"
+      filename: whisker
+      update_cache: yes
+      state: present
+    become: yes
+  - name: Whisker | Install the package
+    package:
+      name: xfce4-whiskermenu-plugin
+      state: latest
+      force_apt_get: true
+    become: yes
+  when: whisker_exists.stat.exists == False

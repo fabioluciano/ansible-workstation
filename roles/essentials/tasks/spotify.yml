@@ -1,0 +1,26 @@
+- name: Check if Spotify is present
+  stat:
+    path: /usr/bin/spotify
+  register: spotify_exists
+
+- name: Spotify | Install Spotify
+  block:
+  - name: Spotify | Add Spotify apt key
+    apt_key:
+      url: https://download.spotify.com/debian/pubkey.gpg
+      state: present
+    become: yes
+  - name: Spotify | Add Spotify repository
+    apt_repository:
+      repo: "deb http://repository.spotify.com stable non-free"
+      filename: spotify
+      update_cache: yes
+      state: present
+    become: yes
+  - name: Spotify | Install the package
+    package:
+      name: spotify-client
+      state: present
+      force_apt_get: true
+    become: yes
+  when: spotify_exists.stat.exists == False

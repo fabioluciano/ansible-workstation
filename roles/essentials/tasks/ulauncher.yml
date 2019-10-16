@@ -1,0 +1,22 @@
+---
+- name: Check if Ulauncher is present
+  stat:
+    path: /usr/bin/ulauncher
+  register: ulauncher_exists
+
+- name: Ulauncher | Install Ulauncher
+  block:
+  - name: Ulauncher | Add the repository
+    apt_repository:
+      repo: "ppa:agornostal/ulauncher"
+      filename: ulauncher
+      update_cache: yes
+      state: present
+    become: yes
+  - name: Ulauncher | Install the package
+    package:
+      name: ulauncher
+      state: present
+      force_apt_get: true
+    become: yes
+  when: ulauncher_exists.stat.exists == False

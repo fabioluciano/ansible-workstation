@@ -1,0 +1,22 @@
+---
+- name: Plank | Check if Plank is present
+  stat:
+    path: /usr/bin/plank
+  register: plank_exists
+
+- name: Plank | Install Plank
+  block:
+  - name: Plank | Add the repository
+    apt_repository:
+      repo: "ppa:ricotz/docky"
+      filename: plank
+      update_cache: yes
+      state: present
+    become: yes
+  - name: Plank | Install the package
+    package:
+      name: plank
+      state: present
+      force_apt_get: true
+    become: yes
+  when: plank_exists.stat.exists == False
