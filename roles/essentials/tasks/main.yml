@@ -24,5 +24,4 @@
         # - tools
         # - obsstudio
         # - nvm
-        - tmux
-        - zsh
+        - terminal

@@ -1,5 +1,5 @@
 ---
-- name: Tmux | Install TMP
+- name: Terminal | Install base16 colors
   git:
     repo: https://github.com/chriskempson/base16-shell
     dest: "{{ ansible_env.HOME }}/.config/base16-shell"
