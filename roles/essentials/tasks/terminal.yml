@@ -1,0 +1,12 @@
+---
+- name: Tmux | Install TMP
+  git:
+    repo: https://github.com/chriskempson/base16-shell
+    dest: "{{ ansible_env.HOME }}/.config/base16-shell"
+
+- name: Includes the all terminal tasks
+  include_tasks: "{{ item }}.yml"
+  with_items:
+    - tmux
+    - zsh
+

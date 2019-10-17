@@ -1,0 +1,36 @@
+source ~/.local-antigen.zsh
+
+antigen use oh-my-zsh
+
+antigen bundle git
+antigen bundle aws
+antigen bundle docker
+antigen bundle vagrant
+antigen bundle pip
+antigen bundle lein
+antigen bundle nvm
+antigen bundle virtualenv
+antigen bundle colored-man-pages
+antigen bundle desyncr/auto-ls
+antigen bundle lukechilds/zsh-nvm
+antigen bundle command-not-found
+antigen bundle gko/ssh-connect
+antigen bundle chrissicool/zsh-256color
+antigen bundle djui/alias-tips
+antigen bundle webyneter/docker-aliases
+antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-history-substring-search
+
+
+antigen theme ys
+
+antigen apply
+
+BASE16_SHELL="$HOME/.config/base16-shell/"
+[ -n "$PS1" ] && \
+    [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
+
+base16_eighties

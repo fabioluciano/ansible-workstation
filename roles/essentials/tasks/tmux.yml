@@ -1,2 +1,24 @@
 ---
-- name: 
+
+- name: Check if Tmux is present
+  stat:
+    path: /usr/bin/tmuxx
+  register: tmux_exists
+
+- name: Tmux | Install and configure
+  block:
+    - name: Tmux | Install the package
+      package:
+        name: tmux
+        state: present
+        force_apt_get: true
+      become: yes
+    - name: Tmux | Install TMP
+      git:
+        repo: https://github.com/tmux-plugins/tpm
+        dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
+    - name: Tmux | Copy configurations file
+      copy:
+        src: tmux.conf
+        dest: "{{ ansible_env.HOME }}/.tmux.conf"
+  when: tmux_exists.stat.exists == False

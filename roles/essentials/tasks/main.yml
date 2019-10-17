@@ -2,25 +2,27 @@
 - name: Includes the all essential tasks
   block:
     - name: Includes the Essentials related tasks
-      include_tasks: "{{ item }}"
+      include_tasks: "{{ item }}.yml"
       with_items:
-        # - upgrade.yml
-        # - essential.yml
-        # - flatpak.yml
-        # - alacritty.yml
-        # - libreoffice.yml
-        # - container.yml
-        # - browser.yml
-        # - whisker.yml
-        # - spotify.yml
-        # - ulauncher.yml
-        - virtualbox.yml
-        - plank.yml
-        # - spacevim.yml
-        # - fonts.yml
-        # - hashicorp.yml
-        # - cloud_provider_cli.yml
-        # - ide.yml
-        # - tools.yml
-        # - obsstudio.yml
-        # - nvm.yml
+        - upgrade
+        # - essential
+        # - flatpak
+        # - alacritty
+        # - libreoffice
+        # - container
+        # - browser
+        # - whisker
+        # - spotify
+        # - ulauncher
+        # - virtualbox
+        # - plank
+        # - spacevim
+        # - fonts
+        # - hashicorp
+        # - cloud_provider_cli
+        # - ide
+        # - tools
+        # - obsstudio
+        # - nvm
+        - tmux
+        - zsh

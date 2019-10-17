@@ -1,0 +1,30 @@
+---
+
+- name:  ZSH | Check if the binary is present
+  stat:
+    path: /usr/bin/zshs
+  register: zsh_exists
+
+- name: ZSH | Install and configure
+  block:
+    - name: ZSH | Install the package
+      package:
+        name: zsh
+        state: present
+        force_apt_get: true
+      become: yes
+    - name: ZSH | Antigen | Download
+      get_url:
+        url: https://git.io/antigen
+        dest: "{{ ansible_env.HOME }}/.local-antigen.zsh"
+        mode: 771
+    - name: ZSH | Copy configurations file
+      copy:
+        src: zshrc
+        dest: "{{ ansible_env.HOME }}/.zshrc"
+    - name: ZSH | Change default shell to zsh
+      user:
+        name: "{{ ansible_user }}"
+        shell: /usr/bin/zsh
+      become: yes
+  when: zsh_exists.stat.exists == False
