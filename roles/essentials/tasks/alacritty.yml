@@ -1,8 +1,19 @@
 ---
-- name: Check if Alacritty is present
+- name: Alacritty | Check if the binary is present
   stat:
     path: /usr/bin/alacritty
   register: alacritty_exists
+
+- name: Alacritty | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/alacritty.list
+  register: alacritty_repository_exists
+
+- name: Alacritty | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/mmstick76/alacritty/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: alacritty_repository_release_exists
 
 - name: Alacritty | Install Alacritty
   block:
@@ -19,4 +30,4 @@
       state: present
       force_apt_get: true
     become: yes
-  when: alacritty_exists.stat.exists == False
+  when: alacritty_exists.stat.exists == False and flatpack_repository_release_exists.status == 200

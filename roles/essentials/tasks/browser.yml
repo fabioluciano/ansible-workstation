@@ -64,7 +64,6 @@
       become: yes
   when: vivaldi_exists.stat.exists == False
 
-
 - name: Check if Opera is present
   stat:
     path: /usr/bin/opera

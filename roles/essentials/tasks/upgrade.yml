@@ -30,6 +30,7 @@
   block:
     - name: Execute
       shell: flatpak update -y
+  when: flatpak_exists.stat.exists == True
 
 - name: Upgrade Snap related packages
   block:

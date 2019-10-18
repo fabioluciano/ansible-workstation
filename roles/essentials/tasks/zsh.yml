@@ -2,7 +2,7 @@
 
 - name:  ZSH | Check if the binary is present
   stat:
-    path: /usr/bin/zshs
+    path: /usr/bin/zsh
   register: zsh_exists
 
 - name: ZSH | Install and configure

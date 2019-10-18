@@ -5,8 +5,10 @@
     dest: "{{ ansible_env.HOME }}/.config/base16-shell"
 
 - name: Includes the all terminal tasks
-  include_tasks: "{{ item }}.yml"
-  with_items:
+  include_tasks: "{{ terminal_tasks }}.yml"
+  loop:
     - tmux
     - zsh
+  loop_control:
+    loop_var: terminal_tasks
 
