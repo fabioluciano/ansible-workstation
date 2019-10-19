@@ -1,4 +1,1 @@
 localhost ansible_connection=local
-
-owing additional packages will be installed:
-  gconf2 libappindicator1 libdbusmenu-gtk4 libpango1.0-0 libpangox-1.0-0

@@ -20,7 +20,7 @@
     - gconf-service
     - gconf-service-backend
     - gconf2-common
-    - gconf
+    - gconf2
     - libgconf-2-4
   loop_control:
     loop_var: essential_dependency

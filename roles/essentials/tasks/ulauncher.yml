@@ -1,8 +1,14 @@
 ---
-- name: Check if Ulauncher is present
+- name: Ulauncher | Check if Ulauncher is present
   stat:
     path: /usr/bin/ulauncher
   register: ulauncher_exists
+
+- name: Alacritty | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/agornostal/ulauncher/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: ulauncher_repository_release_exists
 
 - name: Ulauncher | Install Ulauncher
   block:
@@ -19,4 +25,4 @@
       state: present
       force_apt_get: true
     become: yes
-  when: ulauncher_exists.stat.exists == False
+  when: ulauncher_exists.stat.exists == False and ulauncher_repository_release_exists.status == 200

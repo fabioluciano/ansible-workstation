@@ -4,6 +4,12 @@
     path: /usr/bin/virtualbox
   register: virtualbox_exists
 
+- name: VirtualBox | Ensure that exists a version in this release
+  uri:
+    url: "https://download.virtualbox.org/virtualbox/debian/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: virtualbox_repository_release_exists
+
 - name: VirtualBox | Install VirtualBox
   block:
   - name: VirtualBox | Add 2016 apt key
@@ -29,7 +35,7 @@
       state: present
       force_apt_get: true
     become: yes
-  when: virtualbox_exists.stat.exists == False
+  when: virtualbox_exists.stat.exists == False and virtualbox_repository_release_exists.status == 200
 
 - name: VirtualBox Extensions | Install or Upgrade
   block:
@@ -54,3 +60,4 @@
       file:
         path: "{{ extension_pack_path.dest }}"
         state: absent
+  when: virtualbox_repository_release_exists.status == 200

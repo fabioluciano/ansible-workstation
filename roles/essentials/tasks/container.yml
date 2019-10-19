@@ -4,6 +4,11 @@
     path: /usr/bin/docker
   register: docker_exists
 
+- name: Docker | Ensure that exists a version in this release
+  uri:
+    url: "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: docker_repository_release_exists
 - name: Docker | Install or Upgrade
   block:
   - name: Docker | Add apt key
@@ -24,14 +29,12 @@
       state: present
       force_apt_get: true
     become: yes
-  when: docker_exists.stat.exists == False 
-
+  when: docker_exists.stat.exists == False and docker_repository_release_exists.status == 200
 
 - name: Dive | Check if is present
   stat:
     path: /usr/local/bin/dive
   register: dive_exists
-
 - name: Dive | Install or Upgrade
   block:
     - name: Dive | Recover all releases

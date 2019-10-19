@@ -11,6 +11,11 @@
       state: latest
   when: awscli_exists.stat.exists == False
 
+- name: Azure CLI | Ensure that exists a version in this release
+  uri:
+    url: "https://packages.microsoft.com/repos/azure-cli/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: azurecli_repository_release_exists
 - name: Azure CLI | Check if Azure Cli is present
   stat:
     path: "/usr/bin/az"
@@ -40,6 +45,7 @@
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
       state: present
+      filename: azurecli
       update_cache: true
     become: yes
   - name: Azure CLI | Install or Upgrade Azure cli
@@ -48,29 +54,36 @@
       state: latest
       force_apt_get: yes
     become: yes
-  when: azurecli_exists.stat.exists == False
+  when: azurecli_exists.stat.exists == False and azurecli_repository_release_exists.status == 200
 
-- name: Google Cloud Cli | Check if Google Cloud Cli is present
+
+- name: Google Cloud CLI | Ensure that exists a version in this release
+  uri:
+    url: "https://packages.microsoft.com/repos/azure-cli/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: gcloud_repository_release_exists
+- name: Google Cloud CLI | Check if Google Cloud CLI is present
   stat:
     path: "/usr/bin/gcloud"
   register: gcloud_exists
-- name: Google Cloud Cli | Install or Upgrade Azure cli
+- name: Google Cloud CLI | Install or Upgrade Azure CLI
   block:
-  - name: Google Cloud Cli | Add an Apt signing key for Google Cloud 
-    apt_key:
-      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
-      state: present
-    become: yes
-  - name: Google Cloud Cli | Configure Google Cloud repository
-    apt_repository:
-      repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
-      state: present
-      update_cache: true
-    become: yes
-  - name: Google Cloud Cli | Install or Upgrade Google Cloud cli
-    package:
-      name: google-cloud-sdk
-      state: latest
-      force_apt_get: yes
-    become: yes
-  when: gcloud_exists.stat.exists == False
+    - name: Google Cloud CLI | Add an Apt signing key for Google Cloud 
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+      become: yes
+    - name: Google Cloud CLI | Configure Google Cloud repository
+      apt_repository:
+        repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
+        state: present
+        filename: gcloudcli
+        update_cache: true
+      become: yes
+    - name: Google Cloud CLI | Install or Upgrade Google Cloud CLI
+      package:
+        name: google-cloud-sdk
+        state: latest
+        force_apt_get: yes
+      become: yes
+  when: gcloud_exists.stat.exists == False and gcloud_repository_release_exists.status == 200

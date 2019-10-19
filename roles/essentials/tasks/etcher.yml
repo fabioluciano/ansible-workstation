@@ -1,1 +1,37 @@
-libappindicator1 libdbusmenu-gtk4 libpango1.0-0 libpangox-1.0-0
+- name: Etcher | Check if is present
+  stat:
+    path: /opt/balenaEtcher/balena-etcher-electron
+  register: etcher_exists
+
+- name: Etcher | Install or Upgrade
+  block:
+    - name: Etcher | Install dependencies
+      package:
+        state: present
+        name: "{{ etcher_dependency }}"
+        force_apt_get: true
+      loop:
+        - libappindicator1
+        - libdbusmenu-gtk4
+        - libpango1.0-0
+        - libpangox-1.0-0
+      loop_control:
+        loop_var: etcher_dependency
+      become: yes
+    - name: Etcher | Recover all releases
+      uri:
+        url: https://api.github.com/repos/balena-io/etcher/releases
+        return_content: true
+        body_format: json
+      register: etcher_releases_response
+    - name: Etcher | Get deb URL from latest version
+      set_fact:
+        etcher_deb_download_url: "{{ etcher_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `_amd64.deb`)].browser_download_url') }}"
+    # - name: Etcher | Install deb file
+    #   apt:
+    #     deb: "{{ dive_deb_download_url }}"
+    #   become: yes
+  when: etcher_exists.stat.exists == False 
+
+
+
