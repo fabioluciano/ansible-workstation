@@ -1,0 +1,28 @@
+---
+- name: Inkscape | Check if is present
+  stat:
+    path: /usr/bin/inkscape
+  register: inkscape_bin_path
+
+- name: Inkscape | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/inkscape.dev/stable/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: inkscape_repo
+
+- name: Inkscape | Add package repository
+  apt_repository:
+    repo: "ppa:inkscape.dev/stable"
+    filename: inkscape
+    update_cache: yes
+    state: present
+  become: true
+  when: inkscape_repo.status == 200
+
+- name: Inkscape | Install the package
+  package:
+    name: inkscape
+    state: present
+    force_apt_get: true
+  become: true
+  when: inkscape_bin_path.stat.exists == False

@@ -27,7 +27,7 @@
       name: "{{ azure_depedency }}"
       state: latest
       force_apt_get: yes
-    become: yes
+    become: true
     with_list:
       - ca-certificates
       - curl
@@ -40,20 +40,20 @@
     apt_key:
       url: https://packages.microsoft.com/keys/microsoft.asc
       state: present
-    become: yes
+    become: true
   - name: Azure CLI | Configure Azure cli repository
     apt_repository:
       repo: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
       state: present
       filename: azurecli
       update_cache: true
-    become: yes
+    become: true
   - name: Azure CLI | Install or Upgrade Azure cli
     package:
       name: azure-cli
       state: latest
       force_apt_get: yes
-    become: yes
+    become: true
   when: azurecli_exists.stat.exists == False and azurecli_repository_release_exists.status == 200
 
 
@@ -72,18 +72,18 @@
       apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
-      become: yes
+      become: true
     - name: Google Cloud CLI | Configure Google Cloud repository
       apt_repository:
         repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
         state: present
         filename: gcloudcli
         update_cache: true
-      become: yes
+      become: true
     - name: Google Cloud CLI | Install or Upgrade Google Cloud CLI
       package:
         name: google-cloud-sdk
         state: latest
         force_apt_get: yes
-      become: yes
+      become: true
   when: gcloud_exists.stat.exists == False and gcloud_repository_release_exists.status == 200

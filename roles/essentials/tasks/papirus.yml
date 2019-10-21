@@ -1,0 +1,38 @@
+---
+- name: Icon | Papirus | Recover package facts
+  package_facts:
+    manager: apt
+
+- name: Icon | Papirus | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/papirus.list
+  register: papirus_repository_exists
+
+- name: Icon | Papirus | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/papirus/papirus/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: papirus_repository_release_exists
+
+- name: Icon | Papirus | Install papirus
+  block:
+  - name: Allacritty | Add package repository
+    apt_repository:
+      repo: "ppa:papirus/papirus"
+      filename: papirus
+      update_cache: yes
+      state: present
+    become: true
+    when: papirus_repository_exists.stat.exists == False
+  - name: Icon | Papirus | Install the package
+    package:
+      name: "{{ papirus_package }}"
+      state: present
+      force_apt_get: true
+    loop:
+      - papirus-icon-theme
+      - papirus-folders
+    loop_control:
+      loop_var: papirus_package
+    become: true
+  when: ansible_facts.packages['papirus-icon-theme'] is not defined and papirus_repository_release_exists.status == 200

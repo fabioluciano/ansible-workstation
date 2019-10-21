@@ -1,0 +1,28 @@
+---
+- name: GIMP | Check if is present
+  stat:
+    path: /usr/bin/gimp
+  register: gimp_bin_path
+
+- name: GIMP | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/otto-kesselgulasch/gimp/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: gimp_repo
+
+- name: GIMP | Add package repository
+  apt_repository:
+    repo: "ppa:otto-kesselgulasch/gimp"
+    filename: androidstudio
+    update_cache: yes
+    state: present
+  become: true
+  when: gimp_repo.status == 200
+
+- name: GIMP | Install the package
+  package:
+    name: gimp
+    state: present
+    force_apt_get: true
+  become: true
+  when: gimp_bin_path.stat.exists == False and gimp_repo.status == 200

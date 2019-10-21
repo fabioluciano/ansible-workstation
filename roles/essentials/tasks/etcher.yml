@@ -5,6 +5,9 @@
 
 - name: Etcher | Install or Upgrade
   block:
+    - name: Etcher | Recover package facts
+      package_facts:
+        manager: apt
     - name: Etcher | Install dependencies
       package:
         state: present
@@ -17,21 +20,25 @@
         - libpangox-1.0-0
       loop_control:
         loop_var: etcher_dependency
-      become: yes
+      become: true
+      when: etcher_exists.stat.exists == False
     - name: Etcher | Recover all releases
       uri:
         url: https://api.github.com/repos/balena-io/etcher/releases
         return_content: true
         body_format: json
       register: etcher_releases_response
-    - name: Etcher | Get deb URL from latest version
+    - name: Etcher | Get deb latest version URL
       set_fact:
-        etcher_deb_download_url: "{{ etcher_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `_amd64.deb`)].browser_download_url') }}"
-    # - name: Etcher | Install deb file
-    #   apt:
-    #     deb: "{{ dive_deb_download_url }}"
-    #   become: yes
-  when: etcher_exists.stat.exists == False 
-
-
-
+        etcher_deb_download_url: "{{ etcher_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+    - name: Etcher | Set latest avaliable version
+      set_fact:
+        etcher_latest_version: "{{ etcher_deb_download_url | regex_findall('v(\\d+\\.\\d+\\.\\d+)') | first }}"
+    - name: Etcher | Set local version
+      set_fact:
+        etcher_local_version: "{{ ansible_facts.packages['balena-etcher-electron'][0].version }}"
+    - name: Etcher | Install deb file
+      apt:
+        deb: "{{ etcher_deb_download_url }}"
+      become: true
+      when: etcher_local_version != etcher_latest_version or etcher_exists.stat.exists == False

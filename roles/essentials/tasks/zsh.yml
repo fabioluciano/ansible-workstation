@@ -12,7 +12,7 @@
         name: zsh
         state: present
         force_apt_get: true
-      become: yes
+      become: true
     - name: ZSH | Antigen | Download
       get_url:
         url: https://git.io/antigen
@@ -22,9 +22,9 @@
       copy:
         src: zshrc
         dest: "{{ ansible_env.HOME }}/.zshrc"
-    - name: ZSH | Change default shell to zsh
+    - name: Terminal | ZSH | Change default shell to zsh
       user:
         name: "{{ ansible_user }}"
         shell: /usr/bin/zsh
-      become: yes
+      become: true
   when: zsh_exists.stat.exists == False

@@ -17,7 +17,7 @@
       - curl
     loop_control:
       loop_var: spacevim_dependency
-    become: yes
+    become: true
   - name: SpaceVim | Download the installer
     get_url:
       url: https://spacevim.org/install.sh

@@ -1,28 +1,39 @@
 ---
-- name: Check if Libre Office is present
+- name: Libre Office | Check if is present
   stat:
     path: /usr/bin/libreoffice
   register: libreoffice_exists
 
-- name: Libre Office | Install Libre Office
-  block:
-  - name: Libre Office | Add package repository
-    apt_repository:
-      repo: "ppa:libreoffice/ppa"
-      filename: libreoffice
-      update_cache: yes
-      state: present
-    become: yes
-  - name: Libre Office | Install the package
-    package:
-      name: "{{ libreoffice_dependency }}"
-      state: present
-      force_apt_get: true
-    become: yes
-    loop:
-      - libreoffice
-      - libreoffice-l10n-pt-br
-      - libreoffice-style-sifr
-    loop_control:
-      loop_var: libreoffice_dependency
+- name: Libre Office | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/libreoffice/ppa/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: libreoffice_repository_release_exists
+
+- name: Libre Office  | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/libreoffice.list
+  register: libreoffice_repository_exists
+
+- name: Libre Office | Add package repository
+  apt_repository:
+    repo: "ppa:libreoffice/ppa"
+    filename: libreoffice
+    update_cache: yes
+    state: present
+  become: true
+  when: libreoffice_repository_release_exists == True and libreoffice_repository_exists == False
+  
+- name: Libre Office | Install the package
+  package:
+    name: "{{ libreoffice_dependency }}"
+    state: present
+    force_apt_get: true
+  become: true
+  loop:
+    - libreoffice
+    - libreoffice-l10n-pt-br
+    - libreoffice-style-sifr
+  loop_control:
+    loop_var: libreoffice_dependency
   when: libreoffice_exists.stat.exists == False

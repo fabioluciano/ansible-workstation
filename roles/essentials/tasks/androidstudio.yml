@@ -1,0 +1,28 @@
+---
+- name: Android Studio | Check if is present
+  stat:
+    path: /opt/android-studio/bin/studio.sh
+  register: androidstudio_bin_path
+
+- name: Android Studio | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/maarten-fonville/android-studio/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: androidstudio_repo
+
+- name: Android Studio | Add package repository
+  apt_repository:
+    repo: "ppa:maarten-fonville/android-studio"
+    filename: androidstudio
+    update_cache: yes
+    state: present
+  become: true
+  when: androidstudio_repo.status == 200
+
+- name: Android Studio | Install the package
+  package:
+    name: android-studio
+    state: present
+    force_apt_get: true
+  become: true
+  when: androidstudio_bin_path.stat.exists == False and androidstudio_repo.status == 200

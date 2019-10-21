@@ -1,0 +1,6 @@
+---
+- name: Altair | Install the snap
+  snap:
+    name: altair
+    state: present
+  become: true

@@ -1,0 +1,7 @@
+---
+- name: Kubectl | Install the snap
+  snap:
+    name: kubectl
+    state: present
+    classic: true
+  become: true

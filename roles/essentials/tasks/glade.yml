@@ -1,0 +1,12 @@
+---
+- name: Glade | Check if is installed
+  stat:
+    path: /usr/bin/glade
+  register: glade_bin
+- name: Glade | Install the package
+  package:
+    name: glade
+    state: latest
+    force_apt_get: true
+  become: true
+  when: glade_bin.stat.exists == False

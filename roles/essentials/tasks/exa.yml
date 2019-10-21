@@ -1,0 +1,42 @@
+- name: Exa | Check if is present
+  stat:
+    path: /usr/local/bin/exa
+  register: exa_bin_path
+
+- name: Exa | Check avaliable version
+  command: /usr/local/bin/exa -v
+  register: exa_bin_version
+  ignore_errors: true
+
+- name: Exa | Register local version
+  set_fact:
+    exa_local_version: "{{ exa_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: exa_bin_version.rc == 0
+
+- name: Exa | Recover all releases
+  uri:
+    url: https://api.github.com/repos/ogham/exa/releases
+    return_content: true
+    body_format: json
+  register: exa_releases_response
+
+- name: Exa | Get latest version URL
+  set_fact:
+    exa_download_url: "{{ exa_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `.zip`)].browser_download_url') | first }}"
+
+- name: Exa | Set latest remote version
+  set_fact:
+    exa_remote_version: "{{ exa_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Exa | Install or Upgrade
+  block:
+    - name: Exa | Unarchive the binary
+      unarchive:
+        src: "{{ exa_download_url }}"
+        dest: /usr/local/bin
+        remote_src: true
+      become: true
+    - name: Exa | Rename the binary
+      shell: mv /usr/local/bin/exa-linux* /usr/local/bin/exa
+      become: true
+  when: exa_bin_path.stat.exists == False or exa_remote_version != exa_local_version

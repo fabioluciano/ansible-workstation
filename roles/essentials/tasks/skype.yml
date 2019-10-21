@@ -1,0 +1,33 @@
+---
+- name: Skype | Check if is present
+  stat:
+    path: /usr/bin/skypeforlinux
+  register: skype_bin_path
+
+- name: Skype | Ensure that exists a version in this release
+  uri:
+    url: "https://repo.skype.com/deb/dists/stable/"
+  ignore_errors: yes
+  register: skype_repo
+
+- name: Skype | Install or Upgrade
+  block:
+  - name: Skype | Add apt key
+    apt_key:
+      url: https://repo.skype.com/data/SKYPE-GPG-KEY
+      state: present
+    become: true
+  - name: Skype | Add package repository
+    apt_repository:
+      repo: "deb [arch=amd64] https://repo.skype.com/deb stable main"
+      filename: skype-stable
+      update_cache: yes
+      state: present
+    become: true
+  - name: Skype | Install the package
+    package:
+      name: skypeforlinux
+      state: present
+      force_apt_get: true
+    become: true
+  when: skype_bin_path.stat.exists == False and skype_repo.status == 200

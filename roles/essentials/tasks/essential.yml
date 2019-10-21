@@ -4,7 +4,7 @@
     name: "{{ essential_dependency }}"
     state: latest
     force_apt_get: yes
-  become: yes
+  become: true
   loop:
     - vim
     - curl

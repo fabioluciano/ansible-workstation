@@ -12,26 +12,26 @@
 
 - name: Flatpak | Ensure that the updated repository is present
   block:
-  - name: Ensure that the repository is present
+  - name: Flatpak | Ensure that the repository is present
     apt_repository:
       repo: ppa:alexlarsson/flatpak
       state: present
       update_cache: yes
       filename: flatpak
-    become: yes
+    become: true
     when: flatpak_repository_exists.stat.exists == False and flatpack_repository_release_exists.status == 200
-  - name: Ensures that the package flatpak is installed
+  - name: Flatpak | Ensures that the package flatpak is installed
     package:
       name: "{{ flatpak_depedency }}"
       state: latest
       force_apt_get: yes
-    become: yes
+    become: true
     with_list:
       - flatpak
       - gnome-software-plugin-flatpak
     loop_control:
       loop_var: flatpak_depedency
-  - name: Add the flathub flatpak repository remote to the user installation
+  - name: Flatpak | Add the flathub repository remote to the user installation
     flatpak_remote:
       name: flathub
       state: present

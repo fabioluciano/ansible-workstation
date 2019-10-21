@@ -1,0 +1,28 @@
+---
+- name: Synapse | Check if is present
+  stat:
+    path: /usr/bin/synapse
+  register: synapse_bin_path
+
+- name: Synapse | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/synapse-core/testing/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: synapse_repo
+
+- name: Synapse | Add package repository
+  apt_repository:
+    repo: "ppa:synapse-core/testing"
+    filename: synapse
+    update_cache: yes
+    state: present
+  become: true
+  when: synapse_repo.status == 200
+
+- name: Synapse | Install the package
+  package:
+    name: synapse
+    state: present
+    force_apt_get: true
+  become: true
+  when: synapse_bin_path.stat.exists == False

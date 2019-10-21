@@ -1,0 +1,28 @@
+---
+- name: Peek | Check if is present
+  stat:
+    path: /usr/bin/peek
+  register: peek_bin_path
+
+- name: Peek | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/peek-developers/stable/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: peek_repo
+
+- name: Peek | Add package repository
+  apt_repository:
+    repo: "ppa:peek-developers/stable"
+    filename: peek
+    update_cache: yes
+    state: present
+  become: true
+  when: peek_repo.status == 200
+
+- name: Peek | Install the package
+  package:
+    name: peek
+    state: present
+    force_apt_get: true
+  become: true
+  when: peek_bin_path.stat.exists == False and peek_repo.status == 200

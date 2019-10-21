@@ -1,0 +1,28 @@
+---
+- name: VLC | Check if is present
+  stat:
+    path: /usr/bin/vlc
+  register: vlc_bin_path
+
+- name: VLC | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/videolan/master-daily/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: vlc_repo
+
+- name: VLC | Add package repository
+  apt_repository:
+    repo: "ppa:videolan/master-daily"
+    filename: vlc
+    update_cache: yes
+    state: present
+  become: true
+  when: vlc_repo.status == 200
+
+- name: VLC | Install the package
+  package:
+    name: vlc
+    state: present
+    force_apt_get: true
+  become: true
+  when: vlc_bin_path.stat.exists == False

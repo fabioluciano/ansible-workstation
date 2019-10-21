@@ -1,0 +1,41 @@
+---
+- name: Codecs | Ensures that all packages are present
+  package:
+    name: "{{ codecs_depedency }}"
+    state: latest
+    force_apt_get: yes
+  become: true
+  with_list:
+    - libavcodec-extra
+    - libdvdread4
+    - icedax
+    - ffmpeg
+    - easytag
+    - id3tool
+    - lame
+    - libmad0
+    - mpg321
+    - faac
+    - faad
+    - ffmpeg2theora
+    - flac
+    - icedax
+    - id3v2
+    - lame
+    - libflac++6v5
+    - libjpeg-progs
+    - mjpegtools
+    - mpeg2dec
+    - mpeg3-utils
+    - mpegdemux
+    - mpg123
+    - mpg321
+    - regionset
+    - sox
+    - uudeview
+    - vorbis-tools
+    - x264
+    - audacious
+    - ubuntu-restricted-extras
+  loop_control:
+    loop_var: codecs_depedency

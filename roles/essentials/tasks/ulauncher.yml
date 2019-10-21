@@ -4,7 +4,7 @@
     path: /usr/bin/ulauncher
   register: ulauncher_exists
 
-- name: Alacritty | Ensure that exists a version in this release
+- name: Ulauncher | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/agornostal/ulauncher/ubuntu/dists/{{ ansible_distribution_release }}/"
   ignore_errors: yes
@@ -18,11 +18,11 @@
       filename: ulauncher
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: Ulauncher | Install the package
     package:
       name: ulauncher
-      state: present
+      state: latest
       force_apt_get: true
-    become: yes
+    become: true
   when: ulauncher_exists.stat.exists == False and ulauncher_repository_release_exists.status == 200

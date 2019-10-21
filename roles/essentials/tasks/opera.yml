@@ -1,0 +1,25 @@
+- name: Opera | Check if is installed
+  stat:
+    path: /usr/bin/opera
+  register: opera_exists
+- name: Opera | Install the package
+  block:
+    - name: Opera | Add the key for apt
+      apt_key:
+        url: http://deb.opera.com/archive.key
+        state: present
+      become: true
+    - name: Opera | Add package repository
+      apt_repository:
+        repo: "deb https://deb.opera.com/opera-stable/ stable non-free"
+        state: present
+        update_cache: yes
+        filename: opera-stable
+      become: true
+    - name: Opera | Install the package
+      package:
+        name: opera-stable
+        state: present
+        force_apt_get: true
+      become: true
+  when: opera_exists.stat.exists == False

@@ -1,0 +1,26 @@
+---
+- name: Google Chrome | Check if is installed
+  stat:
+    path: /usr/bin/google-chrome
+  register: google_chrome_exists
+- name: Google Chrome | Install the package
+  block:
+  - name: Google Chrome | Add apt key
+    apt_key:
+      url: https://dl-ssl.google.com/linux/linux_signing_key.pub
+      state: present
+    become: true
+  - name: Google Chrome | Add package repository
+    apt_repository:
+      repo: "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
+      filename: google-chrome
+      update_cache: yes
+      state: present
+    become: true
+  - name: Google Chrome | Install the package
+    package:
+      name: google-chrome-stable
+      state: present
+      force_apt_get: true
+    become: true
+  when: google_chrome_exists.stat.exists == False

@@ -27,7 +27,7 @@
       src: "{{ terraform_download_url }}"
       dest: /usr/local/bin/
       remote_src: true
-    become: yes
+    become: true
     when: terraform_latest_avaliable_version != terraform_local_version
   tags:
     - hashicorp
@@ -61,7 +61,7 @@
       src: "{{ packer_download_url }}"
       dest: /usr/local/bin/
       remote_src: true
-    become: yes
+    become: true
     when: packer_latest_avaliable_version != packer_local_version
   tags:
     - hashicorp
@@ -95,7 +95,7 @@
       src: "{{ vagrant_download_url }}"
       dest: /usr/local/bin/
       remote_src: true
-    become: yes
+    become: true
     when: vagrant_latest_avaliable_version != vagrant_local_version
   tags:
     - hashicorp

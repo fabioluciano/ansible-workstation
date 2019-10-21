@@ -23,11 +23,11 @@
       filename: alacritty
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: Allacritty | Install the package
     package:
       name: alacritty
       state: present
       force_apt_get: true
-    become: yes
-  when: alacritty_exists.stat.exists == False and flatpack_repository_release_exists.status == 200
+    become: true
+  when: alacritty_exists.stat.exists == False and alacritty_repository_release_exists.status == 200

@@ -1,0 +1,6 @@
+---
+- name: Pycharm | Install the package
+  flatpak:
+    name: ccom.jetbrains.PyCharm-Community
+    state: present
+    method: user

@@ -12,11 +12,11 @@
       filename: whisker
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: Whisker | Install the package
     package:
       name: xfce4-whiskermenu-plugin
       state: latest
       force_apt_get: true
-    become: yes
+    become: true
   when: whisker_exists.stat.exists == False

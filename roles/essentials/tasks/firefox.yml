@@ -1,0 +1,11 @@
+---
+- name: Firefox | Check if is installed
+  stat:
+    path: /usr/bin/firefox
+  register: firefox_exists
+- name: Firefox | Install the package
+  package:
+    name: firefox
+    state: latest
+  become: true
+  when: firefox_exists.stat.exists == False

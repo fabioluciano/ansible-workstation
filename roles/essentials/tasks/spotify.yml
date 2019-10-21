@@ -9,18 +9,18 @@
     apt_key:
       url: https://download.spotify.com/debian/pubkey.gpg
       state: present
-    become: yes
+    become: true
   - name: Spotify | Add Spotify repository
     apt_repository:
       repo: "deb http://repository.spotify.com stable non-free"
       filename: spotify
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: Spotify | Install the package
     package:
       name: spotify-client
       state: present
       force_apt_get: true
-    become: yes
+    become: true
   when: spotify_exists.stat.exists == False

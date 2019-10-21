@@ -1,17 +1,17 @@
 ---
-- name: Ensure that the user font directory exists
+- name: Fonts | Ensure that the user font directory exists
   file:
     state: directory
     path: "{{ ansible_env.HOME }}/.fonts"
   tags:
     - fonts
 
-- name: Check if Cascadia font exists
+- name: Fonts | Check if Cascadia font exists
   stat:
     path: "{{ ansible_env.HOME }}/.fonts/Cascadia.ttf"
   register: fontscascadia_exists
 
-- name: Ensure the download of MS Cascadia font
+- name: Fonts | Ensure the download of MS Cascadia font
   get_url:
     url: https://github.com/microsoft/cascadia-code/releases/download/v1910.04/Cascadia.ttf
     dest: "{{ ansible_env.HOME }}/.fonts"
@@ -20,27 +20,27 @@
     - cascadia
   when: fontscascadia_exists.stat.exists == False
 
-- name: Check if FiraCode font exists
+- name: Fonts | Check if FiraCode font exists
   stat:
     path: "{{ ansible_env.HOME }}/.fonts/FiraCode-Regular.ttf"
   register: fontsfiracode_exists
 
-- name: Downloads and install FiraCode font
+- name: Fonts | Downloads and install FiraCode font
   block:
-  - name: Create temporary directory
+  - name: Fonts | Create temporary directory
     tempfile:
       state: directory
     register: firacode_tempdirectory
-  - name: Unarchive the FiraCode zip
+  - name: Fonts | Unarchive the FiraCode zip
     unarchive:
       src: https://github.com/tonsky/FiraCode/releases/download/2/FiraCode_2.zip
       dest: "{{ firacode_tempdirectory.path }}"
       remote_src: true
-  - name: Ensure that the ttf fonts are moved to the fonts directory
+  - name: Fonts | Ensure that the ttf fonts are moved to the fonts directory
     synchronize:
       src: "{{ firacode_tempdirectory.path }}/ttf/"
       dest: "{{ ansible_env.HOME }}/.fonts"
-  - name: Ensure that the temporary dictory is removed
+  - name: Fonts | Ensure that the temporary dictory is removed
     file:
       path: "{{ firacode_tempdirectory.path }}"
       state: absent
@@ -49,28 +49,28 @@
     - firacode
   when: fontsfiracode_exists.stat.exists == False
 
-- name: Check if FiraCode font exists
+- name: Fonts | Check if MS Fonts exists
   stat:
     path: "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"
   register: msttcorefonts_exists
 
-- name: Configure and install MS Fonts
+- name: Fonts | Configure and install MS Fonts
   block:
-    - name: Programaticaly accept the eula agreement
+    - name: Fonts | Programaticaly accept the eula agreement
       shell: echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-      become: yes
-    - name: Ensures that the ttf-mscorefonts-installer is installed
+      become: true
+    - name: Fonts | Ensures that the ttf-mscorefonts-installer is installed
       package:
         name: ttf-mscorefonts-installer
         state: latest
         force_apt_get: yes
-      become: yes
+      become: true
   tags:
     - fonts
     - mscorefonts
   when: msttcorefonts_exists.stat.exists == False
 
-- name: Ensure that the font cache is updated
+- name: Fonts | Ensure that the font cache is updated
   shell: fc-cache -f -v
   become: no
   tags:

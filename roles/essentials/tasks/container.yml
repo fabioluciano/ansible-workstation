@@ -1,53 +1,8 @@
 ---
-- name: Docker | Check if is present
-  stat:
-    path: /usr/bin/docker
-  register: docker_exists
-
-- name: Docker | Ensure that exists a version in this release
-  uri:
-    url: "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/"
-  ignore_errors: yes
-  register: docker_repository_release_exists
-- name: Docker | Install or Upgrade
-  block:
-  - name: Docker | Add apt key
-    apt_key:
-      url: https://download.docker.com/linux/ubuntu/gpg
-      state: present
-    become: yes
-  - name: Docker | Add package repository
-    apt_repository:
-      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
-      filename: docker
-      update_cache: yes
-      state: present
-    become: yes
-  - name: Docker | Install the package
-    package:
-      name: docker-ce
-      state: present
-      force_apt_get: true
-    become: yes
-  when: docker_exists.stat.exists == False and docker_repository_release_exists.status == 200
-
-- name: Dive | Check if is present
-  stat:
-    path: /usr/local/bin/dive
-  register: dive_exists
-- name: Dive | Install or Upgrade
-  block:
-    - name: Dive | Recover all releases
-      uri:
-        url: https://api.github.com/repos/wagoodman/dive/releases
-        return_content: true
-        body_format: json
-      register: dive_releases_response
-    - name: Dive | Get deb url from latest version
-      set_fact:
-        dive_deb_download_url: "{{ dive_releases_response.content | from_json | first | json_query('assets[?content_type==`application/vnd.debian.binary-package`].browser_download_url') | first }}"
-    - name: Dive | Install deb file
-      apt:
-        deb: "{{ dive_deb_download_url }}"
-      become: yes
-  when: dive_exists.stat.exists == False 
+- name: Container | Include related tasks
+  include_tasks: "{{ container_tasks }}.yml"
+  loop:
+    - docker
+    - dive
+  loop_control:
+    loop_var: container_tasks

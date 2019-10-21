@@ -1,0 +1,25 @@
+---
+- name: Xubuntu Dev | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/xubuntu-dev/extras/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: xubuntudev_remote_repo
+
+- name: Xubuntu Dev | Add package repository
+  apt_repository:
+    repo: "ppa:xubuntu-dev/extras"
+    filename: xubuntudev-extras
+    update_cache: yes
+    state: present
+  become: true
+  when: xubuntudev_remote_repo.status == 200
+
+- name: Xubuntu Dev | Install or Upgrade
+  block:
+  - name: Xubuntu Dev | Install the package
+    package:
+      name: thunar-shares-plugin
+      state: present
+      force_apt_get: true
+    become: true
+  when: xubuntudev_remote_repo.status == 200

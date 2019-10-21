@@ -1,0 +1,31 @@
+- name: DBeaver | Check if is present
+  stat:
+    path: /usr/share/dbeaver/dbeaver
+  register: dbeaver_exists
+
+- name: DBeaver | Install or Upgrade
+  block:
+    - name: DBeaver | Recover package facts
+      package_facts:
+        manager: apt
+    - name: DBeaver | Recover all releases
+      uri:
+        url: https://api.github.com/repos/dbeaver/dbeaver/releases
+        return_content: true
+        body_format: json
+      register: dbeaver_releases_response
+    - name: DBeaver | Get deb latest version URL
+      set_fact:
+        dbeaver_deb_download_url: "{{ dbeaver_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+    - name: DBeaver | Set latest avaliable version
+      set_fact:
+        dbeaver_latest_version: "{{ dbeaver_deb_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+    - name: DBeaver | Set local version
+      set_fact:
+        dbeaver_local_version: "{{ ansible_facts.packages['dbeaver-ce'][0].version }}"
+    - name: DBeaver | Install deb file
+      apt:
+        deb: "{{ dbeaver_deb_download_url }}"
+        force_apt_get: yes
+      become: true
+      when: dbeaver_local_version != dbeaver_latest_version or dbeaver_exists.stat.exists == False

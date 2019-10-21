@@ -1,0 +1,59 @@
+---
+- name: Other | Ensures that all packages are present
+  package:
+    name: "{{ others_depedency }}"
+    state: latest
+    force_apt_get: yes
+  become: true
+  with_list:
+    - indicator-multiload
+    - pidgin
+    - adobe-flashplugin
+    - pgadmin3
+    - subversion
+    - meld
+    - git-flow
+    - dia
+    - blender
+    - gparted
+    - menulibre
+    - htop
+    - preload
+    - filezilla
+    - xfce4-goodies
+    - mugshot
+    - ncurses-term
+    - lm-sensors
+    - hddtemp
+    - tlp
+    - tlp-rdw
+    - tp-smapi-dkms
+    - smartmontools
+    - ethtool
+    - hexchat
+    - network-manager-pptp-gnome
+    - pcmanfm
+    - thunar-dropbox-plugin
+    - font-manager
+    - atril
+    - arj
+    - p7zip
+    - p7zip-full
+    - p7zip-rar
+    - unrar
+    - unace-nonfree
+    - unace
+    - zip
+    - unzip
+    - sharutils
+    - rar
+    - uudeview
+    - mpack
+    - arj
+    - cabextract
+    - file-roller
+    - remmina
+    - intel-microcode
+    - nvidia-driver-390
+  loop_control:
+    loop_var: others_depedency

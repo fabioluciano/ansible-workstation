@@ -16,25 +16,25 @@
     apt_key:
       url: https://www.virtualbox.org/download/oracle_vbox_2016.asc
       state: present
-    become: yes
+    become: true
   - name: VirtualBox | Add current apt key
     apt_key:
       url: https://www.virtualbox.org/download/oracle_vbox.asc
       state: present
-    become: yes
+    become: true
   - name: VirtualBox | Add repository
     apt_repository:
       repo: "deb [arch=amd64] https://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
       filename: virtualbox
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: VirtualBox | Install the package
     package:
       name: virtualbox-6.0
       state: present
       force_apt_get: true
-    become: yes
+    become: true
   when: virtualbox_exists.stat.exists == False and virtualbox_repository_release_exists.status == 200
 
 - name: VirtualBox Extensions | Install or Upgrade
@@ -55,7 +55,7 @@
       register: extension_pack_path
     - name: VirtualBox Extensions | Install extension pack
       shell: "printf \"y\n\" | VBoxManage extpack install --replace {{ extension_pack_path.dest }}"
-      become: yes
+      become: true
     - name: VirtualBox Extensions | Remove local copy of extension pack
       file:
         path: "{{ extension_pack_path.dest }}"

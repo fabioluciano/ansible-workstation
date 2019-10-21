@@ -1,0 +1,34 @@
+- name: Compiz | Check if is present
+  stat:
+    path: /opt/balenacompiz/balena-compiz-electron
+  register: compiz_exists
+
+- name: Compiz | Install or Upgrade
+  block:
+    - name: Compiz | Install dependencies
+      package:
+        state: present
+        name: "{{ compiz_dependency }}"
+        force_apt_get: true
+      loop:
+        - compiz
+        - compizconfig-settings-manager
+        - compiz-core 
+        - compiz-plugins 
+        - compiz-plugins-default
+        - compiz-plugins-extra
+        - compiz-plugins-main
+        - compiz-plugins-main-default
+      loop_control:
+        loop_var: compiz_dependency
+      become: true
+    - name: Compiz | Ensure that configuration directory exists
+      file:
+        state: directory
+        path: "{{ ansible_env.HOME }}/.config/compiz-1/compizconfig/"
+    - name: Compiz | Copy configuration file
+      copy:
+        src: compiz.profile
+        dest: "{{ ansible_env.HOME }}/.config/compiz-1/compizconfig/Default.ini"
+    - name: Compiz | Define as default session manager
+      shell: "xfconf-query -c xfce4-session -p /sessions/Failsafe/Client0_Command -t string -t string -s compiz -s ccp"

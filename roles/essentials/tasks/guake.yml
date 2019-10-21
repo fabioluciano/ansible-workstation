@@ -1,0 +1,30 @@
+---
+- name: Guake | Check if is present
+  stat:
+    path: /usr/bin/guake
+  register: guake_bin_path
+
+- name: Guake | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/linuxuprising/guake/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: guake_remote_repo
+
+- name: Guake | Add package repository
+  apt_repository:
+    repo: "linuxuprising/guake"
+    filename: guake
+    update_cache: yes
+    state: present
+  become: true
+  when: guake_remote_repo.status == 200
+
+- name: Guake | Install or Upgrade
+  block:
+  - name: Guake | Install the package
+    package:
+      name: guake
+      state: present
+      force_apt_get: true
+    become: true
+  when: guake_bin_path.stat.exists == False

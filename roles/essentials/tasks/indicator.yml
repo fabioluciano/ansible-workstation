@@ -1,0 +1,32 @@
+---
+- name: Indicators | Atareao | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/atareao/atareao/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: atareao_atareao_repository_release_exists
+
+- name: Indicators | Atareao  | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/atareao_atareao.list
+  register: atareao_atareao_repository_exists
+
+- name: Indicators | Atareao | Add package repository
+  apt_repository:
+    repo: "ppa:atareao/atareao"
+    filename: libreoffice
+    update_cache: yes
+    state: present
+  become: true
+  when: atareao_atareao_repository_release_exists.status == 200 and atareao_atareao_repository_exists.stat.exists == False
+  
+- name: Indicators | Atareao | Install the package
+  package:
+    name: "{{ atareao_atareao_dependency }}"
+    state: present
+    force_apt_get: true
+  become: true
+  loop:
+    - calendar-indicator
+    - touchpad-indicator
+  loop_control:
+    loop_var: atareao_atareao_dependency

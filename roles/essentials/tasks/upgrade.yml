@@ -1,39 +1,35 @@
 ---
-- name: Upgrade the Apt related packages
+- name: Upgrade | Execute all apt related tasks
   block:
-    - name: Update APT package cache
+    - name: Upgrade | Update cache
       apt: 
         update_cache: yes
         cache_valid_time: 600
         force_apt_get: yes
-      become: yes
-    - name: Upgrade APT to the latest packages
+      become: true
+    - name: Upgrade | Ensure that all packages are upgraded
       apt: 
         upgrade: dist
         force_apt_get: yes
       register: apt_result
-      become: yes
-    - name: Autoremove unused packages
+      become: true
+    - name: Upgrade | Autoremove unused packages
       apt: 
         autoremove: yes
         force_apt_get: yes
       register: apt_result
       changed_when: "'packages will be REMOVED' in apt_result.stdout"
-      become: yes
+      become: true
 
-- name: Check if flatpak exists
+- name: Upgrade | Check if flatpak exists
   stat:
     path: /usr/bin/flatpak
   register: flatpak_exists
   
-- name: Upgrade Flatpak related packages
-  block:
-    - name: Execute
-      shell: flatpak update -y
+- name: Upgrade | Upgrade Flatpak related packages
+    shell: flatpak update -y
   when: flatpak_exists.stat.exists == True
 
-- name: Upgrade Snap related packages
-  block:
-    - name: Execute
-      shell: snap refresh
-      become: yes
+- name: Upgrade | Upgrade Snap related packages
+  shell: snap refresh
+  become: true

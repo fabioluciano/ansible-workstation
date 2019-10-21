@@ -12,11 +12,11 @@
       filename: plank
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: Plank | Install the package
     package:
       name: plank
       state: present
       force_apt_get: true
-    become: yes
+    become: true
   when: plank_exists.stat.exists == False

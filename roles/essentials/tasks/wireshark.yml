@@ -1,0 +1,28 @@
+---
+- name: Wireshark | Check if is present
+  stat:
+    path: /usr/bin/wireshark
+  register: wireshark_bin_path
+
+- name: Wireshark | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/wireshark-dev/stable/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: wireshark_repo
+
+- name: Wireshark | Add package repository
+  apt_repository:
+    repo: "ppa:wireshark-dev/stable"
+    filename: wireshark
+    update_cache: yes
+    state: present
+  become: true
+  when: wireshark_repo.status == 200
+
+- name: Wireshark | Install the package
+  package:
+    name: wireshark
+    state: present
+    force_apt_get: true
+  become: true
+  when: wireshark_bin_path.stat.exists == False

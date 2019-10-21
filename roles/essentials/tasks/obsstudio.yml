@@ -12,11 +12,11 @@
       filename: obs-studio
       update_cache: yes
       state: present
-    become: yes
+    become: true
   - name: OBS Studio | Install the package
     package:
       name: obs-studio
       state: present
       force_apt_get: true
-    become: yes
+    become: true
   when: obsstudio_exists.stat.exists == False

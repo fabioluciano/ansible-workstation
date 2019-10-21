@@ -1,0 +1,26 @@
+- name: Vivaldi | Check if is installed
+  stat:
+    path: /usr/bin/vivaldi
+  register: vivaldi_exists
+  
+- name: Vivaldi | Install the package
+  block:
+    - name: Vivaldi | Add the key for apt
+      apt_key:
+        url: https://repo.vivaldi.com/archive/linux_signing_key.pub
+        state: present
+      become: true
+    - name: Vivaldi | add package repository
+      apt_repository:
+        repo: "deb https://repo.vivaldi.com/archive/deb/ stable main"
+        state: present
+        filename: vivaldi
+        update_cache: yes
+      become: true
+    - name: Vivaldi | Install the package
+      package:
+        name: vivaldi-stable
+        state: present
+        force_apt_get: true
+      become: true
+  when: vivaldi_exists.stat.exists == False

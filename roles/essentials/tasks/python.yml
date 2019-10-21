@@ -14,3 +14,7 @@
       pip:
         name: venv
         state: present
+    - name: Python | Add jmespath package
+      pip:
+        name: jmespath
+        state: present

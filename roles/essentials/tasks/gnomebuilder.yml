@@ -1,0 +1,6 @@
+---
+- name: Gnome Builder | Install the package
+  flatpak:
+    name: org.gnome.Builder
+    state: present
+    method: user

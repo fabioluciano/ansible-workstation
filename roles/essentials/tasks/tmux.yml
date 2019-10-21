@@ -2,7 +2,7 @@
 
 - name: Check if Tmux is present
   stat:
-    path: /usr/bin/tmuxx
+    path: /usr/bin/tmux
   register: tmux_exists
 
 - name: Tmux | Install and configure
@@ -12,7 +12,7 @@
         name: tmux
         state: present
         force_apt_get: true
-      become: yes
+      become: true
     - name: Tmux | Install TMP
       git:
         repo: https://github.com/tmux-plugins/tpm

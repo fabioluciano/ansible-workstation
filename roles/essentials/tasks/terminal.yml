@@ -4,7 +4,7 @@
     repo: https://github.com/chriskempson/base16-shell
     dest: "{{ ansible_env.HOME }}/.config/base16-shell"
 
-- name: Includes the all terminal tasks
+- name: Terminal | Include related tasks
   include_tasks: "{{ terminal_tasks }}.yml"
   loop:
     - tmux
@@ -12,3 +12,7 @@
   loop_control:
     loop_var: terminal_tasks
 
+- name: Terminal | Copy configurations file
+  copy:
+    src: terminalrc
+    dest: "{{ ansible_env.HOME }}/.config/xfce4/terminal"

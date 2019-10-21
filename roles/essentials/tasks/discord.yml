@@ -1,0 +1,6 @@
+---
+- name: Discord | Install the package
+  flatpak:
+    name: com.discordapp.Discord
+    state: present
+    method: user

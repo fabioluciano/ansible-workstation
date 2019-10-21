@@ -1,0 +1,22 @@
+---
+- name: Check if Telegram is present
+  stat:
+    path: /opt/telegram/Telegram
+  register: telegram_exists
+
+- name: Telegram | Install the package
+  block:
+    - name: Telegram | Add package repository
+      apt_repository:
+        repo: "ppa:atareao/telegram"
+        state: present
+        update_cache: yes
+        filename: telegram
+      become: true
+    - name: Telegram | Install the package
+      package:
+        name: telegram
+        state: present
+        force_apt_get: true
+      become:  yes
+  when: telegram_exists.stat.exists == False

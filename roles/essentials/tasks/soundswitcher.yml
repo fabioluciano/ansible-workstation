@@ -1,0 +1,29 @@
+---
+- name: Sound Switcher | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/yktooo_ppa.list
+  register: yktooo_repo
+
+- name: Sound Switcher | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/yktooo/ppa/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: yktooo_remote_repo
+
+- name: Sound Switcher | Ensure that the updated repository is present
+  block:
+  - name: Sound Switcher | Ensure that the repository is present
+    apt_repository:
+      repo: ppa:yktooo/ppa
+      state: present
+      update_cache: yes
+      filename: yktooo_ppa
+    become: true    
+  - name: Sound Switcher | Ensures that the package is installed
+    package:
+      name: indicator-sound-switcher
+      state: latest
+      force_apt_get: yes
+    become: true
+  when: yktooo_repo.stat.exists == False and yktooo_remote_repo.status == 200
+

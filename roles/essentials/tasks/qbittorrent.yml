@@ -1,0 +1,28 @@
+---
+- name: Qbittorrent | Check if is present
+  stat:
+    path: /usr/bin/qbittorrent
+  register: qbittorrent_bin_path
+
+- name: Qbittorrent | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/qbittorrent-team/qbittorrent-stable/ubuntu/dists/{{ ansible_distribution_release }}/"
+  ignore_errors: yes
+  register: qbittorrent_repo
+
+- name: Qbittorrent | Add package repository
+  apt_repository:
+    repo: "ppa:qbittorrent-team/qbittorrent-stable"
+    filename: qbittorrent
+    update_cache: yes
+    state: present
+  become: true
+  when: qbittorrent_repo.status == 200
+
+- name: Qbittorrent | Install the package
+  package:
+    name: qbittorrent
+    state: present
+    force_apt_get: true
+  become: true
+  when: qbittorrent_bin_path.stat.exists == False

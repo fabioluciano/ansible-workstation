@@ -1,4 +1,8 @@
 ---
+
+	# sudo add-apt-repository ppa:linuxuprising/java -y
+	# echo oracle-java12-installer shared/accepted-oracle-license-v1-2 select true | sudo /usr/bin/debconf-set-selections
+	# sudo apt install -y oracle-java11-installer oracle-java12-set-default
 - name: JAVA | Install JDK8
   block:
   - name: Recover JDK8 download page

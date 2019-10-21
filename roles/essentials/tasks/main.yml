@@ -11,18 +11,47 @@
         # - terminal
         # - ide
         # - alacritty
-        # - browser        
+        # - browser
+        # - dbeaver
         # - libreoffice
-        # - container
         # - whisker
         # - spotify
+        # - papirus
+        # - hashicorp
+        # - compiz
+        # - indicator
+        # - exa
+
+        # - guake
+        # - container
         # - ulauncher
         # - virtualbox
         # - plank
         # - spacevim
-        # - hashicorp
         # - cloud_provider_cli
         # - tools
         # - obsstudio
         # - nvm
-        - etcher
+        # - etcher
+        # - androidstudio
+        # - postman
+        # - gimp
+        # - pycharm
+        # - gnomebuilder
+        # - glade
+        # - altair
+        # - shutter
+        # - xubuntudev
+        # - synapse
+        # - skype
+        # - qbittorrent
+        # - vlc
+        # - peek
+        # - wireshark
+        # - discord
+        # - inkscape
+        # - kubectl
+        # - microk8s
+        # - soundswitcher
+        # - codecs
+        - other
