@@ -68,6 +68,9 @@
   name = "lang#plantuml"
 
 [[layers]]
+  name = "lang#graphql"
+
+[[layers]]
   name = "lang#rust"
 
 [[layers]]
@@ -75,6 +78,10 @@
 
 [[layers]]
   name = "lang#typescript"
+
+[[layers]]
+  name = "checkers"
+  show_cursor_error = false
 
 [[layers]]
   name = "lang#vue"

@@ -32,6 +32,9 @@
     - ethtool
     - hexchat
     - network-manager-pptp-gnome
+    - network-manager-fortisslvpn-gnome
+    - network-manager-openconnect-gnome
+    - network-manager-openvpn-gnome
     - pcmanfm
     - thunar-dropbox-plugin
     - font-manager

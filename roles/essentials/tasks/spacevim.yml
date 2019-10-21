@@ -18,20 +18,44 @@
     loop_control:
       loop_var: spacevim_dependency
     become: true
+
   - name: SpaceVim | Download the installer
     get_url:
       url: https://spacevim.org/install.sh
       dest: /tmp/spacevim-installer.sh
       mode: '0555'
+
   - name: SpaceVim | Execute the installer
     shell: bash /tmp/spacevim-installer.sh
-    become: no
+
   - name: SpaceVim | Remove the installer
     file:
       state: absent
       path: /tmp/spacevim-installer.sh
+
   - name: SpaceVim | Copy configuration file
     synchronize:
       src: "init.toml"
       dest: "{{ ansible_env.HOME }}/.SpaceVim.d/"
-  when: spacevim_exists.stat.exists == False
+  # when: spacevim_exists.stat.exists == False
+
+- name: Spacevim | Layers | Ensure that the html dependency is present
+  shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g vscode-html-languageserver-bin"
+
+- name: Spacevim | Layers | Ensure that the markdown dependency is present
+  shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g prettier"
+
+- name: Spacevim | Layers | Ensure that the typescript dependency is present
+  shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g typescript"
+
+- pip:
+    name: "{{ spacevim_pip_depedency}}"
+    extra_args: --user
+  loop:
+    - flake8
+    - yapf
+    - autoflake
+    - isort
+    - coverage
+  loop_control:
+    loop_var: spacevim_pip_depedency

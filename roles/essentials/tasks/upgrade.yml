@@ -24,11 +24,11 @@
 - name: Upgrade | Check if flatpak exists
   stat:
     path: /usr/bin/flatpak
-  register: flatpak_exists
-  
+  register: flatpak_bin_path
+
 - name: Upgrade | Upgrade Flatpak related packages
-    shell: flatpak update -y
-  when: flatpak_exists.stat.exists == True
+  shell: flatpak update -y
+  when: flatpak_bin_path.stat.exists == True
 
 - name: Upgrade | Upgrade Snap related packages
   shell: snap refresh

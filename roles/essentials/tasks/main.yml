@@ -7,6 +7,7 @@
         # - essential
         # - flatpak
         # - upgrade
+
         # - fonts
         # - terminal
         # - ide
@@ -27,10 +28,11 @@
         # - ulauncher
         # - virtualbox
         # - plank
-        # - spacevim
+        - spacevim
         # - cloud_provider_cli
         # - tools
         # - obsstudio
+
         # - nvm
         # - etcher
         # - androidstudio
@@ -43,6 +45,7 @@
         # - shutter
         # - xubuntudev
         # - synapse
+
         # - skype
         # - qbittorrent
         # - vlc
@@ -54,4 +57,4 @@
         # - microk8s
         # - soundswitcher
         # - codecs
-        - other
+        # - other
