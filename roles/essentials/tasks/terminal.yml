@@ -9,6 +9,7 @@
   loop:
     - tmux
     - zsh
+    - alacritty
   loop_control:
     loop_var: terminal_tasks
 

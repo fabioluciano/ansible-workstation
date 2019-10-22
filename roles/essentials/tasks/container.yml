@@ -4,5 +4,6 @@
   loop:
     - docker
     - dive
+    - microk8s
   loop_control:
     loop_var: container_tasks

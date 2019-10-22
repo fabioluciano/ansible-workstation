@@ -4,31 +4,29 @@
     - name: Includes the Essentials related tasks
       include_tasks: "{{ item }}.yml"
       with_items:
-        # - essential
-        # - flatpak
-        # - upgrade
+        - essential
+        - flatpak
+        - upgrade
 
-        # - fonts
-        # - terminal
-        # - ide
-        # - alacritty
-        # - browser
-        # - dbeaver
-        # - libreoffice
-        # - whisker
-        # - spotify
-        # - papirus
-        # - hashicorp
-        # - compiz
-        # - indicator
-        # - exa
+        - fonts
+        - terminal
+        - ide
+        - browser
+        - dbeaver
+        - libreoffice
+        - whisker
+        - spotify
+        - papirus
+        - hashicorp
+        - compiz
+        - indicator
 
         # - guake
         # - container
         # - ulauncher
         # - virtualbox
         # - plank
-        - spacevim
+        # - spacevim
         # - cloud_provider_cli
         # - tools
         # - obsstudio

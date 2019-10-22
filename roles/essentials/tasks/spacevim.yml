@@ -48,8 +48,9 @@
 - name: Spacevim | Layers | Ensure that the typescript dependency is present
   shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g typescript"
 
-- pip:
-    name: "{{ spacevim_pip_depedency}}"
+- name: Spacevim | Layers | Ensure that the python dependency is present
+  pip:
+    name: "{{ spacevim_pip_depedency }}"
     extra_args: --user
   loop:
     - flake8

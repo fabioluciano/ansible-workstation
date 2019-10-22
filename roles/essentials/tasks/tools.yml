@@ -6,5 +6,12 @@
     - apachedirectory
     - whatsdesk
     - exa
+    - bat
+    - synapse
+    - ulauncher
+    - wireshark
+    - whatsdesk
+    - spacevim
+    - virtualbox
   loop_control:
     loop_var: tools_tasks
