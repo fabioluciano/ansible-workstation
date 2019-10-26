@@ -1,0 +1,10 @@
+---
+- name: Composer PHP | Check if is present
+  stat:
+    path: /usr/local/bin/composer
+  register: composer_bin_path
+
+- name: Composer PHP | install the package
+  shell: "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
+  become: true
+  when: composer_bin_path.stat.exists == False

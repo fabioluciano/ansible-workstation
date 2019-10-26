@@ -1,0 +1,37 @@
+- name: Docker Compose | Check if is present
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: dockercompose_bin_path
+
+- name: Docker Compose | Check avaliable version
+  command: /usr/local/bin/docker-compose -v
+  register: dockercompose_local_version
+  ignore_errors: true
+
+- name: Docker Compose | Register local version
+  set_fact:
+    exa_local_version: "{{ dockercompose_local_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+(\\-rc\\d+)?)') | first | first }}"
+  when: dockercompose_local_version.rc == 0
+
+- name: Docker Compose | Recover all releases
+  uri:
+    url: https://api.github.com/repos/docker/compose/releases?prerelease=false
+    return_content: true
+    body_format: json
+  register: dockercompose_releases_response
+
+- name: Docker Compose | Get latest version URL
+  set_fact:
+    dockercompose_download_url: "{{ dockercompose_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `-Linux-x86_64`)].browser_download_url') | first }}"
+
+- name: Docker Compose | Set latest remote version
+  set_fact:
+    dockercompose_remote_version: "{{ dockercompose_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+(\\-rc\\d+)?)') | first | first }}"
+
+- name: Docker Compose | Install or Upgrade
+  get_url:
+    url: "{{ dockercompose_download_url }}"
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+  become: true
+  when: dockercompose_bin_path.stat.exists == False or dockercompose_remote_version != dockercompose_local_version

@@ -4,10 +4,12 @@
     - name: Includes the Essentials related tasks
       include_tasks: "{{ item }}.yml"
       with_items:
+        - docker-compose
+        - composer
+        - sdkman
         - essential
         - flatpak
         - upgrade
-
         - fonts
         - terminal
         - ide
@@ -20,39 +22,37 @@
         - hashicorp
         - compiz
         - indicator
+        - guake
+        - container
+        - ulauncher
+        - virtualbox
+        - plank
+        - spacevim
+        - cloud_provider_cli
+        - tools
+        - obsstudio
+        - nvm
+        - etcher
+        - androidstudio
+        - postman
+        - gimp
+        - pycharm
+        - gnomebuilder
+        - glade
+        - altair
+        - shutter
+        - xubuntudev
+        - synapse
 
-        # - guake
-        # - container
-        # - ulauncher
-        # - virtualbox
-        # - plank
-        # - spacevim
-        # - cloud_provider_cli
-        # - tools
-        # - obsstudio
-
-        # - nvm
-        # - etcher
-        # - androidstudio
-        # - postman
-        # - gimp
-        # - pycharm
-        # - gnomebuilder
-        # - glade
-        # - altair
-        # - shutter
-        # - xubuntudev
-        # - synapse
-
-        # - skype
-        # - qbittorrent
-        # - vlc
-        # - peek
-        # - wireshark
-        # - discord
-        # - inkscape
-        # - kubectl
-        # - microk8s
-        # - soundswitcher
-        # - codecs
-        # - other
+        - skype
+        - qbittorrent
+        - vlc
+        - peek
+        - wireshark
+        - discord
+        - inkscape
+        - kubectl
+        - microk8s
+        - soundswitcher
+        - codecs
+        - other

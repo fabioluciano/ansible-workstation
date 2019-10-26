@@ -5,13 +5,13 @@
 
 - name: Exa | Check avaliable version
   command: /usr/local/bin/exa -v
-  register: exa_bin_version
+  register: exa_local_version
   ignore_errors: true
 
 - name: Exa | Register local version
   set_fact:
-    exa_local_version: "{{ exa_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-  when: exa_bin_version.rc == 0
+    exa_local_version: "{{ exa_local_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: exa_local_version.rc == 0
 
 - name: Exa | Recover all releases
   uri:

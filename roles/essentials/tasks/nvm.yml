@@ -1,3 +1,8 @@
+- name: NVM | Check if is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+  register: nvm_bin_path
+
 - name: NVM | Download or Upgrade NVM
   block:
     - name: NVM | Download the installer
@@ -13,3 +18,4 @@
       shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install stable"
     - name: NVM | Install Yarn
       shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g yarn"
+  when: nvm_bin_path.stat.exists == False

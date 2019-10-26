@@ -16,7 +16,7 @@
 
 - name: Icon | Papirus | Install papirus
   block:
-  - name: Allacritty | Add package repository
+  - name: Icon | Papirus | Add package repository
     apt_repository:
       repo: "ppa:papirus/papirus"
       filename: papirus

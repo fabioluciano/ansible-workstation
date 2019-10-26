@@ -1,6 +1,12 @@
 ---
-- name: Pycharm | Install the package
+- name: PyCharm | Check if is present
+  shell: "flatpak list | awk '/com.jetbrains.PyCharm-Community/{print $1}'"
+  register: pycharm_is_installed
+  ignore_errors: true
+
+- name: PyCharm | Install the package
   flatpak:
     name: ccom.jetbrains.PyCharm-Community
     state: present
     method: user
+  when: pycharm_is_installed.stdout != 'PyCharm-Community'

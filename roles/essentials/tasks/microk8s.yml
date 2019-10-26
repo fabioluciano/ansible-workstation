@@ -9,3 +9,11 @@
 - name: Microk8 | Disable startup
   shell: snap disable microk8s
   become: true
+  ignore_errors: true
+
+- name: Microk8 | Add current user to microk8s group
+  user: 
+    name: "{{ ansible_user }}"
+    groups: microk8s
+    append: yes
+  become: true

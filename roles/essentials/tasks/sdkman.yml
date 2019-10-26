@@ -1,0 +1,36 @@
+---
+- name: SDKMAN | Check if is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh"
+  register: sdkman_bin_path
+
+- name: SDKMAN | Download and Install
+  block:
+  - name: SDKMAN | Download the binary
+    get_url:
+      url: https://get.sdkman.io
+      dest: /tmp/sdkman.sh
+      mode: 0777
+  - name: SDKMAN | Execute the binary
+    shell: "/tmp/sdkman.sh"
+  when: sdkman_bin_path.stat.exists == False
+
+- name: SDKMAN | Install Java 8
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.222.hs-adpt"
+  args:
+    executable: /bin/bash
+
+- name: SDKMAN | Install Java 13
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 13.0.1-open"
+  args:
+    executable: /bin/bash
+
+- name: SDKMAN | Install Maven
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install maven"
+  args:
+    executable: /bin/bash
+
+- name: SDKMAN | Install Groovy
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install groovy"
+  args:
+    executable: /bin/bash
