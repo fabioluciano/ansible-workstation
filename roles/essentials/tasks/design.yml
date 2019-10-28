@@ -1,0 +1,8 @@
+---
+- name: Design | Include related tasks
+  include_tasks: "{{ design_tasks }}.yml"
+  loop:
+    - gimp
+    - inkscape
+  loop_control:
+    loop_var: design_tasks

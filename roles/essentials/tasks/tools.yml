@@ -2,6 +2,8 @@
 - name: Tools | Include related tasks
   include_tasks: "{{ tools_tasks }}.yml"
   loop:
+    - compiz
+    - guake
     - telegram
     - apachedirectory
     - whatsdesk
@@ -13,5 +15,13 @@
     - whatsdesk
     - spacevim
     - virtualbox
+    - discord
+    - etcher
+    - indicator
+    - obsstudio
+    - papirus
+    - peek
+    - plank
+    - qbittorrent
   loop_control:
     loop_var: tools_tasks

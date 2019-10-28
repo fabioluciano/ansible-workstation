@@ -8,5 +8,6 @@
     - androidstudio
     - pycharm
     - glade
+    - gnomebuilder
   loop_control:
     loop_var: ide_tasks

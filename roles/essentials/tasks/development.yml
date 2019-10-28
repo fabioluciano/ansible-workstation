@@ -1,0 +1,16 @@
+---
+- name: Development | Include related tasks
+  include_tasks: "{{ development_tasks }}.yml"
+  loop:
+    - altair
+    - cloud_provider_cli
+    - composer
+    - dbeaver
+    - nvm
+    - postman
+    - python
+    - sdkman
+    - spacevim
+    - hashicorp
+  loop_control:
+    loop_var: development_tasks

@@ -1,0 +1,8 @@
+---
+- name: Multimedia | Include related tasks
+  include_tasks: "{{ multimedia_tasks }}.yml"
+  loop:
+    - spotify
+    - codecs
+  loop_control:
+    loop_var: multimedia_tasks

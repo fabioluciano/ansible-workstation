@@ -1,4 +1,6 @@
 ---
+- include_tasks: flatpak.yml
+
 - name: Upgrade | Execute all apt related tasks
   block:
     - name: Upgrade | Update cache
@@ -20,16 +22,24 @@
       register: apt_result
       changed_when: "'packages will be REMOVED' in apt_result.stdout"
       become: true
+  tags:
+    - upgrade
 
 - name: Upgrade | Check if flatpak exists
   stat:
     path: /usr/bin/flatpak
   register: flatpak_bin_path
+  tags:
+    - upgrade
 
 - name: Upgrade | Upgrade Flatpak related packages
   shell: flatpak update -y
   when: flatpak_bin_path.stat.exists == True
+  tags:
+    - upgrade
 
 - name: Upgrade | Upgrade Snap related packages
   shell: snap refresh
   become: true
+  tags:
+    - upgrade

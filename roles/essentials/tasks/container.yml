@@ -5,5 +5,7 @@
     - docker
     - dive
     - microk8s
+    - docker-compose
+    - kubectl
   loop_control:
     loop_var: container_tasks
