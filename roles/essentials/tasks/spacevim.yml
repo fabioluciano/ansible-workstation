@@ -37,7 +37,7 @@
     synchronize:
       src: "init.toml"
       dest: "{{ ansible_env.HOME }}/.SpaceVim.d/"
-  # when: spacevim_exists.stat.exists == False
+  when: spacevim_exists.stat.exists == False
 
 - name: Spacevim | Layers | Ensure that the html dependency is present
   shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g vscode-html-languageserver-bin"

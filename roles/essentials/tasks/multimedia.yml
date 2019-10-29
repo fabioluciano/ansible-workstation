@@ -3,6 +3,7 @@
   include_tasks: "{{ multimedia_tasks }}.yml"
   loop:
     - spotify
+    - vlc
     - codecs
   loop_control:
     loop_var: multimedia_tasks

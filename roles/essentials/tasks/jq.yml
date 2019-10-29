@@ -1,0 +1,42 @@
+- name: JQ | Check if is present
+  stat:
+    path: /usr/local/bin/jq
+  register: jq_bin_path
+
+- name: JQ | Check avaliable version
+  command: /usr/local/bin/jq --version
+  register: jq_bin_version
+  ignore_errors: true
+
+- name: JQ | Register local version
+  set_fact:
+    jq_local_version: "{{ jq_bin_version.stdout | regex_findall('(\\d+\\.\\d+)') | first }}"
+  when: jq_bin_version.rc == 0
+
+- name: JQ | Register local version
+  set_fact:
+    jq_local_version: ""
+  when: jq_bin_version.rc != 0
+
+- name: JQ | Recover all releases
+  uri:
+    url: https://api.github.com/repos/stedolan/jq/releases
+    return_content: true
+    body_format: json
+  register: jq_releases_response
+
+- name: JQ | Get latest version URL
+  set_fact:
+    jq_download_url: "{{ jq_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `linux64`)].browser_download_url') | first }}"
+
+- name: JQ | Set latest remote version
+  set_fact:
+    jq_remote_version: "{{ jq_download_url | regex_findall('(\\d+\\.\\d+)') | first }}"
+
+- name: JQ | Install or Upgrade
+  get_url:
+    url: "{{ jq_download_url }}"
+    dest: /usr/local/bin/jq
+    mode: 0755
+  become: true
+  when: jq_local_version != jq_remote_version or jq_bin_path.stat.exists == False

@@ -9,11 +9,12 @@
     - whatsdesk
     - exa
     - bat
+    - jq
+    - skim
     - synapse
     - ulauncher
     - wireshark
     - whatsdesk
-    - spacevim
     - virtualbox
     - discord
     - etcher
@@ -23,5 +24,9 @@
     - peek
     - plank
     - qbittorrent
+    - skype
+    - soundswitcher
+    - whisker
+    - xubuntudev
   loop_control:
     loop_var: tools_tasks

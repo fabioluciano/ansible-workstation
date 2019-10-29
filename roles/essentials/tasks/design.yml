@@ -4,5 +4,6 @@
   loop:
     - gimp
     - inkscape
+    - shutter
   loop_control:
     loop_var: design_tasks
