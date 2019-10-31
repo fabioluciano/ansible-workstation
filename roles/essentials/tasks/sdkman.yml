@@ -17,7 +17,7 @@
   when: sdkman_bin_path.stat.exists == False
 
 - name: SDKMAN | Install Java 8
-  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.222.hs-adpt"
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.232.hs-adpt"
   args:
     executable: /bin/bash
 
