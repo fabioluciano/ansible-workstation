@@ -11,6 +11,7 @@
       url: https://get.sdkman.io
       dest: /tmp/sdkman.sh
       mode: 0777
+      validate_certs: false
   - name: SDKMAN | Execute the binary
     shell: "/tmp/sdkman.sh"
   when: sdkman_bin_path.stat.exists == False

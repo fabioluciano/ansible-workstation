@@ -52,6 +52,7 @@
       get_url:
         url: "{{ virtualbox_extpack_download_url }}"
         dest: /tmp
+        validate_certs: false
       register: extension_pack_path
     - name: VirtualBox Extensions | Install extension pack
       shell: "printf \"y\n\" | VBoxManage extpack install --replace {{ extension_pack_path.dest }}"

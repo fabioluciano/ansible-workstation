@@ -10,6 +10,7 @@
         url: https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh
         dest: /tmp/nvm.sh
         mode: 771
+        validate_certs: false
     - name: NVM | Install the binary
       shell: bash
       args:

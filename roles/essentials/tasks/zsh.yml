@@ -18,6 +18,7 @@
         url: https://git.io/antigen
         dest: "{{ ansible_env.HOME }}/.local-antigen.zsh"
         mode: 771
+        validate_certs: false
     - name: ZSH | Copy configurations file
       copy:
         src: zshrc

@@ -21,6 +21,7 @@
       get_url:
         url: "{{ apachedirectory_archive_url }}"
         dest: "{{ apachedirectory_directory.path }}/apachestudio.tar.gz"
+        validate_certs: false
       async: 1000
       poll: 0
       register: apachestudio_download_action

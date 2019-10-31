@@ -15,6 +15,7 @@
   get_url:
     url: https://github.com/microsoft/cascadia-code/releases/download/v1910.04/Cascadia.ttf
     dest: "{{ ansible_env.HOME }}/.fonts"
+    validate_certs: true
   tags:
     - fonts
     - cascadia

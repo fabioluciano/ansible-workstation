@@ -11,6 +11,7 @@
     - bat
     - jq
     - skim
+    - dust
     - synapse
     - ulauncher
     - wireshark

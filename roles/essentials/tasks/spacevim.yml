@@ -24,7 +24,7 @@
       url: https://spacevim.org/install.sh
       dest: /tmp/spacevim-installer.sh
       mode: '0555'
-
+      validate_certs: false
   - name: SpaceVim | Execute the installer
     shell: bash /tmp/spacevim-installer.sh
 

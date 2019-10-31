@@ -17,3 +17,4 @@
   copy:
     src: terminalrc
     dest: "{{ ansible_env.HOME }}/.config/xfce4/terminal"
+  ignore_errors: true

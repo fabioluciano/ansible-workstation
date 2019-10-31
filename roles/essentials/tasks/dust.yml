@@ -1,0 +1,39 @@
+- name: Dust | Check if is present
+  stat:
+    path: /usr/local/bin/dust
+  register: dust_bin_path
+
+- name: Dust | Check avaliable version
+  command: /usr/local/bin/dust -v
+  register: dust_local_version
+  ignore_errors: true
+
+- name: Dust | Register local version
+  set_fact:
+    dust_local_version: "{{ dust_local_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: dust_local_version.rc == 0
+
+- name: Dust | Recover all releases
+  uri:
+    url: https://api.github.com/repos/bootandy/dust/releases
+    return_content: true
+    body_format: json
+  register: dust_releases_response
+
+- name: Dust | Get latest version URL
+  set_fact:
+    dust_download_url: "{{ dust_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `linux-gnu.tar.gz`)].browser_download_url') | first }}"
+
+- name: Dust | Set latest remote version
+  set_fact:
+    dust_remote_version: "{{ dust_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Dust | Install or Upgrade
+  block:
+    - name: Dust | Unarchive the binary
+      unarchive:
+        src: "{{ dust_download_url }}"
+        dest: /usr/local/bin
+        remote_src: true
+      become: true
+  when: dust_bin_path.stat.exists == False or dust_remote_version != dust_local_version
