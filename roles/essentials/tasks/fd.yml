@@ -1,0 +1,41 @@
+- name: Fd | Check if is present
+  stat:
+    path: /usr/bin/fd
+  register: fd_bin_path
+
+- name: Fd | Check avaliable version
+  command: /usr/bin/fd --version
+  register: fd_bin_version
+  ignore_errors: true
+
+- name: Fd | Register local version
+  set_fact:
+    fd_local_version: "{{ fd_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: fd_bin_version.rc == 0
+
+- name: Fd | Register local version
+  set_fact:
+    fd_local_version: ""
+  when: fd_bin_version.rc != 0
+
+- name: Fd | Recover all releases
+  uri:
+    url: https://api.github.com/repos/sharkdp/fd/releases
+    return_content: true
+    body_format: json
+  register: fd_releases_response
+
+- name: Fd | Get latest version URL
+  set_fact:
+    fd_download_url: "{{ fd_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `fd_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: Fd | Set latest remote version
+  set_fact:
+    fd_remote_version: "{{ fd_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Fd | Install deb file
+  apt:
+    deb: "{{ fd_download_url }}"
+    force_apt_get: yes
+  become: true
+  when: fd_local_version != fd_remote_version or fd_bin_path.stat.exists == False

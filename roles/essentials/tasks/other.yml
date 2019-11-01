@@ -6,7 +6,6 @@
     force_apt_get: yes
   become: true
   with_list:
-    - indicator-multiload
     - pidgin
     - adobe-flashplugin
     - pgadmin3

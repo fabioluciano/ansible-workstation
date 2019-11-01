@@ -15,6 +15,7 @@
       - vim
       - git 
       - curl
+      - global
     loop_control:
       loop_var: spacevim_dependency
     become: true
