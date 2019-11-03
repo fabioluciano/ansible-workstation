@@ -16,7 +16,7 @@
       register: apachedirectory_download_page
     - name: Apache Directory | Set archive download link
       set_fact: 
-        apachedirectory_archive_url: "{{ apachedirectory_download_page.content | regex_findall('(https?:\/\/.*linux.gtk.x86_64.tar.gz)') | first }}"
+        apachedirectory_archive_url: "{{ apachedirectory_download_page.content | regex_findall('(https?://.*linux.gtk.x86_64.tar.gz)') | first }}"
     - name: Apache Directory | Get archive
       get_url:
         url: "{{ apachedirectory_archive_url }}"

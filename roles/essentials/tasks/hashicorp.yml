@@ -16,7 +16,7 @@
     register: terraform_download_page
   - name: HashiCorp | Terraform | Define latest avaliable version
     set_fact:
-      terraform_download_url: "{{ terraform_download_page.content | regex_findall('(https:\/\/.*?terraform_[\\d.]+_linux_amd64.zip)') | first }}"
+      terraform_download_url: "{{ terraform_download_page.content | regex_findall('(https://.*?terraform_[\\d.]+_linux_amd64.zip)') | first }}"
       terraform_latest_avaliable_version: "{{ terraform_download_page.content | regex_findall('terraform_([\\d.]+)_linux_amd64.zip') | first }}"
   - name: HashiCorp | Terraform | If installed, set the local version fact
     set_fact:
@@ -50,7 +50,7 @@
     register: packer_download_page
   - name: HashiCorp | Packer | Define latest avaliable version fact
     set_fact:
-      packer_download_url: "{{ packer_download_page.content | regex_findall('(https:\/\/.*?packer_[\\d.]+_linux_amd64.zip)') | first }}"
+      packer_download_url: "{{ packer_download_page.content | regex_findall('(https://.*?packer_[\\d.]+_linux_amd64.zip)') | first }}"
       packer_latest_avaliable_version: "{{ packer_download_page.content | regex_findall('packer_([\\d.]+)_linux_amd64.zip') | first }}"
   - name: HashiCorp | Packer | If installed, set the local version fact
     set_fact:
@@ -84,13 +84,13 @@
     register: vagrant_download_page
   - name: HashiCorp | Vagrant | Define latest avaliable version fact
     set_fact:
-      vagrant_download_url: "{{ vagrant_download_page.content | regex_findall('(https:\/\/.*?vagrant_[\\d.]+_linux_amd64.zip)') | first }}"
+      vagrant_download_url: "{{ vagrant_download_page.content | regex_findall('(https://.*?vagrant_[\\d.]+_linux_amd64.zip)') | first }}"
       vagrant_latest_avaliable_version: "{{ vagrant_download_page.content | regex_findall('vagrant_([\\d.]+)_linux_amd64.zip') | first }}"
   - name: HashiCorp | Vagrant | If installed, set the local version fact
     set_fact:
       vagrant_local_version: "{{ vagrant_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
     when: vagrant_is_installed.rc == 0 and vagrant_local_version.rc == 0
-  - name: HashiCorp | Vagrant | Ensure that the binary is avaliable on /usr/local/bin directory
+  - name: pdbeHashiCorp | Vagrant | Ensure that the binary is avaliable on /usr/local/bin directory
     unarchive:
       src: "{{ vagrant_download_url }}"
       dest: /usr/local/bin/

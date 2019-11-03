@@ -47,7 +47,7 @@
       register: virtualbox_extpack_response
     - name: VirtualBox Extensions | Define download link
       set_fact:
-        virtualbox_extpack_download_url: "{{ virtualbox_extpack_response.content | regex_findall('(https:\/\/.*?.vbox-extpack)') | first }}"
+        virtualbox_extpack_download_url: "{{ virtualbox_extpack_response.content | regex_findall('(https://.*?.vbox-extpack)') | first }}"
     - name: VirtualBox Extensions | Download the extension pack
       get_url:
         url: "{{ virtualbox_extpack_download_url }}"

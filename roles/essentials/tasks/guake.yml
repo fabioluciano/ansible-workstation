@@ -12,7 +12,7 @@
 
 - name: Guake | Add package repository
   apt_repository:
-    repo: "linuxuprising/guake"
+    repo: "ppa:linuxuprising/guake"
     filename: guake
     update_cache: yes
     state: present

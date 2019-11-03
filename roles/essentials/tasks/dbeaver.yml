@@ -23,9 +23,10 @@
     - name: DBeaver | Set local version
       set_fact:
         dbeaver_local_version: "{{ ansible_facts.packages['dbeaver-ce'][0].version }}"
+      ignore_errors: true
     - name: DBeaver | Install deb file
       apt:
         deb: "{{ dbeaver_deb_download_url }}"
         force_apt_get: yes
       become: true
-      when: dbeaver_local_version != dbeaver_latest_version or dbeaver_exists.stat.exists == False
+      when: (dbeaver_local_version is defined and dbeaver_local_version != dbeaver_latest_version) or dbeaver_exists.stat.exists == False

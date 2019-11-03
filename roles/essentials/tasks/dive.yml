@@ -8,7 +8,7 @@
   block:
     - name: Dive | Recover package facts
       package_facts:
-        manager: apt
+        manager: auto
     - name: Dive | Recover all releases
       uri:
         url: https://api.github.com/repos/wagoodman/dive/releases
@@ -24,9 +24,10 @@
     - name: Dive | Set local version
       set_fact:
         dive_local_version: "{{ ansible_facts.packages['dive'][0].version }}"
+      ignore_errors: true
     - name: Dive | Install deb file
       apt:
         deb: "{{ dive_deb_download_url }}"
         force_apt_get: yes
       become: true
-      when: dive_local_version != dive_latest_version or dive_exists.stat.exists == False
+      when: (dive_local_version is defined and dive_local_version != dive_latest_version) or dive_exists.stat.exists == False
