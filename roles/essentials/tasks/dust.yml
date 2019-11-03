@@ -4,7 +4,7 @@
   register: dust_bin_path
 
 - name: Dust | Check avaliable version
-  command: /usr/local/bin/dust -v
+  command: /usr/local/bin/dust -V
   register: dust_local_version
   ignore_errors: true
 
