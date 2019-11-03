@@ -4,6 +4,17 @@
     path: /usr/local/bin/composer
   register: composer_bin_path
 
+- name: Composer PHP | Ensure that all dependecies are present
+  package:
+    name: "{{ composer_dependency }}"
+    state: present
+    force_apt_get: true
+  loop:
+    - php-cli
+  loop_control:
+    loop_var: composer_dependency
+  become: true
+
 - name: Composer PHP | install the package
   shell: "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
   become: true
