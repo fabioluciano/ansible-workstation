@@ -20,18 +20,22 @@
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.232.hs-adpt"
   args:
     executable: /bin/bash
+  ignore_errors: true
 
 - name: SDKMAN | Install Java 13
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 13.0.1-open"
   args:
     executable: /bin/bash
+  ignore_errors: true
 
 - name: SDKMAN | Install Maven
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install maven"
   args:
     executable: /bin/bash
+  ignore_errors: true
 
 - name: SDKMAN | Install Groovy
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install groovy"
   args:
     executable: /bin/bash
+  ignore_errors: true

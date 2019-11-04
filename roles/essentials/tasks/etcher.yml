@@ -37,8 +37,10 @@
     - name: Etcher | Set local version
       set_fact:
         etcher_local_version: "{{ ansible_facts.packages['balena-etcher-electron'][0].version }}"
+      ignore_errors: true
     - name: Etcher | Install deb file
       apt:
         deb: "{{ etcher_deb_download_url }}"
+        force_apt_get: true
       become: true
-      when: etcher_local_version != etcher_latest_version or etcher_exists.stat.exists == False
+      when: (etcher_local_version is defined and etcher_local_version != etcher_latest_version) or etcher_exists.stat.exists == False

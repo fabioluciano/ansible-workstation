@@ -3,12 +3,12 @@
   include_tasks: "{{ development_tasks }}.yml"
   loop:
     - altair
+    - python
     - cloud_provider_cli
     - composer
     - dbeaver
     - nvm
     - postman
-    - python
     - sdkman
     - spacevim
     - hashicorp

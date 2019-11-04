@@ -37,6 +37,18 @@
     become: true
   when: virtualbox_bin_path.stat.exists == False and virtualbox_repo.status == 200
 
+- name: VirtualBox | Install or Upgrade
+  package:
+    name: "{{ virtualbox_dependency }}"
+  loop:
+    - virtualbox
+    - virtualbox-guest-additions-iso
+    - virtualbox-guest-utils
+  loop_control:
+    loop_var: virtualbox_dependency
+  when: virtualbox_bin_path.stat.exists == False and virtualbox_repo.status != 200
+  become: true
+
 - name: VirtualBox Extensions | Install or Upgrade
   block:
     - name: VirtualBox Extensions | Request download page
@@ -61,16 +73,4 @@
       file:
         path: "{{ extension_pack_path.dest }}"
         state: absent
-  when: virtualbox_repo.status == 200
-
-- name: VirtualBox Extensions | Install or Upgrade
-  package:
-    name: "{{ virtualbox_dependency }}"
-  loop:
-    - virtualbox
-    - virtualbox-ext-pack
-    - virtualbox-guest-additions-iso
-    - virtualbox-guest-utils
-  loop_control:
-    loop_var: virtualbox_dependency
-  when: virtualbox_bin_path.stat.exists == False and virtualbox_repo.status != 200
+  when: virtualbox_bin_path.stat.exists == True
