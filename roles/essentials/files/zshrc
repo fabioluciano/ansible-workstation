@@ -37,5 +37,5 @@ BASE16_SHELL="$HOME/.config/base16-shell/"
 base16_default-dark
 
 if test -f "$HOME/.sdkman/bin/sdkman-init.sh"; then
-    . ~/.sdkman/bin/sdkman-init.sh
+    . $HOME/.sdkman/bin/sdkman-init.sh
 fi
