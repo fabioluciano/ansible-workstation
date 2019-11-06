@@ -7,6 +7,7 @@
 - name: Inkscape | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/inkscape.dev/stable/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: inkscape_repo
 

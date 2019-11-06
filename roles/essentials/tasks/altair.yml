@@ -1,6 +1,12 @@
 ---
+- name: Altair | Check if the binary is present
+  stat:
+    path: /snap/bin/altair
+  register: altair_bin_path
+
 - name: Altair | Install the snap
   snap:
     name: altair
     state: present
   become: true
+  when: altair_bin_path.stat.exists == False

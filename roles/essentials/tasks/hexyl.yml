@@ -1,0 +1,41 @@
+- name: Hexyl | Check if is present
+  stat:
+    path: /usr/bin/hexyl
+  register: hexyl_bin_path
+
+- name: Hexyl | Check avaliable version
+  command: /usr/bin/hexyl --version
+  register: hexyl_bin_version
+  ignore_errors: true
+
+- name: Hexyl | Register local version
+  set_fact:
+    hexyl_local_version: "{{ hexyl_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: hexyl_bin_version.rc == 0
+
+- name: Hexyl | Register local version
+  set_fact:
+    hexyl_local_version: ""
+  when: hexyl_bin_version.rc != 0
+
+- name: Hexyl | Recover all releases
+  uri:
+    url: https://api.github.com/repos/sharkdp/hexyl/releases
+    return_content: true
+    body_format: json
+  register: hexyl_releases_response
+
+- name: Hexyl | Get latest version URL
+  set_fact:
+    hexyl_download_url: "{{ hexyl_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `hexyl_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: Hexyl | Set latest remote version
+  set_fact:
+    helyx_remote_version: "{{ hexyl_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Hexyl | Install deb file
+  apt:
+    deb: "{{ hexyl_download_url }}"
+    force_apt_get: yes
+  become: true
+  when: (hexyl_local_version is defined and hexyl_local_version != helyx_remote_version) or hexyl_bin_path.stat.exists == False

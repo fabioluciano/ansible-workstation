@@ -1,0 +1,12 @@
+---
+- name: GColor3 | Check if is present
+  shell: "flatpak list | awk '/Color picker/{print $1}'"
+  register: gcolor3_is_installed
+  ignore_errors: true
+
+- name: GColor3 | Install the package
+  flatpak:
+    name: nl.hjdskes.gcolor3
+    state: present
+    method: user
+  when: gcolor3_is_installed.stdout != 'Color picker'

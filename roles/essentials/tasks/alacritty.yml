@@ -2,7 +2,7 @@
 - name: Alacritty | Check if the binary is present
   stat:
     path: /usr/bin/alacritty
-  register: alacritty_exists
+  register: alacritty_bin_path
 
 - name: Alacritty | Check if repository is configured
   stat:
@@ -12,6 +12,7 @@
 - name: Alacritty | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/mmstick76/alacritty/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: alacritty_repository_release_exists
 
@@ -30,4 +31,4 @@
       state: present
       force_apt_get: true
     become: true
-  when: alacritty_exists.stat.exists == False and alacritty_repository_release_exists.status == 200
+  when: alacritty_bin_path.stat.exists == False and alacritty_repository_release_exists.status == 200

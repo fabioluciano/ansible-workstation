@@ -30,7 +30,7 @@
 
 - name: Exa | Install or Upgrade
   block:
-    - name: Exa | Unarchive the binary
+    - name: Exa | Get and unarchive the binary
       unarchive:
         src: "{{ exa_download_url }}"
         dest: /usr/local/bin
@@ -39,4 +39,4 @@
     - name: Exa | Rename the binary
       shell: mv /usr/local/bin/exa-linux* /usr/local/bin/exa
       become: true
-  when: exa_bin_path.stat.exists == False or exa_remote_version != exa_local_version
+  when: exa_remote_version != exa_local_version or exa_bin_path.stat.exists == False

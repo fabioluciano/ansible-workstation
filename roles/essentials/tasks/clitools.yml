@@ -1,0 +1,13 @@
+---
+- name: CLI Tools | Include related tasks
+  include_tasks: "{{ clitools_tasks }}.yml"
+  loop:
+    - exa
+    - fd
+    - bat
+    - jq
+    - skim
+    - dust
+    - hexyl
+  loop_control:
+    loop_var: clitools_tasks
