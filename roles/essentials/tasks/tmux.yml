@@ -7,12 +7,19 @@
 
 - name: Tmux | Install and configure
   block:
+
     - name: Tmux | Install the package
       package:
-        name: tmux
+        name: "{{ tmux_dependency }}"
         state: present
         force_apt_get: true
+      loop:
+        - tmux
+        - fzf
+      loop_control:
+        loop_var: tmux_dependency
       become: true
+
     - name: Tmux | Install TMP
       git:
         repo: https://github.com/tmux-plugins/tpm
