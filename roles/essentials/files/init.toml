@@ -11,6 +11,9 @@
   name = "colorscheme"
 
 [[layers]]
+  name = "git"
+
+[[layers]]
   name = 'autocomplete'
   auto-completion-return-key-behavior = "complete"
   auto-completion-tab-key-behavior = "smart"

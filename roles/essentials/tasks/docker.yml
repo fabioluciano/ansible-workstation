@@ -7,6 +7,7 @@
 - name: Docker | Ensure that exists a version in this release
   uri:
     url: "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: docker_repository_release_exists
 

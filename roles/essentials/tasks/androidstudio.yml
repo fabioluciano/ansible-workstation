@@ -7,6 +7,7 @@
 - name: Android Studio | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/maarten-fonville/android-studio/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: androidstudio_repo
 

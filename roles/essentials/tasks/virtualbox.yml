@@ -7,6 +7,7 @@
 - name: VirtualBox | Ensure that exists a version in this release
   uri:
     url: "https://download.virtualbox.org/virtualbox/debian/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: virtualbox_repo
 

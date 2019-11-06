@@ -1,0 +1,12 @@
+---
+- name: AWS CLI | Check if AWS Cli is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.local/bin/aws"
+  register: awscli_exists
+- name: AWS CLI | Install or Upgrade AWS cli
+  block:
+  - name: AWS CLI | Install or Upgrade AWS cli
+    pip:
+      name: awscli
+      state: latest
+  when: awscli_exists.stat.exists == False

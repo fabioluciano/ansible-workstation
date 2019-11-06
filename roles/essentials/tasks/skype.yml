@@ -7,6 +7,7 @@
 - name: Skype | Ensure that exists a version in this release
   uri:
     url: "https://repo.skype.com/deb/dists/stable/"
+    method: HEAD
   ignore_errors: yes
   register: skype_repo
 

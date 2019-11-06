@@ -1,0 +1,34 @@
+---
+- name: Google Cloud CLI | Check if Google Cloud CLI is present
+  stat:
+    path: "/usr/bin/gcloud"
+  register: gcloud_exists
+
+- name: Google Cloud CLI | Ensure that exists a version in this release
+  uri:
+    url: "https://packages.microsoft.com/repos/azure-cli/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
+  ignore_errors: yes
+  register: gcloud_repository_release_exists
+
+- name: Google Cloud CLI | Install or Upgrade Azure CLI
+  block:
+    - name: Google Cloud CLI | Add an Apt signing key for Google Cloud 
+      apt_key:
+        url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+        state: present
+      become: true
+    - name: Google Cloud CLI | Configure Google Cloud repository
+      apt_repository:
+        repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
+        state: present
+        filename: gcloudcli
+        update_cache: true
+      become: true
+    - name: Google Cloud CLI | Install or Upgrade Google Cloud CLI
+      package:
+        name: google-cloud-sdk
+        state: latest
+        force_apt_get: yes
+      become: true
+  when: gcloud_exists.stat.exists == False and gcloud_repository_release_exists.status == 200

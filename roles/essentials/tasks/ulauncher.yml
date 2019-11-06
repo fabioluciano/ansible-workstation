@@ -7,6 +7,7 @@
 - name: Ulauncher | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/agornostal/ulauncher/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: ulauncher_repository_release_exists
 

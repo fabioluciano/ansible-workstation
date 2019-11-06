@@ -7,6 +7,7 @@
 - name: Libre Office | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/libreoffice/ppa/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: libreoffice_repository_release_exists
 

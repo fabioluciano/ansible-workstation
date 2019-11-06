@@ -1,0 +1,9 @@
+---
+- name: CLI Tool - Cloud Provider | Include related tasks
+  include_tasks: "{{ clicloudprovider_tasks }}.yml"
+  loop:
+    - awscli
+    - azurecli
+    - gcloud
+  loop_control:
+    loop_var: clicloudprovider_tasks

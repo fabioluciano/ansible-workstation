@@ -4,7 +4,6 @@
   loop:
     - altair
     - python
-    - cloud_provider_cli
     - composer
     - dbeaver
     - nvm

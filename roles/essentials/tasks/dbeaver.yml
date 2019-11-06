@@ -8,22 +8,27 @@
     - name: DBeaver | Recover package facts
       package_facts:
         manager: apt
+        
     - name: DBeaver | Recover all releases
       uri:
         url: https://api.github.com/repos/dbeaver/dbeaver/releases
         return_content: true
         body_format: json
       register: dbeaver_releases_response
+
     - name: DBeaver | Get deb latest version URL
       set_fact:
         dbeaver_deb_download_url: "{{ dbeaver_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
     - name: DBeaver | Set latest avaliable version
       set_fact:
         dbeaver_latest_version: "{{ dbeaver_deb_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
     - name: DBeaver | Set local version
       set_fact:
         dbeaver_local_version: "{{ ansible_facts.packages['dbeaver-ce'][0].version }}"
       ignore_errors: true
+
     - name: DBeaver | Install deb file
       apt:
         deb: "{{ dbeaver_deb_download_url }}"

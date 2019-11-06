@@ -38,4 +38,4 @@
     deb: "{{ bat_download_url }}"
     force_apt_get: yes
   become: true
-  when: bat_local_version != bat_remote_version or bat_bin_path.stat.exists == False
+  when: (bat_local_version is defined and bat_local_version != bat_remote_version) or bat_bin_path.stat.exists == False

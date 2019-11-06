@@ -2,6 +2,7 @@
 - name: Xubuntu Dev | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/xubuntu-dev/extras/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
   ignore_errors: yes
   register: xubuntudev_remote_repo
 
