@@ -23,4 +23,4 @@
         state: present
         force_apt_get: true
       become: true
-  when: vivaldi_exists.stat.exists == False
+  when: vivaldi_exists.stat.exists == false

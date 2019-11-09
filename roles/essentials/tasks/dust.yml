@@ -36,4 +36,4 @@
         dest: /usr/local/bin
         remote_src: true
       become: true
-  when: dust_bin_path.stat.exists == False or dust_remote_version != dust_local_version
+  when: dust_bin_path.stat.exists == false or dust_remote_version != dust_local_version

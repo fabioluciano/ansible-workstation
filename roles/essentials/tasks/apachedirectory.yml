@@ -53,4 +53,4 @@
         description: Apache Directory Studio
         executable: /opt/ApacheDirectoryStudio/ApacheDirectoryStudio
         icon: /opt/ApacheDirectoryStudio/icon.xpm
-  when: apachedirectory_installation_dir.stat.exists == False
+  when: apachedirectory_installation_dir.stat.exists == false

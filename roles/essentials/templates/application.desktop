@@ -4,6 +4,6 @@ Comment={{ description }}
 Categories=Utility;
 Type=Application
 Exec={{ executable }}
-Icon={{ icon }}
+{% if icon is defined %}Icon={{ icon }}{% endif %}
 Terminal=false
 NoDisplay=false

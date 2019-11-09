@@ -22,4 +22,4 @@
         state: present
         force_apt_get: true
       become: true
-  when: opera_exists.stat.exists == False
+  when: opera_exists.stat.exists == false

@@ -40,4 +40,4 @@
     mode: 0755
     validate_certs: false
   become: true
-  when: jq_local_version != jq_remote_version or jq_bin_path.stat.exists == False
+  when: jq_local_version != jq_remote_version or jq_bin_path.stat.exists == false

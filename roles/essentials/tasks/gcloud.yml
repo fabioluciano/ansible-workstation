@@ -31,4 +31,4 @@
         state: latest
         force_apt_get: yes
       become: true
-  when: gcloud_exists.stat.exists == False and gcloud_repository_release_exists.status == 200
+  when: gcloud_exists.stat.exists == false and gcloud_repository_release_exists.status == 200

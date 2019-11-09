@@ -26,4 +26,4 @@
     state: present
     force_apt_get: true
   become: true
-  when: peek_bin_path.stat.exists == False and peek_repo.status == 200
+  when: peek_bin_path.stat.exists == false and peek_repo.status == 200

@@ -26,5 +26,5 @@
       state: latest
       force_apt_get: yes
     become: true
-  when: yktooo_repo.stat.exists == False and yktooo_remote_repo.status == 200
+  when: yktooo_repo.stat.exists == false and yktooo_remote_repo.status == 200
 

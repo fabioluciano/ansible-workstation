@@ -26,4 +26,4 @@
     state: present
     force_apt_get: true
   become: true
-  when: inkscape_bin_path.stat.exists == False
+  when: inkscape_bin_path.stat.exists == false

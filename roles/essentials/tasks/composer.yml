@@ -18,4 +18,4 @@
 - name: Composer PHP | install the package
   shell: "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer"
   become: true
-  when: composer_bin_path.stat.exists == False
+  when: composer_bin_path.stat.exists == false

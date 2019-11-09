@@ -28,4 +28,4 @@
       state: present
       force_apt_get: true
     become: true
-  when: guake_bin_path.stat.exists == False
+  when: guake_bin_path.stat.exists == false

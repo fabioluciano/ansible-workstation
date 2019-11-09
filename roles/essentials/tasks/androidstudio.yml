@@ -26,4 +26,4 @@
     state: present
     force_apt_get: true
   become: true
-  when: androidstudio_bin_path.stat.exists == False and androidstudio_repo.status == 200
+  when: androidstudio_bin_path.stat.exists == false and androidstudio_repo.status == 200

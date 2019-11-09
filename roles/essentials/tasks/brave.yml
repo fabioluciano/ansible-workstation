@@ -30,5 +30,5 @@
         state: present
         force_apt_get: true
       become: true
-  when: brave_exists.stat.exists == False and brave_repository_release_exists.status == 200
+  when: brave_exists.stat.exists == false and brave_repository_release_exists.status == 200
 

@@ -21,7 +21,7 @@
       loop_control:
         loop_var: etcher_dependency
       become: true
-      when: etcher_exists.stat.exists == False
+      when: etcher_exists.stat.exists == false
     - name: Etcher | Recover all releases
       uri:
         url: https://api.github.com/repos/balena-io/etcher/releases
@@ -43,4 +43,4 @@
         deb: "{{ etcher_deb_download_url }}"
         force_apt_get: true
       become: true
-      when: (etcher_local_version is defined and etcher_local_version != etcher_latest_version) or etcher_exists.stat.exists == False
+      when: (etcher_local_version is defined and etcher_local_version != etcher_latest_version) or etcher_exists.stat.exists == false

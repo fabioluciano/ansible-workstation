@@ -28,4 +28,4 @@
         name: "{{ ansible_user }}"
         shell: /usr/bin/zsh
       become: true
-  when: zsh_exists.stat.exists == False
+  when: zsh_exists.stat.exists == false

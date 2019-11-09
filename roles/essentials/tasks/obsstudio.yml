@@ -19,4 +19,4 @@
       state: present
       force_apt_get: true
     become: true
-  when: obsstudio_exists.stat.exists == False
+  when: obsstudio_exists.stat.exists == false

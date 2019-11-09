@@ -9,4 +9,4 @@
     state: latest
     force_apt_get: true
   become: true
-  when: firefox_exists.stat.exists == False
+  when: firefox_exists.stat.exists == false

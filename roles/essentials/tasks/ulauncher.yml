@@ -26,4 +26,4 @@
       state: latest
       force_apt_get: true
     become: true
-  when: ulauncher_exists.stat.exists == False and ulauncher_repository_release_exists.status == 200
+  when: ulauncher_exists.stat.exists == false and ulauncher_repository_release_exists.status == 200

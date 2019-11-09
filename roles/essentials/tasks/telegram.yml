@@ -19,4 +19,4 @@
         state: present
         force_apt_get: true
       become:  yes
-  when: telegram_exists.stat.exists == False
+  when: telegram_exists.stat.exists == false

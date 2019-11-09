@@ -9,4 +9,4 @@
     pip:
       name: awscli
       state: latest
-  when: awscli_exists.stat.exists == False
+  when: awscli_exists.stat.exists == false

@@ -36,7 +36,7 @@
       state: present
       force_apt_get: true
     become: true
-  when: virtualbox_bin_path.stat.exists == False and virtualbox_repo.status == 200
+  when: virtualbox_bin_path.stat.exists == false and virtualbox_repo.status == 200
 
 - name: VirtualBox | Install or Upgrade
   package:
@@ -47,7 +47,7 @@
     - virtualbox-guest-utils
   loop_control:
     loop_var: virtualbox_dependency
-  when: virtualbox_bin_path.stat.exists == False and virtualbox_repo.status != 200
+  when: virtualbox_bin_path.stat.exists == false and virtualbox_repo.status != 200
   become: true
 
 - name: VirtualBox Extensions | Install or Upgrade

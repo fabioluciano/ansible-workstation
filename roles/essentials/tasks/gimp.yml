@@ -26,4 +26,4 @@
     state: present
     force_apt_get: true
   become: true
-  when: gimp_bin_path.stat.exists == False and gimp_repo.status == 200
+  when: gimp_bin_path.stat.exists == false and gimp_repo.status == 200

@@ -18,7 +18,7 @@
     update_cache: yes
     state: present
   become: true
-  when: atareao_atareao_repository_release_exists.status == 200 and atareao_atareao_repository_exists.stat.exists == False
+  when: atareao_atareao_repository_release_exists.status == 200 and atareao_atareao_repository_exists.stat.exists == false
   
 - name: Indicators | Atareao | Install the package
   package:

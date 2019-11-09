@@ -39,4 +39,4 @@
     dest: /usr/local/bin
     remote_src: true
   become: true
-  when: sk_local_version != sk_remote_version or sk_bin_path.stat.exists == False
+  when: sk_local_version != sk_remote_version or sk_bin_path.stat.exists == false

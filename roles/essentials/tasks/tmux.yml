@@ -24,7 +24,7 @@
       git:
         repo: https://github.com/tmux-plugins/tpm
         dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
-  when: tmux_exists.stat.exists == False
+  when: tmux_exists.stat.exists == false
 
 - name: Tmux | Copy configurations file
   copy:

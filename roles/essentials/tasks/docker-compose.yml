@@ -35,4 +35,4 @@
     mode: 0755
     validate_certs: false
   become: true
-  when: dockercompose_bin_path.stat.exists == False or dockercompose_remote_version != dockercompose_local_version
+  when: dockercompose_bin_path.stat.exists == false or dockercompose_remote_version != dockercompose_local_version

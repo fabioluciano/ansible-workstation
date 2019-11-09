@@ -19,4 +19,4 @@
       shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install stable"
     - name: NVM | Install Yarn
       shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g yarn"
-  when: nvm_bin_path.stat.exists == False
+  when: nvm_bin_path.stat.exists == false

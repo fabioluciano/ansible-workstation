@@ -24,7 +24,7 @@
       update_cache: yes
       state: present
     become: true
-    when: papirus_repository_exists.stat.exists == False
+    when: papirus_repository_exists.stat.exists == false
   - name: Icon | Papirus | Install the package
     package:
       name: "{{ papirus_package }}"

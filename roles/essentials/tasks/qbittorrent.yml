@@ -26,4 +26,4 @@
     state: present
     force_apt_get: true
   become: true
-  when: qbittorrent_bin_path.stat.exists == False
+  when: qbittorrent_bin_path.stat.exists == false

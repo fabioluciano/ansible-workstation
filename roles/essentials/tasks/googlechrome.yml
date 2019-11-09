@@ -23,4 +23,4 @@
       state: present
       force_apt_get: true
     become: true
-  when: google_chrome_exists.stat.exists == False
+  when: google_chrome_exists.stat.exists == false

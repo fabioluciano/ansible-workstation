@@ -19,4 +19,19 @@
       state: present
       force_apt_get: true
     become: true
-  when: plank_exists.stat.exists == False
+  when: plank_exists.stat.exists == false
+
+- name: Plank | Check if Plank is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.config/autostart/plank.desktop"
+  register: plank_autostart_path
+
+- name: Plank | Ensure that there is a autostart file
+  template:
+    src: application.desktop
+    dest: "{{ ansible_env.HOME }}/.config/autostart/plank.desktop"
+  vars:
+    name: Plank
+    description: Plank
+    executable: plank
+  when: plank_autostart_path.stat.exists == false

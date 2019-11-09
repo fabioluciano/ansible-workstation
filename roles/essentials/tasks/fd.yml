@@ -38,4 +38,4 @@
     deb: "{{ fd_download_url }}"
     force_apt_get: yes
   become: true
-  when: fd_local_version != fd_remote_version or fd_bin_path.stat.exists == False
+  when: fd_local_version != fd_remote_version or fd_bin_path.stat.exists == false

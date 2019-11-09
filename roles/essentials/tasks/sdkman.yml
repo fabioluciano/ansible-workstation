@@ -14,19 +14,29 @@
       validate_certs: false
   - name: SDKMAN | Execute the binary
     shell: "/tmp/sdkman.sh"
-  when: sdkman_bin_path.stat.exists == False
+  when: sdkman_bin_path.stat.exists == false
+
+- name: SDKMAN | Check if Java 13 is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/8.0.232.hs-adpt/bin/java"
+  register: sdkman_java8_bin_path
 
 - name: SDKMAN | Install Java 8
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.232.hs-adpt"
   args:
     executable: /bin/bash
-  ignore_errors: true
+  when: sdkman_java8_bin_path.stat.exists == false
+
+- name: SDKMAN | Check if Java 13 is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/13.0.1-open/bin/java"
+  register: sdkman_java13_bin_path
 
 - name: SDKMAN | Install Java 13
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 13.0.1-open"
   args:
     executable: /bin/bash
-  ignore_errors: true
+  when: sdkman_java13_bin_path.stat.exists == false
 
 - name: SDKMAN | Install Maven
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install maven"

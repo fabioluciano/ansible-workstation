@@ -31,4 +31,4 @@
       state: present
       force_apt_get: true
     become: true
-  when: alacritty_bin_path.stat.exists == False and alacritty_repository_release_exists.status == 200
+  when: alacritty_bin_path.stat.exists == false and alacritty_repository_release_exists.status == 200

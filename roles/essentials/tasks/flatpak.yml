@@ -20,7 +20,7 @@
       update_cache: yes
       filename: flatpak
     become: true
-    when: flatpak_repository_exists.stat.exists == False and flatpack_repository_release_exists.status == 200
+    when: flatpak_repository_exists.stat.exists == false and flatpack_repository_release_exists.status == 200
   - name: Flatpak | Ensures that the package flatpak is installed
     package:
       name: "{{ flatpak_depedency }}"

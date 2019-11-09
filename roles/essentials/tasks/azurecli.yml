@@ -47,4 +47,4 @@
       state: latest
       force_apt_get: yes
     become: true
-  when: azurecli_bin_path.stat.exists == False and azurecli_repository_release_exists.status == 200
+  when: azurecli_bin_path.stat.exists == false and azurecli_repository_release_exists.status == 200

@@ -30,4 +30,4 @@
         deb: "{{ dive_deb_download_url }}"
         force_apt_get: yes
       become: true
-      when: (dive_local_version is defined and dive_local_version != dive_latest_version) or dive_exists.stat.exists == False
+      when: (dive_local_version is defined and dive_local_version != dive_latest_version) or dive_exists.stat.exists == false

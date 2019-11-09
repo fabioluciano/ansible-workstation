@@ -1,0 +1,29 @@
+---
+- name: MPV | Check if is present
+  stat:
+    path: /usr/bin/mpv
+  register: mpv_bin_path
+
+- name: MPV | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/mc3man/mpv-tests/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
+  ignore_errors: yes
+  register: mpv_repo
+
+- name: MPV | Add package repository
+  apt_repository:
+    repo: "ppa:mc3man/mpv-tests"
+    filename: mpv
+    update_cache: yes
+    state: present
+  become: true
+  when: mpv_repo.status == 200
+
+- name: MPV | Install the package
+  package:
+    name: mpv
+    state: present
+    force_apt_get: true
+  become: true
+  when: mpv_bin_path.stat.exists == false

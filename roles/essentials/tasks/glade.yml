@@ -9,4 +9,4 @@
     state: latest
     force_apt_get: true
   become: true
-  when: glade_bin.stat.exists == False
+  when: glade_bin.stat.exists == false

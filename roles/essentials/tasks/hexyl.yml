@@ -38,4 +38,4 @@
     deb: "{{ hexyl_download_url }}"
     force_apt_get: yes
   become: true
-  when: (hexyl_local_version is defined and hexyl_local_version != helyx_remote_version) or hexyl_bin_path.stat.exists == False
+  when: (hexyl_local_version is defined and hexyl_local_version != helyx_remote_version) or hexyl_bin_path.stat.exists == false

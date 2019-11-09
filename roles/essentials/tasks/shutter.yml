@@ -28,4 +28,4 @@
       state: present
       force_apt_get: true
     become: true
-  when: shutter_bin_path.stat.exists == False
+  when: shutter_bin_path.stat.exists == false

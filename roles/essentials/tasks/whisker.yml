@@ -19,4 +19,4 @@
       state: latest
       force_apt_get: true
     become: true
-  when: whisker_exists.stat.exists == False
+  when: whisker_exists.stat.exists == false

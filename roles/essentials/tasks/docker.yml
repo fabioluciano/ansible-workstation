@@ -31,7 +31,7 @@
       state: present
       force_apt_get: true
     become: true
-  when: docker_exists.stat.exists == False and docker_repository_release_exists.status == 200
+  when: docker_exists.stat.exists == false and docker_repository_release_exists.status == 200
 
 - name: Docker | Install or Upgrade
   block:
@@ -41,7 +41,7 @@
       state: present
       force_apt_get: true
     become: true
-  when: docker_exists.stat.exists == False and docker_repository_release_exists.status != 200
+  when: docker_exists.stat.exists == false and docker_repository_release_exists.status != 200
 
 - name: Docker | Add current user to docker group
   user: 

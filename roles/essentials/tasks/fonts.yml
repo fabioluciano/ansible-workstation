@@ -19,7 +19,7 @@
   tags:
     - fonts
     - cascadia
-  when: fontscascadia_exists.stat.exists == False
+  when: fontscascadia_exists.stat.exists == false
 
 - name: Fonts | Check if FiraCode font exists
   stat:
@@ -48,7 +48,7 @@
   tags:
     - fonts
     - firacode
-  when: fontsfiracode_exists.stat.exists == False
+  when: fontsfiracode_exists.stat.exists == false
 
 - name: Fonts | Check if MS Fonts exists
   stat:
@@ -69,7 +69,7 @@
   tags:
     - fonts
     - mscorefonts
-  when: msttcorefonts_exists.stat.exists == False
+  when: msttcorefonts_exists.stat.exists == false
 
 - name: Fonts | Ensure that the font cache is updated
   shell: fc-cache -f -v

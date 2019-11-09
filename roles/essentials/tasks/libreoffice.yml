@@ -23,7 +23,7 @@
     update_cache: yes
     state: present
   become: true
-  when: libreoffice_repository_release_exists == True and libreoffice_repository_exists == False
+  when: libreoffice_repository_release_exists == True and libreoffice_repository_exists == false
   
 - name: Libre Office | Install the package
   package:
@@ -37,4 +37,4 @@
     - libreoffice-style-sifr
   loop_control:
     loop_var: libreoffice_dependency
-  when: libreoffice_exists.stat.exists == False
+  when: libreoffice_exists.stat.exists == false
