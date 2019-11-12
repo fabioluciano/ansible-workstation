@@ -3,6 +3,7 @@
   include_tasks: "{{ container_tasks }}.yml"
   loop:
     - docker
+    - dry
     - dive
     - microk8s
     - docker-compose

@@ -1,0 +1,38 @@
+- name: Dry | Check if is present
+  stat:
+    path: /usr/local/bin/dry
+  register: dry_bin_path
+
+- name: Dry | Check avaliable version
+  command: /usr/local/bin/dry -v
+  register: dry_local_version
+  ignore_errors: true
+
+- name: Dry | Register local version
+  set_fact:
+    dry_local_version: "{{ dry_local_version.stdout | regex_findall('(\\d+\\.\\d+)') | first }}"
+  when: dry_local_version.rc == 0
+
+- name: Dry | Recover all releases
+  uri:
+    url: https://api.github.com/repos/moncho/dry/releases
+    return_content: true
+    body_format: json
+  register: dry_releases_response
+
+- name: Dry | Get latest version URL
+  set_fact:
+    dry_download_url: "{{ dry_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `linux-amd64`)].browser_download_url') | first }}"
+
+- name: Dry | Set latest remote version
+  set_fact:
+    dry_remote_version: "{{ dry_download_url | regex_findall('(\\d+\\.\\d+)') | first }}"
+
+- name: Dry | Download and put on bin path
+  get_url:
+    url: "{{ dry_download_url }}"
+    dest: /usr/local/bin/dry
+    mode: 0755
+    validate_certs: false
+  become: true
+  when: dry_remote_version != dry_local_version or dry_bin_path.stat.exists == false

@@ -14,7 +14,7 @@
 - name: Indicators | Atareao | Add package repository
   apt_repository:
     repo: "ppa:atareao/atareao"
-    filename: libreoffice
+    filename: atareao
     update_cache: yes
     state: present
   become: true

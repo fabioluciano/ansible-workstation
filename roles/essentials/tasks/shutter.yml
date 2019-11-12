@@ -4,12 +4,18 @@
     path: /usr/bin/shutter
   register: shutter_bin_path
 
+- name: Shutter | Check if repository is already present
+  stat:
+    path: /etc/apt/source.list.d/shutter.list
+  register: shutter_repo_config_path
+
 - name: Shutter | Ensure that exists a version in this release
   uri:
     url: "http://ppa.launchpad.net/linuxuprising/shutter/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
   register: shutter_remote_repo
+  when: shutter_repo_config_path.stat.exists == false
 
 - name: Shutter | Add package repository
   apt_repository:
@@ -18,7 +24,7 @@
     update_cache: yes
     state: present
   become: true
-  when: shutter_remote_repo.status == 200
+  when: (shutter_remote_repo is defined and shutter_remote_repo.status == 200) and shutter_repo_config_path.stat.exists == false
 
 - name: Shutter | Install or Upgrade
   block:
