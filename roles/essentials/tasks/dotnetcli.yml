@@ -1,0 +1,27 @@
+- name: .NET Cli | Check if is present
+  stat:
+    path: /usr/bin/dotnet
+  register: dotnetcli_exists
+
+- name: .NET Cli | Ensure that exists a version in this release
+  stat:
+    path: /etc/apt/sources.list.d/microsoft-prod.list
+  ignore_errors: yes
+  register: dotnetcli_repo
+
+- name: .NET Cli | Install deb file for repository configuration
+  apt:
+    deb: "https://packages.microsoft.com/config/ubuntu/{{ ansible_distribution_version }}/packages-microsoft-prod.deb"
+    force_apt_get: yes
+    update_cache: true
+  become: true
+  when: dotnetcli_exists.stat.exists == false and dotnetcli_repo.stat.exists == false
+
+- name: .NET Cli | Install the binary
+  package:
+    name: dotnet-sdk-3.1
+    state: present
+    force_apt_get: yes
+  become: true
+  when: dotnetcli_exists.stat.exists == false
+

@@ -11,5 +11,6 @@
     - sdkman
     - spacevim
     - hashicorp
+    - dotnetcli
   loop_control:
     loop_var: development_tasks
