@@ -6,7 +6,7 @@
 
 - name: Google Cloud CLI | Ensure that exists a version in this release
   uri:
-    url: "https://packages.microsoft.com/repos/azure-cli/dists/{{ ansible_distribution_release }}/"
+    url: "https://packages.cloud.google.com/apt/dists/cloud-sdk-{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
   register: gcloud_repository_release_exists
