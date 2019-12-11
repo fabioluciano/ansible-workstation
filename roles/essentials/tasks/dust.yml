@@ -26,7 +26,7 @@
 
 - name: Dust | Set latest remote version
   set_fact:
-    dust_remote_version: "{{ dust_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+\\.\\d+)') | first }}"
+    dust_remote_version: "{{ dust_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: Dust | Install or Upgrade
   block:

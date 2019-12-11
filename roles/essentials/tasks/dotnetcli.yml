@@ -13,9 +13,13 @@
   apt:
     deb: "https://packages.microsoft.com/config/ubuntu/{{ ansible_distribution_version }}/packages-microsoft-prod.deb"
     force_apt_get: yes
-    update_cache: true
   become: true
   when: dotnetcli_exists.stat.exists == false and dotnetcli_repo.stat.exists == false
+
+- name: .NET Cli | update apt cache
+  apt:
+    update_cache: true
+  become: true
 
 - name: .NET Cli | Install the binary
   package:
