@@ -32,7 +32,7 @@
     become: true
   - name: VirtualBox | Install the package
     package:
-      name: virtualbox-6.0
+      name: virtualbox-6.1
       state: present
       force_apt_get: true
     become: true
@@ -74,4 +74,3 @@
       file:
         path: "{{ extension_pack_path.dest }}"
         state: absent
-  when: virtualbox_bin_path.stat.exists == True

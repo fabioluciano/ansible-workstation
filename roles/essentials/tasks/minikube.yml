@@ -1,0 +1,44 @@
+- name: Minikube | Check if is present
+  stat:
+    path: /usr/local/bin/minikube
+  register: minikube_bin_path
+
+- name: Minikube | Check avaliable version
+  command: /usr/local/bin/minikube version
+  register: minikube_bin_version
+  ignore_errors: true
+
+- name: Minikube | Register local version
+  set_fact:
+    minikube_local_version: "{{ minikube_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: minikube_bin_version.rc == 0
+
+- name: Minikube | Register local version
+  set_fact:
+    minikube_local_version: ""
+  when: minikube_bin_version.rc != 0
+
+- name: Minikube | Recover all releases
+  uri:
+    url: https://api.github.com/repos/kubernetes/minikube/releases
+    return_content: true
+    body_format: json
+  register: minikube_releases_response
+
+- name: Minikube | Get latest version URL
+  set_fact:
+    minikube_download_url: "{{ minikube_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `minikube_`) && ends_with(name, `.deb`)].browser_download_url') | first }}"
+
+- name: Minikube | Set latest remote version
+  set_fact:
+    minikube_remote_version: "{{ minikube_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Minikube | Install deb file
+  apt:
+    deb: "{{ minikube_download_url }}"
+    force_apt_get: yes
+  become: true
+  when: minikube_local_version != minikube_remote_version or minikube_bin_path.stat.exists == false
+
+- name: Minikube | Set KVM2 as driver
+  shell: "minikube config set vm-driver kvm2"

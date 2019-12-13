@@ -1,0 +1,8 @@
+---
+- name: Kubernetes | Include related tasks
+  include_tasks: "{{ kubernetes_tasks }}.yml"
+  loop:
+    - kvm
+    - minikube
+  loop_control:
+    loop_var: kubernetes_tasks
