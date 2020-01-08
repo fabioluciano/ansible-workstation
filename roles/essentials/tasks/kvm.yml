@@ -10,6 +10,6 @@
       - qemu-kvm
       - libvirt-daemon-system
       - libvirt-clients
-      - bridge-util
+      - bridge-utils
     loop_control:
       loop_var: kvm_depedency

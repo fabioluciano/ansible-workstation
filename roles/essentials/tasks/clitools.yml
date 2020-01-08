@@ -8,6 +8,7 @@
     - jq
     - skim
     - dust
+    - glow
     - hexyl
     - clitoolscloudprovider
   loop_control:

@@ -6,6 +6,7 @@
     - dry
     - dive
     - microk8s
+    - kubernetes
     - docker-compose
     - kubectl
   loop_control:

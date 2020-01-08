@@ -1,0 +1,42 @@
+---
+- name: Glow | Check if is present
+  stat:
+    path: /usr/bin/glow
+  register: glow_bin_path
+
+- name: Glow | Check avaliable version
+  command: /usr/bin/glow --version
+  register: glow_bin_version
+  ignore_errors: true
+
+- name: Glow | Register local version
+  set_fact:
+    glow_local_version: "{{ glow_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: glow_bin_version.rc == 0
+
+- name: Glow | Register local version
+  set_fact:
+    glow_local_version: ""
+  when: glow_bin_version.rc != 0
+
+- name: Glow | Recover all releases
+  uri:
+    url: https://api.github.com/repos/charmbracelet/glow/releases
+    return_content: true
+    body_format: json
+  register: glow_releases_response
+
+- name: Glow | Get latest version URL
+  set_fact:
+    glow_download_url: "{{ glow_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `glow_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: Glow | Set latest remote version
+  set_fact:
+    glow_remote_version: "{{ glow_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Glow | Install deb file
+  apt:
+    deb: "{{ glow_download_url }}"
+    force_apt_get: yes
+  become: true
+  when: (glow_local_version is defined and glow_local_version != glow_remote_version) or glow_bin_path.stat.exists == false

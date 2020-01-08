@@ -31,11 +31,11 @@
 
 - name: Hexyl | Set latest remote version
   set_fact:
-    helyx_remote_version: "{{ hexyl_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+    hexyl_remote_version: "{{ hexyl_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: Hexyl | Install deb file
   apt:
     deb: "{{ hexyl_download_url }}"
     force_apt_get: yes
   become: true
-  when: (hexyl_local_version is defined and hexyl_local_version != helyx_remote_version) or hexyl_bin_path.stat.exists == false
+  when: (hexyl_local_version is defined and hexyl_local_version != hexyl_remote_version) or hexyl_bin_path.stat.exists == false
