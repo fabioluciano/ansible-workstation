@@ -5,7 +5,6 @@
     - docker
     - dry
     - dive
-    - microk8s
     - kubernetes
     - docker-compose
     - kubectl

@@ -24,7 +24,6 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-history-substring-search
 antigen bundle matthieusb/zsh-sdkman
 
-
 antigen theme ys
 
 antigen apply

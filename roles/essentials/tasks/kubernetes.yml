@@ -4,5 +4,7 @@
   loop:
     - kvm
     - minikube
+    - microk8s
+    - helm
   loop_control:
     loop_var: kubernetes_tasks

@@ -1,0 +1,46 @@
+- name: Helm | Check if is present
+  stat:
+    path: /usr/local/bin/helm
+  register: helm_bin_path
+
+- name: Helm | Check avaliable version
+  command: /usr/local/bin/helm version --short
+  register: helm_bin_version
+  ignore_errors: true
+
+- name: Helm | Register local version
+  set_fact:
+    helm_local_version: "{{ helm_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: helm_bin_version.rc == 0
+
+- name: Helm | Register local version
+  set_fact:
+    helm_local_version: ""
+  when: helm_bin_version.rc != 0
+
+- name: Helm | Recover all releases
+  uri:
+    url: https://api.github.com/repos/helm/helm/releases
+    return_content: true
+    body_format: json
+  register: helm_releases_response
+
+- name: Helm | Get latest version URL
+  set_fact:
+    helm_download_filename: "{{ helm_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `-linux-amd64.tar.gz.asc`)].browser_download_url') | first | basename | replace('.asc', '') }}"
+
+- name: Helm | Set latest remote version
+  set_fact:
+    helm_remote_version: "{{ helm_download_filename | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Helm | Install or Upgrade
+  unarchive:
+    src: "https://get.helm.sh/{{ helm_download_filename }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --strip=1
+      - --wildcards
+      - '*/helm'
+    remote_src: True
+  become: true
+  when: helm_local_version != helm_remote_version or helm_bin_path.stat.exists == false
