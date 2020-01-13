@@ -10,6 +10,7 @@
     - dust
     - glow
     - hexyl
+    - broot
     - clitoolscloudprovider
   loop_control:
     loop_var: clitools_tasks

@@ -1,0 +1,43 @@
+- name: Broot | Check if is present
+  stat:
+    path: /usr/local/bin/broot
+  register: broot_bin_path
+
+- name: Broot | Check avaliable version
+  command: /usr/local/bin/broot --version
+  register: broot_bin_version
+  ignore_errors: true
+
+- name: Broot | Register local version
+  set_fact:
+    broot_local_version: "{{ broot_bin_version.stdout | regex_findall('(\\d+\\.\\d+)') | first }}"
+  when: broot_bin_version.rc == 0
+
+- name: Broot | Register local version
+  set_fact:
+    broot_local_version: ""
+  when: broot_bin_version.rc != 0
+
+- name: Broot | Recover all releases
+  uri:
+    url: https://api.github.com/repos/canop/broot/releases
+    return_content: true
+    body_format: json
+  register: broot_releases_response
+
+- name: Broot | Get latest version URL
+  set_fact:
+    broot_download_url: "{{ broot_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `broot`)].browser_download_url') | first }}"
+
+- name: Broot | Set latest remote version
+  set_fact:
+    broot_remote_version: "{{ broot_download_url | regex_findall('(\\d+\\.\\d+)') | first }}"
+
+- name: Broot | Install or Upgrade
+  get_url:
+    url: "{{ broot_download_url }}"
+    dest: /usr/local/bin/broot
+    mode: 0755
+    validate_certs: false
+  become: true
+  when: broot_local_version != broot_remote_version or broot_bin_path.stat.exists == false
