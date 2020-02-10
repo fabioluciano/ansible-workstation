@@ -20,22 +20,22 @@
 
 - name: Helm | Recover all releases
   uri:
-    url: https://api.github.com/repos/helm/helm/releases
+    url: https://api.github.com/repos/helm/helm/releases/latest
     return_content: true
     body_format: json
   register: helm_releases_response
 
 - name: Helm | Get latest version URL
   set_fact:
-    helm_download_filename: "{{ helm_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `-linux-amd64.tar.gz.asc`)].browser_download_url') | first | basename | replace('.asc', '') }}"
+    helm_download_filename: "{{ helm_releases_response.content | from_json | json_query('assets[?ends_with(name, `-linux-amd64.tar.gz.asc`)].name') | replace('.asc', '') }}"
 
 - name: Helm | Set latest remote version
   set_fact:
-    helm_remote_version: "{{ helm_download_filename | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+    helm_remote_version: "{{ helm_download_filename[0] | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first}}"
 
 - name: Helm | Install or Upgrade
   unarchive:
-    src: "https://get.helm.sh/{{ helm_download_filename }}"
+    src: "https://get.helm.sh/{{ helm_download_filename[0] }}"
     dest: /usr/local/bin
     extra_opts:
       - --strip=1

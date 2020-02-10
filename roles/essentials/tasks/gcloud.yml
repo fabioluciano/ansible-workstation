@@ -6,7 +6,7 @@
 
 - name: Google Cloud CLI | Ensure that exists a version in this release
   uri:
-    url: "https://packages.cloud.google.com/apt/dists/cloud-sdk-{{ ansible_distribution_release }}/"
+    url: "https://packages.cloud.google.com/apt/dists/cloud-sdk/"
     method: HEAD
   ignore_errors: yes
   register: gcloud_repository_release_exists
@@ -20,7 +20,7 @@
       become: true
     - name: Google Cloud CLI | Configure Google Cloud repository
       apt_repository:
-        repo: "deb http://packages.cloud.google.com/apt cloud-sdk-{{ ansible_distribution_release }} main"
+        repo: "deb http://packages.cloud.google.com/apt cloud-sdk main"
         state: present
         filename: gcloudcli
         update_cache: true
