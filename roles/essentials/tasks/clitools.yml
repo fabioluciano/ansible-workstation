@@ -11,5 +11,6 @@
     - glow
     - hexyl
     - clitoolscloudprovider
+    - cfssl
   loop_control:
     loop_var: clitools_tasks

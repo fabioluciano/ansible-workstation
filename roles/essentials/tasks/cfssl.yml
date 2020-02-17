@@ -1,0 +1,24 @@
+- name: CFSSL | Recover all releases
+  uri:
+    url: https://pkg.cfssl.org/
+    return_content: true
+  register: cfssl_releases_response
+
+- name: CFSSL | Recover all versions
+  set_fact:
+    latest_avaliable_version: "{{ cfssl_releases_response.content | regex_findall('R(\\d+\\.\\d+)') | list | unique | sort(reverse=True) | first }}"
+
+- name: CFSSL | Get all amd64 binaries in latest version
+  set_fact:
+    cfssl_binaries: "{{ cfssl_releases_response.content | regex_findall('\/R' + latest_avaliable_version + '/.*?_linux-amd64') }}"
+
+- name: CFSSL | Get and put the binary on local binary location
+  get_url:
+    url: "https://pkg.cfssl.org{{ cfssl_binary }}"
+    dest: "/usr/local/bin/{{ cfssl_binary | replace('/R' + latest_avaliable_version + '/', '') | replace('_linux-amd64', '') }}"
+    validate_certs: false
+    mode: 111
+  loop: "{{ cfssl_binaries }}"
+  loop_control:
+    loop_var: cfssl_binary
+  become: true
