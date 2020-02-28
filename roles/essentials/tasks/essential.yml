@@ -16,6 +16,7 @@
     - ca-certificates
     - software-properties-common
     - unzip
+    - gdebi
     - bash-completion
     - gconf-service
     - gconf-service-backend
