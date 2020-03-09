@@ -21,6 +21,11 @@
     become: true
   when: plank_exists.stat.exists == false
 
+- name: Plank | Change file ownership, group and permissions
+  file:
+    path: "{{ ansible_env.HOME }}/.config/autostart"
+    state: directory
+
 - name: Plank | Check if Plank is present
   stat:
     path: "{{ ansible_env.HOME }}/.config/autostart/plank.desktop"

@@ -6,6 +6,14 @@
 - name: Prepare | Include pip related tasks
   include_tasks: "pip.yml"
 
+- name: Prepare | Include the execution of script daily
+  cron:
+    name: "Update all workstation"
+    special_time: daily
+    user: "{{ ansible_user }}"
+    job: "make --directory={{ playbook_dir }}"
+    state: present
+
 - name: Prepare | Install or Upgrade jmespath
   pip:
     name: jmespath
