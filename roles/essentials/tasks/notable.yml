@@ -1,0 +1,31 @@
+- name: Notable | Check if is present
+  stat:
+    path: /usr/bin/notable
+  register: notable_bin_path
+
+- name: Notable | Register local version
+  set_fact:
+    notable_local_version: "{{ ansible_facts.packages.notable[0].version }}"
+  ignore_errors: true
+
+- name: Notable | Recover all releases
+  uri:
+    url: https://api.github.com/repos/notable/notable/releases
+    return_content: true
+    body_format: json
+  register: notable_releases_response
+
+- name: Notable | Get latest version URL
+  set_fact:
+    notable_download_url: "{{ notable_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `notable_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: Notable | Set latest remote version
+  set_fact:
+    notable_remote_version: "{{ notable_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Notable | Install deb file
+  apt:
+    deb: "{{ notable_download_url }}"
+    force_apt_get: yes
+  become: true
+  when: (notable_local_version is defined and notable_local_version != notable_remote_version) or notable_bin_path.stat.exists == false

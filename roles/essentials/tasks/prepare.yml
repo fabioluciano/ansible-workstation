@@ -1,0 +1,13 @@
+---
+- name: Prepare | Recover package facts
+  package_facts:
+    manager: apt
+
+- name: Prepare | Include pip related tasks
+  include_tasks: "pip.yml"
+
+- name: Prepare | Install or Upgrade jmespath
+  pip:
+    name: jmespath
+    state: latest
+    extra_args: --user
