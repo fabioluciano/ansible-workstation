@@ -4,11 +4,7 @@
   register: dbeaver_exists
 
 - name: DBeaver | Install or Upgrade
-  block:
-    - name: DBeaver | Recover package facts
-      package_facts:
-        manager: apt
-        
+  block:     
     - name: DBeaver | Recover all releases
       uri:
         url: https://api.github.com/repos/dbeaver/dbeaver/releases

@@ -1,8 +1,4 @@
 ---
-- name: Icon | Papirus | Recover package facts
-  package_facts:
-    manager: apt
-
 - name: Icon | Papirus | Check if repository is configured
   stat:
     path: /etc/apt/sources.list.d/papirus.list

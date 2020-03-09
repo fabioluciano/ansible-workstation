@@ -3,7 +3,6 @@
   include_tasks: "{{ development_tasks }}.yml"
   loop:
     - altair
-    - python
     - composer
     - dbeaver
     - nvm

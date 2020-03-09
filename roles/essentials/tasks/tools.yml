@@ -25,6 +25,7 @@
     - skype
     - soundswitcher
     - whisker
+    - notable
     - xubuntudev
   loop_control:
     loop_var: tools_tasks

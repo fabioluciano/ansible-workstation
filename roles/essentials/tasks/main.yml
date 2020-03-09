@@ -4,6 +4,7 @@
     - name: Includes the Essentials related tasks
       include_tasks: "{{ item }}.yml"
       with_items:
+        - prepare
         - essential
         - upgrade
         - fonts

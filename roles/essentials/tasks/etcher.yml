@@ -5,9 +5,6 @@
 
 - name: Etcher | Install or Upgrade
   block:
-    - name: Etcher | Recover package facts
-      package_facts:
-        manager: apt
     - name: Etcher | Install dependencies
       package:
         state: present

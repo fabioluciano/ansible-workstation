@@ -6,9 +6,6 @@
 
 - name: Dive | Install or Upgrade
   block:
-    - name: Dive | Recover package facts
-      package_facts:
-        manager: auto
     - name: Dive | Recover all releases
       uri:
         url: https://api.github.com/repos/wagoodman/dive/releases
