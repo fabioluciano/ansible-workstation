@@ -6,13 +6,10 @@
 
 - name: Composer PHP | Ensure that all dependecies are present
   package:
-    name: "{{ composer_dependency }}"
+    name:
+      - php-cli
     state: present
     force_apt_get: true
-  loop:
-    - php-cli
-  loop_control:
-    loop_var: composer_dependency
   become: true
 
 - name: Composer PHP | install the package

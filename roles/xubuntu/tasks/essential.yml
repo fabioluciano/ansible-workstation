@@ -1,27 +1,24 @@
 ---
 - name: Essential | Install essential packages
   package:
-    name: "{{ essential_dependency }}"
+    name:
+      - vim
+      - curl
+      - wget
+      - git
+      - git-flow
+      - libssl-dev
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - unzip
+      - gdebi
+      - bash-completion
+      - gconf-service
+      - gconf-service-backend
+      - gconf2-common
+      - gconf2
+      - libgconf-2-4
     state: latest
     force_apt_get: yes
   become: true
-  loop:
-    - vim
-    - curl
-    - wget
-    - git
-    - git-flow
-    - libssl-dev
-    - apt-transport-https
-    - ca-certificates
-    - software-properties-common
-    - unzip
-    - gdebi
-    - bash-completion
-    - gconf-service
-    - gconf-service-backend
-    - gconf2-common
-    - gconf2
-    - libgconf-2-4
-  loop_control:
-    loop_var: essential_dependency

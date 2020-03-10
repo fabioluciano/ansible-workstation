@@ -13,19 +13,30 @@
         state: present
         force_apt_get: true
       become: true
-    - name: ZSH | Antigen | Download
-      get_url:
-        url: https://git.io/antigen
-        dest: "{{ ansible_env.HOME }}/.local-antigen.zsh"
-        mode: 771
-        validate_certs: false
-    - name: ZSH | Copy configurations file
-      copy:
-        src: zshrc
-        dest: "{{ ansible_env.HOME }}/.zshrc"
-    - name: Terminal | ZSH | Change default shell to zsh
-      user:
-        name: "{{ ansible_user }}"
-        shell: /usr/bin/zsh
-      become: true
   when: zsh_exists.stat.exists == false
+
+
+- name:  ZSH | Antigen | Check if the binary is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.local-antigen.zsh"
+  register: antigen_exists
+
+- name: ZSH | Antigen | Download
+  get_url:
+    url: https://git.io/antigen
+    dest: "{{ ansible_env.HOME }}/.local-antigen.zsh"
+    mode: 771
+    validate_certs: false
+  when: antigen_exists.stat.exists == false
+
+
+- name: ZSH | Copy configurations file
+  copy:
+    src: zshrc
+    dest: "{{ ansible_env.HOME }}/.zshrc"
+
+- name: Terminal | ZSH | Change default shell to zsh
+  user:
+    name: "{{ ansible_user }}"
+    shell: /usr/bin/zsh
+  become: true

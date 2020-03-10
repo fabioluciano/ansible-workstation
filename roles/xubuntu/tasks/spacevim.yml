@@ -8,16 +8,13 @@
   block:
   - name: SpaceVim | Ensure that vim package is installed
     package: 
-      name: "{{ spacevim_dependency }}"
+      name:
+        - vim
+        - git 
+        - curl
+        - global
       state: present 
       force_apt_get: yes
-    loop:
-      - vim
-      - git 
-      - curl
-      - global
-    loop_control:
-      loop_var: spacevim_dependency
     become: true
 
   - name: SpaceVim | Download the installer
@@ -51,13 +48,10 @@
 
 - name: Spacevim | Layers | Ensure that the python dependency is present
   pip:
-    name: "{{ spacevim_pip_depedency }}"
+    name:
+      - flake8
+      - yapf
+      - autoflake
+      - isort
+      - coverage
     extra_args: --user
-  loop:
-    - flake8
-    - yapf
-    - autoflake
-    - isort
-    - coverage
-  loop_control:
-    loop_var: spacevim_pip_depedency

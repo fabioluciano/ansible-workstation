@@ -23,13 +23,10 @@
     when: papirus_repository_exists.stat.exists == false
   - name: Icon | Papirus | Install the package
     package:
-      name: "{{ papirus_package }}"
+      name:
+        - papirus-icon-theme
+        - papirus-folders
       state: present
       force_apt_get: true
-    loop:
-      - papirus-icon-theme
-      - papirus-folders
-    loop_control:
-      loop_var: papirus_package
     become: true
   when: ansible_facts.packages['papirus-icon-theme'] is not defined and papirus_repository_release_exists.status == 200

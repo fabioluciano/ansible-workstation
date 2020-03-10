@@ -27,14 +27,11 @@
   
 - name: Libre Office | Install the package
   package:
-    name: "{{ libreoffice_dependency }}"
+    name:
+      - libreoffice
+      - libreoffice-l10n-pt-br
+      - libreoffice-style-sifr
     state: present
     force_apt_get: true
   become: true
-  loop:
-    - libreoffice
-    - libreoffice-l10n-pt-br
-    - libreoffice-style-sifr
-  loop_control:
-    loop_var: libreoffice_dependency
   when: libreoffice_exists.stat.exists == false

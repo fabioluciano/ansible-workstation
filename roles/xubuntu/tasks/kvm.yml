@@ -2,14 +2,11 @@
   block:
   - name: KVM | Ensures that is installed
     package:
-      name: "{{ kvm_depedency }}"
+      name:
+        - qemu-kvm
+        - libvirt-daemon-system
+        - libvirt-clients
+        - bridge-utils
       state: latest
       force_apt_get: yes
     become: true
-    with_list:
-      - qemu-kvm
-      - libvirt-daemon-system
-      - libvirt-clients
-      - bridge-utils
-    loop_control:
-      loop_var: kvm_depedency

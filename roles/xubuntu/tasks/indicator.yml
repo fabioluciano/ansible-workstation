@@ -22,12 +22,9 @@
   
 - name: Indicators | Atareao | Install the package
   package:
-    name: "{{ atareao_atareao_dependency }}"
+    name:
+      - calendar-indicator
+      - touchpad-indicator
     state: present
     force_apt_get: true
   become: true
-  loop:
-    - calendar-indicator
-    - touchpad-indicator
-  loop_control:
-    loop_var: atareao_atareao_dependency

@@ -40,13 +40,10 @@
 
 - name: VirtualBox | Install or Upgrade
   package:
-    name: "{{ virtualbox_dependency }}"
-  loop:
-    - virtualbox
-    - virtualbox-guest-additions-iso
-    - virtualbox-guest-utils
-  loop_control:
-    loop_var: virtualbox_dependency
+    name:
+      - virtualbox
+      - virtualbox-guest-additions-iso
+      - virtualbox-guest-utils
   when: virtualbox_bin_path.stat.exists == false and virtualbox_repo.status != 200
   become: true
 

@@ -14,18 +14,15 @@
   block:
   - name: Azure CLI | Ensures that the dependencies for Azure cli is installed
     package:
-      name: "{{ azure_depedency }}"
+      name:
+        - ca-certificates
+        - curl
+        - apt-transport-https
+        - lsb-release
+        - gnupg
       state: latest
       force_apt_get: yes
     become: true
-    with_list:
-      - ca-certificates
-      - curl
-      - apt-transport-https
-      - lsb-release
-      - gnupg
-    loop_control:
-      loop_var: azure_depedency
 
   - name: Azure CLI | Add an Apt signing key
     apt_key:
