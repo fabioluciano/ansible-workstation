@@ -1,7 +1,7 @@
 [Configuration]
 ColorForeground=#dcdcdc
 ColorBackground=#2c2c2c
-FontName=Cascadia Code 11
+FontName=Cascadia Code 12
 MiscAlwaysShowTabs=FALSE
 MiscBell=FALSE
 MiscBellUrgent=TRUE

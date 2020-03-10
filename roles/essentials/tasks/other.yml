@@ -57,6 +57,5 @@
     - file-roller
     - remmina
     - intel-microcode
-    - nvidia-driver-390
   loop_control:
     loop_var: others_depedency

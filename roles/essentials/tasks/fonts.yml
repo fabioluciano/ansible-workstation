@@ -6,20 +6,21 @@
   tags:
     - fonts
 
-- name: Fonts | Check if Cascadia font exists
-  stat:
-    path: "{{ ansible_env.HOME }}/.fonts/Cascadia.ttf"
-  register: fontscascadia_exists
-
 - name: Fonts | Ensure the download of MS Cascadia font
   get_url:
-    url: https://github.com/microsoft/cascadia-code/releases/download/v1910.04/Cascadia.ttf
+    url: "https://github.com/microsoft/cascadia-code/releases/download/v1911.21/{{ cascadia_depedency }}.ttf"
     dest: "{{ ansible_env.HOME }}/.fonts"
     validate_certs: true
   tags:
     - fonts
     - cascadia
-  when: fontscascadia_exists.stat.exists == false
+  with_list:
+    - Cascadia
+    - CascadiaMono
+    - CascadiaMonoPL
+    - CascadiaPL
+  loop_control:
+    loop_var: cascadia_depedency
 
 - name: Fonts | Check if FiraCode font exists
   stat:
