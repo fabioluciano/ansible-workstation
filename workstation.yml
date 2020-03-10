@@ -4,4 +4,4 @@
   gather_facts: True
   become: false
   roles:
-    - essentials
+    - xubuntu

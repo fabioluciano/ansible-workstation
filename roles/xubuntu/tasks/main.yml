@@ -1,7 +1,7 @@
 ---
 - name: Includes the all essential tasks
   block:
-    - name: Includes the Essentials related tasks
+    - name: Includes the Xubuntu related tasks
       include_tasks: "{{ item }}.yml"
       with_items:
         - prepare
