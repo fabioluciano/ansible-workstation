@@ -7,7 +7,7 @@
     - bat
     - jq
     - skim
-    - dust
+    # - dust
     - glow
     - hexyl
     - clitoolscloudprovider

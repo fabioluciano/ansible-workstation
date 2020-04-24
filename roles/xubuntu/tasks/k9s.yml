@@ -1,0 +1,39 @@
+- name: K9s | Check if is present
+  stat:
+    path: /usr/local/bin/k9s
+  register: k9s_bin_path
+
+- name: K9s | Check avaliable version
+  command: /usr/local/bin/k9s version
+  register: k9s_local_version
+  ignore_errors: true
+
+- name: K9s | Register local version
+  set_fact:
+    k9s_local_version: "{{ k9s_local_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: k9s_local_version.rc == 0
+
+- name: K9s | Recover all releases
+  uri:
+    url: https://api.github.com/repos/derailed/k9s/releases
+    return_content: true
+    body_format: json
+  register: k9s_releases_response
+
+- name: K9s | Get latest version URL
+  set_fact:
+    k9s_download_url: "{{ k9s_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `Linux_x86_64.tar.gz`)].browser_download_url') | first }}"
+
+- name: K9s | Set latest remote version
+  set_fact:
+    k9s_remote_version: "{{ k9s_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: K9s | Install or Upgrade
+  block:
+    - name: K9s | Unarchive the binary
+      unarchive:
+        src: "{{ k9s_download_url }}"
+        dest: /usr/local/bin
+        remote_src: true
+      become: true
+  when: k9s_bin_path.stat.exists == false or k9s_remote_version != k9s_local_version

@@ -4,7 +4,6 @@
   loop:
     - compiz
     - guake
-    - telegram
     - apachedirectory
     - libreoffice
     - whatsdesk
