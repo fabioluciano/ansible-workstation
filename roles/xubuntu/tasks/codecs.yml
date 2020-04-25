@@ -3,7 +3,6 @@
   package:
     name:
       - libavcodec-extra
-      - libdvdread4
       - icedax
       - ffmpeg
       - easytag
