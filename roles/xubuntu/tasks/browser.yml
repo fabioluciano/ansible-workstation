@@ -1,11 +1,8 @@
 ---
 - name: Browser | Include related tasks
-  include_tasks: "{{ container_tasks }}.yml"
+  include_tasks: "{{ browser_tasks }}.yml"
   loop:
     - firefox
     - googlechrome
-    - vivaldi
-    - opera
-    - brave
   loop_control:
-    loop_var: container_tasks
+    loop_var: browser_tasks
