@@ -2,7 +2,7 @@
   block:
     - name: Python | Add pip package
       package:
-        name: python-pip
+        name: python-pip-whl
         state: present
         force_apt_get: true
       become: true

@@ -14,7 +14,7 @@
 - name: GIMP | Add package repository
   apt_repository:
     repo: "ppa:otto-kesselgulasch/gimp"
-    filename: androidstudio
+    filename: gimp
     update_cache: yes
     state: present
   become: true

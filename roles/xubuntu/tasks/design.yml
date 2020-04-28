@@ -2,7 +2,7 @@
 - name: Design | Include related tasks
   include_tasks: "{{ design_tasks }}.yml"
   loop:
-    - gimp
+#    - gimp
     - inkscape
     - shutter
   loop_control:

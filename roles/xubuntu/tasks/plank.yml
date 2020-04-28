@@ -1,25 +1,32 @@
 ---
-- name: Plank | Check if Plank is present
-  stat:
-    path: /usr/bin/plank
-  register: plank_exists
+- name: Plank | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/ricotz/docky/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
+  ignore_errors: yes
+  register: plank_repository_release_exists
 
-- name: Plank | Install Plank
-  block:
-  - name: Plank | Add the repository
-    apt_repository:
-      repo: "ppa:ricotz/docky"
-      filename: plank
-      update_cache: yes
-      state: present
-    become: true
-  - name: Plank | Install the package
-    package:
-      name: plank
-      state: present
-      force_apt_get: true
-    become: true
-  when: plank_exists.stat.exists == false
+- name: Plank | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/plank.list
+  register: plank_repository_exists
+
+- name: Plank | Add package repository
+  apt_repository:
+    repo: "ricotz/docky"
+    filename: plank
+    update_cache: yes
+    state: present
+  become: true
+  when: plank_repository_release_exists == True and plank_repository_exists == false
+  
+- name: Plank | Install the package
+  package:
+    name:
+      - plank
+    state: present
+    force_apt_get: true
+  become: true
 
 - name: Plank | Change file ownership, group and permissions
   file:

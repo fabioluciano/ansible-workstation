@@ -8,7 +8,7 @@ install_python:
 	sudo apt install -y python
 
 install_pip: install_python
-	sudo apt install -y python-pip
+	sudo apt install -y python-pip-whl python3-pip
 
 install_ansible: install_pip
 	python3 -m pip install ansible --upgrade --user
@@ -24,7 +24,7 @@ configure_ansible_cfg: install_crudini
 	crudini --set ansible.cfg defaults action_plugins $(shell python3 -m ara.setup.action_plugins)
 
 execute_playbook: configure_ansible_cfg
-	ansible-playbook workstation.yml
+	ansible-playbook workstation.yml -v
 
 serve:
 	ara-manage runserver

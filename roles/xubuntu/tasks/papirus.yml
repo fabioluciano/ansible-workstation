@@ -25,7 +25,6 @@
     package:
       name:
         - papirus-icon-theme
-        - papirus-folders
       state: present
       force_apt_get: true
     become: true

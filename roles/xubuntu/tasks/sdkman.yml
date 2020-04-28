@@ -16,27 +16,27 @@
     shell: "/tmp/sdkman.sh"
   when: sdkman_bin_path.stat.exists == false
 
-- name: SDKMAN | Check if Java 13 is present
+- name: SDKMAN | Check if Java 8 is present
   stat:
-    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/8.0.242.hs-adpt/bin/java"
+    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/8.0.252.hs-adpt/bin/java"
   register: sdkman_java8_bin_path
 
 - name: SDKMAN | Install Java 8
-  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.242.hs-adpt"
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.252.hs-adpt"
   args:
     executable: /bin/bash
   when: sdkman_java8_bin_path.stat.exists == false
 
-- name: SDKMAN | Check if Java 13 is present
+- name: SDKMAN | Check if Java 14 is present
   stat:
-    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/13.0.2.hs-adpt/bin/java"
-  register: sdkman_java13_bin_path
+    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/14.0.1.hs-adpt/bin/java"
+  register: sdkman_java14_bin_path
 
-- name: SDKMAN | Install Java 13
-  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 13.0.2.hs-adpt"
+- name: SDKMAN | Install Java 14
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 14.0.1.hs-adpt"
   args:
     executable: /bin/bash
-  when: sdkman_java13_bin_path.stat.exists == false
+  when: sdkman_java14_bin_path.stat.exists == false
 
 - name: SDKMAN | Install Maven
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install maven"
