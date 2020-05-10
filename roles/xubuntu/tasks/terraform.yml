@@ -1,0 +1,39 @@
+---
+- name: HashiCorp | Terraform | Install or Upgrade
+  block:
+  - name:  HashiCorp | Terraform | Verify the binary existence
+    command: which terraform
+    register: terraform_is_installed
+    ignore_errors: yes
+    
+  - name: HashiCorp | Terraform | Check avaliable version
+    command: terraform -v
+    when: terraform_is_installed.rc == 0
+    register: terraform_local_version
+
+  - name: HashiCorp | Terraform | Request download page content
+    uri:
+      url: https://www.terraform.io/downloads.html
+      return_content: yes
+    register: terraform_download_page
+
+  - name: HashiCorp | Terraform | Define latest avaliable version
+    set_fact:
+      terraform_download_url: "{{ terraform_download_page.content | regex_findall('(https://.*?terraform_[\\d.]+_linux_amd64.zip)') | first }}"
+      terraform_latest_avaliable_version: "{{ terraform_download_page.content | regex_findall('terraform_([\\d.]+)_linux_amd64.zip') | first }}"
+
+  - name: HashiCorp | Terraform | If installed, set the local version fact
+    set_fact:
+      terraform_local_version: "{{ terraform_local_version.stdout | regex_findall('Terraform v([\\d+.]+)') | first }}"
+    when: terraform_is_installed.rc == 0 and terraform_local_version.rc == 0
+
+  - name: HashiCorp | Terraform | Ensure that the binary is avaliable on /usr/local/bin directory
+    unarchive:
+      src: "{{ terraform_download_url }}"
+      dest: /usr/local/bin/
+      remote_src: true
+    become: true
+    when: terraform_latest_avaliable_version != terraform_local_version
+  tags:
+    - hashicorp
+    - terraform
