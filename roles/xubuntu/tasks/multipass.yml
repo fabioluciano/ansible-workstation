@@ -1,0 +1,13 @@
+---
+- name: Multipass | Check if the binary is present
+  stat:
+    path: /snap/bin/multipass
+  register: multipass_bin_path
+
+- name: Multipass | Install the snap
+  snap:
+    name: multipass
+    state: present
+    classic: yes
+  become: true
+  when: multipass_bin_path.stat.exists == false
