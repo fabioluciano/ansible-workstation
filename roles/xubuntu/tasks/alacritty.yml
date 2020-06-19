@@ -32,3 +32,14 @@
       force_apt_get: true
     become: true
   when: alacritty_bin_path.stat.exists == false and alacritty_repository_release_exists.status == 200
+
+- name: Alacritty | Configure the application
+  block:
+  - name: Alacritty | Create configuration directory
+    file:
+      state: directory
+      path: "{{ ansible_env.HOME }}/.config/alacritty/"
+  - name: Alacritty | Copy configuration file
+    copy:
+      src: alacritty.yml
+      dest: "{{ ansible_env.HOME }}/.config/alacritty/"

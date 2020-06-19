@@ -21,6 +21,14 @@
         dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
   when: tmux_exists.stat.exists == false
 
+
+- name: Tmux | Install Tmux plugins dependencies
+  package:
+    name: xsel
+    state: present
+    force_apt_get: true
+  become: true
+
 - name: Tmux | Copy configurations file
   copy:
     src: tmux.conf

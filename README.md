@@ -11,4 +11,4 @@ sudo apt install make
 Inside the cloned repo, execute the `make` command.
 
 ## TODO
-[ ] nvm install stable before install depencies
+[ ] nvm install stable before install dependencies

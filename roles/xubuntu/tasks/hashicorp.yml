@@ -4,6 +4,6 @@
   loop:
     - terraform
     - packer
-    - vagrant
+      #- vagrant
   loop_control:
     loop_var: hashicorp_tasks

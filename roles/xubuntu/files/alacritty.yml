@@ -1,0 +1,47 @@
+window:
+  dimensions:
+    columns: 100
+    lines: 40
+  padding:
+    x: 0
+    y: 0
+  dynamic_padding: false
+  decorations: full
+  startup_mode: Windowed
+  gtk_theme_variant: dark
+
+scrolling:
+  history: 10000
+  multiplier: 3
+
+font:
+  normal:
+    family: Cascadia Code
+    style: Regular
+  bold:
+    family: Cascadia Code
+    style: Bold
+  italic:
+    family: Cascadia Code
+    style: Italic
+  bold_italic:
+    family: Cascadia Code
+    style: Bold Italic
+  size: 13.5
+  offset:
+    y: 1
+    x: 0
+
+draw_bold_text_with_bright_colors: true
+
+cursor:
+  style: Block
+
+live_config_reload: true
+
+shell:
+  program: /usr/bin/zsh
+  args:
+    - --login
+    - -c
+    - "tmux"
