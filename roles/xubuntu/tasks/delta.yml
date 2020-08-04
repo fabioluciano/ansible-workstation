@@ -1,0 +1,41 @@
+- name: Delta | Check if is present
+  stat:
+    path: /usr/bin/delta
+  register: delta_bin_path
+
+- name: Delta | Check avaliable version
+  command: /usr/bin/delta --version
+  register: delta_bin_version
+  ignore_errors: true
+
+- name: Delta | Register local version
+  set_fact:
+    delta_local_version: "{{ delta_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: delta_bin_version.rc == 0
+
+- name: Delta | Register local version
+  set_fact:
+    delta_local_version: ""
+  when: delta_bin_version.rc != 0
+
+- name: Delta | Recover all releases
+  uri:
+    url: https://api.github.com/repos/dandavison/delta/releases
+    return_content: true
+    body_format: json
+  register: delta_releases_response
+
+- name: Delta | Get latest version URL
+  set_fact:
+    delta_download_url: "{{ delta_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `git-delta_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: Delta | Set latest remote version
+  set_fact:
+    delta_remote_version: "{{ delta_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Delta | Install deb file
+  apt:
+    deb: "{{ delta_download_url }}"
+    force_apt_get: yes
+  become: true
+  when: (delta_local_version is defined and delta_local_version != delta_remote_version) or delta_bin_path.stat.exists == false

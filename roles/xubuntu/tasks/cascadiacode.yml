@@ -1,0 +1,19 @@
+- name: Font Cascadia Code | Recover all releases
+  uri:
+    url: https://api.github.com/repos/microsoft/cascadia-code/releases
+    return_content: true
+    body_format: json
+  register: cascadia_code_releases_response
+
+- name: Font Cascadia Code | Get latest version URL
+  set_fact:
+    cascadia_code_download_url: "{{ cascadia_code_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `.zip`)].browser_download_url') | first }}"
+
+- name: Font Cascadia Code | Install or Upgrade
+  block:
+    - name: Font Cascadia Code | Get and unarchive the binary
+      unarchive:
+        src: "{{ cascadia_code_download_url }}"
+        dest: "{{ ansible_env.HOME }}/.fonts"
+        remote_src: true
+      become: true

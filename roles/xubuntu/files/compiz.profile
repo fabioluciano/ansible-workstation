@@ -2,7 +2,7 @@
 s0_mode = 1
 
 [core]
-s0_active_plugins = core;composite;opengl;compiztoolbox;copytex;imgjpeg;maximumize;decor;gnomecompat;grid;imgpng;mousepoll;move;place;put;regex;resize;resizeinfo;session;text;thumbnail;titleinfo;wall;wobbly;workspacenames;animation;commands;expo;shift;workarounds;fade;scale;showdesktop;trailfocus;
+s0_active_plugins = core;composite;opengl;compiztoolbox;copytex;imgjpeg;maximumize;decor;gnomecompat;grid;imgpng;mousepoll;move;place;put;regex;resize;resizeinfo;session;text;thumbnail;titleinfo;wall;workspacenames;animation;commands;expo;shift;workarounds;fade;scale;showdesktop;
 s0_outputs = 1920x1080+1920+0;1920x1080+0+0;
 s0_show_desktop_edge = BottomRight
 s0_hsize = 2

@@ -6,21 +6,8 @@
   tags:
     - fonts
 
-- name: Fonts | Ensure the download of MS Cascadia font
-  get_url:
-    url: "https://github.com/microsoft/cascadia-code/releases/download/v1911.21/{{ cascadia_depedency }}.ttf"
-    dest: "{{ ansible_env.HOME }}/.fonts"
-    validate_certs: true
-  tags:
-    - fonts
-    - cascadia
-  with_list:
-    - Cascadia
-    - CascadiaMono
-    - CascadiaMonoPL
-    - CascadiaPL
-  loop_control:
-    loop_var: cascadia_depedency
+- name: Browser | Include related tasks
+  include_tasks: "cascadiacode.yml"
 
 - name: Fonts | Check if FiraCode font exists
   stat:
@@ -29,23 +16,23 @@
 
 - name: Fonts | Downloads and install FiraCode font
   block:
-  - name: Fonts | Create temporary directory
-    tempfile:
-      state: directory
-    register: firacode_tempdirectory
-  - name: Fonts | Unarchive the FiraCode zip
-    unarchive:
-      src: https://github.com/tonsky/FiraCode/releases/download/2/FiraCode_2.zip
-      dest: "{{ firacode_tempdirectory.path }}"
-      remote_src: true
-  - name: Fonts | Ensure that the ttf fonts are moved to the fonts directory
-    synchronize:
-      src: "{{ firacode_tempdirectory.path }}/ttf/"
-      dest: "{{ ansible_env.HOME }}/.fonts"
-  - name: Fonts | Ensure that the temporary dictory is removed
-    file:
-      path: "{{ firacode_tempdirectory.path }}"
-      state: absent
+    - name: Fonts | Create temporary directory
+      tempfile:
+        state: directory
+      register: firacode_tempdirectory
+    - name: Fonts | Unarchive the FiraCode zip
+      unarchive:
+        src: https://github.com/tonsky/FiraCode/releases/download/2/FiraCode_2.zip
+        dest: "{{ firacode_tempdirectory.path }}"
+        remote_src: true
+    - name: Fonts | Ensure that the ttf fonts are moved to the fonts directory
+      synchronize:
+        src: "{{ firacode_tempdirectory.path }}/ttf/"
+        dest: "{{ ansible_env.HOME }}/.fonts"
+    - name: Fonts | Ensure that the temporary dictory is removed
+      file:
+        path: "{{ firacode_tempdirectory.path }}"
+        state: absent
   tags:
     - fonts
     - firacode

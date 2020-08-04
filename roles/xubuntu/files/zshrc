@@ -37,3 +37,7 @@ base16_default-dark
 if test -f "$HOME/.sdkman/bin/sdkman-init.sh"; then
     . $HOME/.sdkman/bin/sdkman-init.sh
 fi
+
+alias du="ncdu --color dark"
+alias ls='exa'
+alias cat='bat'

@@ -13,5 +13,6 @@
     - hexyl
     - clitoolscloudprovider
     - cfssl
+    - delta
   loop_control:
     loop_var: clitools_tasks
