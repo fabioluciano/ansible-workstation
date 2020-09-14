@@ -15,6 +15,6 @@
         - ide
         - clitools
         - tools
-        - design
-        - multimedia
+#        - design
+#        - multimedia
         - other

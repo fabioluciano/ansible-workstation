@@ -3,14 +3,14 @@
   package:
     name:
       - tree
-      - pidgin
-      - adobe-flashplugin
+#      - pidgin
+#      - adobe-flashplugin
       - pgadmin3
-      - subversion
+#      - subversion
       - meld
       - git-flow
-      - dia
-      - blender
+#      - dia
+#      - blender
       - gparted
       - menulibre
       - htop
@@ -24,7 +24,7 @@
       - tlp
       - tlp-rdw
       - tp-smapi-dkms
-      - smartmontools
+#      - smartmontools
       - ethtool
       - hexchat
       - network-manager-pptp-gnome

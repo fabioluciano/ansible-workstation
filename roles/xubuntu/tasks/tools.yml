@@ -3,27 +3,27 @@
   include_tasks: "{{ tools_tasks }}.yml"
   loop:
     - compiz
-    - guake
-    - apachedirectory
+#    - guake
+#    - apachedirectory
     - libreoffice
     - whatsdesk
     - gcolor3
     - synapse
-    - ulauncher
-    - wireshark
+#    - ulauncher
+#    - wireshark
     - whatsdesk
-    - telegram
+#    - telegram
     - virtualbox
-    - multipass
-    - discord
-    - etcher
-#    - indicator
+#    - multipass
+#    - discord
+#    - etcher
+    - indicator
     - obsstudio
     - papirus
-    - peek
+#    - peek
     - plank
     - qbittorrent
-    - skype
+#    - skype
     - soundswitcher
     - whisker
     - notable

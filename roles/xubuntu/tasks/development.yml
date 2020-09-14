@@ -2,11 +2,11 @@
 - name: Development | Include related tasks
   include_tasks: "{{ development_tasks }}.yml"
   loop:
-    - altair
+#    - altair
     - composer
     - dbeaver
     - nvm
-    - postman
+#    - postman
     - sdkman
     - spacevim
     - hashicorp

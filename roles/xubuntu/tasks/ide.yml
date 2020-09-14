@@ -2,12 +2,12 @@
 - name: IDE | Include related tasks
   include_tasks: "{{ ide_tasks }}.yml"
   loop:
-    - vscode
+#    - vscode
     - atom
     - sublimetext
-    - androidstudio
+#    - androidstudio
     - pycharm
-    - glade
+#    - glade
     - gnomebuilder
   loop_control:
     loop_var: ide_tasks
