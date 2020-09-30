@@ -18,22 +18,22 @@
 
 - name: SDKMAN | Check if Java 8 is present
   stat:
-    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/8.0.252.hs-adpt/bin/java"
+    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/8.0.265-open/bin/java"
   register: sdkman_java8_bin_path
 
 - name: SDKMAN | Install Java 8
-  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.252.hs-adpt"
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.265-open"
   args:
     executable: /bin/bash
   when: sdkman_java8_bin_path.stat.exists == false
 
 - name: SDKMAN | Check if Java 14 is present
   stat:
-    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/14.0.1.hs-adpt/bin/java"
+    path: "{{ ansible_env.HOME }}/.sdkman/candidates/java/14.0.2-open/bin/java"
   register: sdkman_java14_bin_path
 
 - name: SDKMAN | Install Java 14
-  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 14.0.1.hs-adpt"
+  shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 14.0.2-open"
   args:
     executable: /bin/bash
   when: sdkman_java14_bin_path.stat.exists == false
