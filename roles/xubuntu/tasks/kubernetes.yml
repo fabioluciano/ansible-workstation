@@ -3,6 +3,7 @@
   include_tasks: "{{ kubernetes_tasks }}.yml"
   loop:
     - kvm
+    - kubectl
     - k9s
     - helm
     - minikube

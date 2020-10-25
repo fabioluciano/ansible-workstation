@@ -1,0 +1,48 @@
+---
+- name: Buildah | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/kubic-libcontainers.list
+  register: buildah_repository_file_path
+
+- name: Buildah | Check if the binary is present
+  stat:
+    path: "/usr/bin/buildah"
+  register: buildah_bin_path
+
+- name: Install the package
+  when: buildah_bin_path.stat.exists == false
+  block:
+    - name: Buildah | Ensure that exists a version in this release
+      uri:
+        url: "https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ansible_distribution_version}}"
+        method: HEAD
+      ignore_errors: yes
+      retries: 3
+      register: buildah_repository_release_exists
+
+    - name: Buildah | Add an Apt signing key
+      apt_key:
+        url: https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ansible_distribution_version}}/Release.key
+        state: present
+      retries: 3
+      become: true
+      when: buildah_repository_release_exists.status == 200
+
+    - name: Buildah | Configure the repository
+      apt_repository:
+        repo: "deb https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/xUbuntu_{{ansible_distribution_version}}/ /"
+        state: present
+        filename: kubic-libcontainers
+        update_cache: true
+      become: true
+      retries: 3
+      when: buildah_repository_file_path.stat.exists == false and buildah_repository_release_exists.status == 200
+
+    - name: Buildah | Install or Upgrade
+      package:
+        name: buildah
+        state: latest
+        force_apt_get: yes
+      become: true
+      retries: 3
+      when: buildah_repository_release_exists.status == 200

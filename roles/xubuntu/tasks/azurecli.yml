@@ -5,44 +5,45 @@
     method: HEAD
   ignore_errors: yes
   register: azurecli_repository_release_exists
+
 - name: Azure CLI | Check if Azure Cli is present
   stat:
     path: "/usr/bin/az"
   register: azurecli_bin_path
-  
+
 - name: Azure CLI | Install or Upgrade Azure cli
   block:
-  - name: Azure CLI | Ensures that the dependencies for Azure cli is installed
-    package:
-      name:
-        - ca-certificates
-        - curl
-        - apt-transport-https
-        - lsb-release
-        - gnupg
-      state: latest
-      force_apt_get: yes
-    become: true
+    - name: Azure CLI | Ensures that the dependencies for Azure cli is installed
+      package:
+        name:
+          - ca-certificates
+          - curl
+          - apt-transport-https
+          - lsb-release
+          - gnupg
+        state: latest
+        force_apt_get: yes
+      become: true
 
-  - name: Azure CLI | Add an Apt signing key
-    apt_key:
-      url: https://packages.microsoft.com/keys/microsoft.asc
-      state: present
-    retries: 3
-    become: true
+    - name: Azure CLI | Add an Apt signing key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+      retries: 3
+      become: true
 
-  - name: Azure CLI | Configure the repository
-    apt_repository:
-      repo: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
-      state: present
-      filename: azurecli
-      update_cache: true
-    become: true
-    
-  - name: Azure CLI | Install or Upgrade
-    package:
-      name: azure-cli
-      state: latest
-      force_apt_get: yes
-    become: true
+    - name: Azure CLI | Configure the repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ {{ ansible_distribution_release }} main"
+        state: present
+        filename: azurecli
+        update_cache: true
+      become: true
+
+    - name: Azure CLI | Install or Upgrade
+      package:
+        name: azure-cli
+        state: latest
+        force_apt_get: yes
+      become: true
   when: azurecli_bin_path.stat.exists == false and azurecli_repository_release_exists.status == 200
