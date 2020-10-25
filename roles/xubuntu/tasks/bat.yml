@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/sharkdp/bat/releases
     return_content: true
     body_format: json
+  retries: 3
   register: bat_releases_response
 
 - name: Bat | Get latest version URL
@@ -37,5 +38,6 @@
   apt:
     deb: "{{ bat_download_url }}"
     force_apt_get: yes
+  retries: 3
   become: true
   when: (bat_local_version is defined and bat_local_version != bat_remote_version) or bat_bin_path.stat.exists == false

@@ -13,21 +13,23 @@
       uri:
         url: https://directory.apache.org/studio/download/download-linux.html
         return_content: yes
+      retries: 3
       register: apachedirectory_download_page
     - name: Apache Directory | Set archive download link
-      set_fact: 
+      set_fact:
         apachedirectory_archive_url: "{{ apachedirectory_download_page.content | regex_findall('(https?://.*linux.gtk.x86_64.tar.gz)') | first }}"
     - name: Apache Directory | Get archive
       get_url:
         url: "{{ apachedirectory_archive_url }}"
         dest: "{{ apachedirectory_directory.path }}/apachestudio.tar.gz"
         validate_certs: false
+      retries: 3
       async: 1000
       poll: 0
       register: apachestudio_download_action
     - name: Apache Directory | Wait for download to end
       async_status:
-        jid: '{{ apachestudio_download_action.ansible_job_id }}'
+        jid: "{{ apachestudio_download_action.ansible_job_id }}"
       register: apachestudio_job_result
       until: apachestudio_job_result.finished
       retries: 30

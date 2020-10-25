@@ -6,22 +6,24 @@
 
 - name: Atom | Install Atom
   block:
-  - name: Atom | Add apt key
-    apt_key:
-      url: https://packagecloud.io/AtomEditor/atom/gpgkey 
-      state: present
-    become: true
-  - name: Atom | Add the repository
-    apt_repository:
-      repo: "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
-      filename: atom
-      update_cache: yes
-      state: present
-    become: true
-  - name: Atom | Install the package
-    package:
-      name: atom
-      state: present
-      force_apt_get: true
-    become: true
+    - name: Atom | Add apt key
+      apt_key:
+        url: https://packagecloud.io/AtomEditor/atom/gpgkey
+        state: present
+      retries: 3
+      become: true
+    - name: Atom | Add the repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
+        filename: atom
+        update_cache: yes
+        state: present
+      retries: 3
+      become: true
+    - name: Atom | Install the package
+      package:
+        name: atom
+        state: present
+        force_apt_get: true
+      become: true
   when: atom_exists.stat.exists == false
