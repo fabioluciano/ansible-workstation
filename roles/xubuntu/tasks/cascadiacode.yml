@@ -3,6 +3,7 @@
     url: https://api.github.com/repos/microsoft/cascadia-code/releases
     return_content: true
     body_format: json
+  retries: 3
   register: cascadia_code_releases_response
 
 - name: Font Cascadia Code | Get latest version URL
@@ -16,4 +17,5 @@
         src: "{{ cascadia_code_download_url }}"
         dest: "{{ ansible_env.HOME }}/.fonts"
         remote_src: true
+      retries: 3
       become: true

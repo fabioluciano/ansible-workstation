@@ -1,0 +1,47 @@
+---
+- name: Github Cli | Check if is present
+  stat:
+    path: /usr/local/bin/gh
+  register: github_cli_bin_path
+
+- name: Github Cli | Check avaliable version
+  command: /usr/local/bin/gh --version
+  register: github_cli_bin_version
+  ignore_errors: true
+
+- name: Github Cli | Register local version
+  set_fact:
+    github_cli_local_version: "{{ github_cli_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: github_cli_bin_version.rc == 0
+
+- name: Github Cli | Register local version
+  set_fact:
+    github_cli_local_version: ""
+  when: github_cli_bin_version.rc != 0
+
+- name: Github Cli | Recover all releases
+  uri:
+    url: https://api.github.com/repos/cli/cli/releases
+    return_content: true
+    body_format: json
+  register: github_cli_releases_response
+
+- name: Github Cli | Get latest version URL
+  set_fact:
+    github_cli_download_url: "{{ github_cli_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `gh_`) && ends_with(name, `linux_amd64.tar.gz`)].browser_download_url') | first }}"
+
+- name: Github Cli | Set latest remote version
+  set_fact:
+    github_cli_remote_version: "{{ github_cli_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Github Cli | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{ github_cli_download_url }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --strip-components=2
+      - --wildcards
+      - "*/bin/gh"
+  when: (github_cli_local_version is defined and github_cli_local_version != github_cli_remote_version) or github_cli_bin_path.stat.exists == false

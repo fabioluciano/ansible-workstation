@@ -1,0 +1,46 @@
+---
+- name: Kubeval | Check if is present
+  stat:
+    path: /usr/local/bin/kubeval
+  register: kubeval_bin_path
+
+- name: Kubeval | Check avaliable version
+  command: /usr/local/bin/kubeval --version
+  register: kubeval_cli_bin_version
+  ignore_errors: true
+
+- name: Kubeval | Register local version
+  set_fact:
+    kubeval_cli_local_version: "{{ kubeval_cli_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: kubeval_cli_bin_version.rc == 0
+
+- name: Kubeval | Register local version
+  set_fact:
+    kubeval_cli_local_version: ""
+  when: kubeval_cli_bin_version.rc != 0
+
+- name: Kubeval | Recover all releases
+  uri:
+    url: https://api.github.com/repos/instrumenta/kubeval/releases
+    return_content: true
+    body_format: json
+  register: kubeval_cli_releases_response
+
+- name: Kubeval | Get latest version URL
+  set_fact:
+    kubeval_cli_download_url: "{{ kubeval_cli_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `kubeval`) && ends_with(name, `linux-amd64.tar.gz`)].browser_download_url') | first }}"
+
+- name: Kubeval | Set latest remote version
+  set_fact:
+    kubeval_cli_remote_version: "{{ kubeval_cli_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Kubeval | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{ kubeval_cli_download_url }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --wildcards
+      - "kubeval"
+  when: (kubeval_cli_local_version is defined and kubeval_cli_local_version != kubeval_cli_remote_version) or kubeval_bin_path.stat.exists == false

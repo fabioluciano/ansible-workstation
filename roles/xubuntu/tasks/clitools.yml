@@ -14,5 +14,6 @@
     - clitoolscloudprovider
     - cfssl
     - delta
+    - github_cli
   loop_control:
     loop_var: clitools_tasks

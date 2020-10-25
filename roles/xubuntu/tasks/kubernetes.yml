@@ -6,5 +6,6 @@
     - k9s
     - helm
     - minikube
+    - kubeval
   loop_control:
     loop_var: kubernetes_tasks
