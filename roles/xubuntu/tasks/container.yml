@@ -3,10 +3,11 @@
   include_tasks: "{{ container_tasks }}.yml"
   loop:
     - docker
+    - podman
+    - buildah
     - dry
     - dive
     - kubernetes
     - docker-compose
-    - kubectl
   loop_control:
     loop_var: container_tasks
