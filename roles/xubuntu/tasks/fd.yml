@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/sharkdp/fd/releases
     return_content: true
     body_format: json
+  retries: 3
   register: fd_releases_response
 
 - name: Fd | Get latest version URL
@@ -38,4 +39,5 @@
     deb: "{{ fd_download_url }}"
     force_apt_get: yes
   become: true
+  retries: 3
   when: fd_local_version != fd_remote_version or fd_bin_path.stat.exists == false

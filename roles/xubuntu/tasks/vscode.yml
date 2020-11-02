@@ -6,23 +6,22 @@
 
 - name: Visual Code Studio | Install Visual Code
   block:
-  - name: Visual Code Studio | Add Visual Code apt key
-    apt_key:
-      url: https://packages.microsoft.com/keys/microsoft.asc
-      state: present
-    become: true
-  - name: Visual Code Studio | Add Visual Code repository
-    apt_repository:
-      repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
-      filename: vscode
-      update_cache: yes
-      state: present
-    become: true
-  - name: Visual Code Studio | Install Visual Code
-    package:
-      name: code
-      state: present
-      force_apt_get: true
-    become: true
+    - name: Visual Code Studio | Add Visual Code apt key
+      apt_key:
+        url: https://packages.microsoft.com/keys/microsoft.asc
+        state: present
+      become: true
+    - name: Visual Code Studio | Add Visual Code repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://packages.microsoft.com/repos/vscode stable main"
+        filename: vscode
+        update_cache: yes
+        state: present
+      become: true
+    - name: Visual Code Studio | Install Visual Code
+      package:
+        name: code
+        state: present
+        force_apt_get: true
+      become: true
   when: vscode_exists.stat.exists == false
-

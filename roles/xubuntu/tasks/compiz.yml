@@ -10,14 +10,15 @@
         name:
           - compiz
           - compizconfig-settings-manager
-          - compiz-core 
-          - compiz-plugins 
+          - compiz-core
+          - compiz-plugins
           - compiz-plugins-default
           - compiz-plugins-extra
           - compiz-plugins-main
           - compiz-plugins-main-default
         state: present
         force_apt_get: true
+      retries: 3
       become: true
     - name: Compiz | Ensure that configuration directory exists
       file:

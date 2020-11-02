@@ -14,32 +14,35 @@
     url: "http://ppa.launchpad.net/mmstick76/alacritty/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: alacritty_repository_release_exists
 
 - name: Alacritty | Install Alacritty
   block:
-  - name: Allacritty | Add package repository
-    apt_repository:
-      repo: "ppa:mmstick76/alacritty"
-      filename: alacritty
-      update_cache: yes
-      state: present
-    become: true
-  - name: Allacritty | Install the package
-    package:
-      name: alacritty
-      state: present
-      force_apt_get: true
-    become: true
+    - name: Allacritty | Add package repository
+      apt_repository:
+        repo: "ppa:mmstick76/alacritty"
+        filename: alacritty
+        update_cache: yes
+        state: present
+      become: true
+      retries: true
+    - name: Allacritty | Install the package
+      package:
+        name: alacritty
+        state: present
+        force_apt_get: true
+      retries:
+      become: true
   when: alacritty_bin_path.stat.exists == false and alacritty_repository_release_exists.status == 200
 
 - name: Alacritty | Configure the application
   block:
-  - name: Alacritty | Create configuration directory
-    file:
-      state: directory
-      path: "{{ ansible_env.HOME }}/.config/alacritty/"
-  - name: Alacritty | Copy configuration file
-    copy:
-      src: alacritty.yml
-      dest: "{{ ansible_env.HOME }}/.config/alacritty/"
+    - name: Alacritty | Create configuration directory
+      file:
+        state: directory
+        path: "{{ ansible_env.HOME }}/.config/alacritty/"
+    - name: Alacritty | Copy configuration file
+      copy:
+        src: alacritty.yml
+        dest: "{{ ansible_env.HOME }}/.config/alacritty/"

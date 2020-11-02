@@ -9,4 +9,5 @@
     name: altair
     state: present
   become: true
+  retries: 3
   when: altair_bin_path.stat.exists == false

@@ -4,6 +4,7 @@
     url: "https://packages.microsoft.com/repos/azure-cli/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: azurecli_repository_release_exists
 
 - name: Azure CLI | Check if Azure Cli is present
@@ -23,6 +24,7 @@
           - gnupg
         state: latest
         force_apt_get: yes
+      retries: 3
       become: true
 
     - name: Azure CLI | Add an Apt signing key
@@ -38,6 +40,7 @@
         state: present
         filename: azurecli
         update_cache: true
+      retries: 3
       become: true
 
     - name: Azure CLI | Install or Upgrade
@@ -45,5 +48,6 @@
         name: azure-cli
         state: latest
         force_apt_get: yes
+      retries: 3
       become: true
   when: azurecli_bin_path.stat.exists == false and azurecli_repository_release_exists.status == 200

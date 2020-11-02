@@ -1,0 +1,37 @@
+---
+- name: Fonts | Check if FiraCode font exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.fonts/FiraCode-Regular.ttf"
+  register: fontsfiracode_exists
+
+- name: Fonts | Downloads and install FiraCode font
+  block:
+    - name: Fonts | Fira Code | Recover all releases
+      uri:
+        url: https://api.github.com/repos/tonsky/FiraCode/releases
+        return_content: true
+        body_format: json
+      retries: 3
+      register: firacode_releases_response
+
+    - name: Fonts | Fira Code | Get latest version URL
+      set_fact:
+        firacode_download_url: "{{ firacode_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `Fira_Code`) && ends_with(name, `.zip`)].browser_download_url') | first }}"
+
+    - name: Fonts | Unarchive the FiraCode zip
+      unarchive:
+        src: "{{ firacode_download_url }}"
+        dest: "{{ ansible_env.HOME }}/.fonts"
+        remote_src: true
+#
+# - name: Fonts | Ensure that the ttf fonts are moved to the fonts directory
+# synchronize:
+# src: "{{ firacode_tempdirectory.path }}/ttf/"
+# dest: "{{ ansible_env.HOME }}/.fonts"
+#
+# - name: Fonts | Ensure that the temporary dictory is removed
+# file:
+# path: "{{ firacode_tempdirectory.path }}"
+# state: absent
+# when: fontsfiracode_exists.stat.exists == false
+

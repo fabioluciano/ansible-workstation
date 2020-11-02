@@ -9,7 +9,7 @@
   - name: SpaceVim | Ensure that vim package is installed
     package: 
       name:
-        - vim
+        - neovim
         - git 
         - curl
         - global

@@ -18,6 +18,7 @@
     url: https://api.github.com/repos/moncho/dry/releases
     return_content: true
     body_format: json
+  retries: 3
   register: dry_releases_response
 
 - name: Dry | Get latest version URL
@@ -35,4 +36,5 @@
     mode: 0755
     validate_certs: false
   become: true
+  retries: 3
   when: dry_remote_version != dry_local_version or dry_bin_path.stat.exists == false
