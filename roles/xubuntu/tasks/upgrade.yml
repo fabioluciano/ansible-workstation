@@ -9,12 +9,16 @@
         cache_valid_time: 600
         force_apt_get: yes
       become: true
+      retries: 3
+
     - name: Upgrade | Ensure that all packages are upgraded
       apt: 
         upgrade: dist
         force_apt_get: yes
       register: apt_result
       become: true
+      retries: 3
+
     - name: Upgrade | Autoremove unused packages
       apt: 
         autoremove: yes
@@ -22,24 +26,18 @@
       register: apt_result
       changed_when: "'packages will be REMOVED' in apt_result.stdout"
       become: true
-  tags:
-    - upgrade
 
 - name: Upgrade | Check if flatpak exists
   stat:
     path: /usr/bin/flatpak
   register: flatpak_bin_path
-  tags:
-    - upgrade
 
 - name: Upgrade | Upgrade Flatpak related packages
-  shell: flatpak update -y
   when: flatpak_bin_path.stat.exists == True
-  tags:
-    - upgrade
+  shell: flatpak update -y
+  retries: 3
 
 - name: Upgrade | Upgrade Snap related packages
   shell: snap refresh
   become: true
-  tags:
-    - upgrade
+  retries: 3

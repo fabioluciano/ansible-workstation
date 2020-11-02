@@ -9,6 +9,7 @@
     url: "https://packages.cloud.google.com/apt/dists/cloud-sdk/"
     method: HEAD
   ignore_errors: yes
+  retries: 3 
   register: gcloud_repository_release_exists
 
 - name: Google Cloud CLI | Install or Upgrade Azure CLI
@@ -17,18 +18,23 @@
       apt_key:
         url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
         state: present
+      retries: 3
       become: true
+
     - name: Google Cloud CLI | Configure Google Cloud repository
       apt_repository:
         repo: "deb http://packages.cloud.google.com/apt cloud-sdk main"
         state: present
         filename: gcloudcli
         update_cache: true
+      retries: 3
       become: true
+
     - name: Google Cloud CLI | Install or Upgrade Google Cloud CLI
       package:
         name: google-cloud-sdk
         state: latest
         force_apt_get: yes
+      retries: 3
       become: true
   when: gcloud_exists.stat.exists == false and gcloud_repository_release_exists.status == 200

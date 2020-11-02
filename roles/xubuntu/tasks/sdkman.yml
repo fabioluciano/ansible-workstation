@@ -6,14 +6,15 @@
 
 - name: SDKMAN | Download and Install
   block:
-  - name: SDKMAN | Download the binary
-    get_url:
-      url: https://get.sdkman.io
-      dest: /tmp/sdkman.sh
-      mode: 0777
-      validate_certs: false
-  - name: SDKMAN | Execute the binary
-    shell: "/tmp/sdkman.sh"
+    - name: SDKMAN | Download the binary
+      get_url:
+        url: https://get.sdkman.io
+        dest: /tmp/sdkman.sh
+        mode: 0777
+        validate_certs: false
+      retries: 3
+    - name: SDKMAN | Execute the binary
+      shell: "/tmp/sdkman.sh"
   when: sdkman_bin_path.stat.exists == false
 
 - name: SDKMAN | Check if Java 8 is present
@@ -36,16 +37,19 @@
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 14.0.2-open"
   args:
     executable: /bin/bash
+  retries: 3
   when: sdkman_java14_bin_path.stat.exists == false
 
 - name: SDKMAN | Install Maven
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install maven"
   args:
     executable: /bin/bash
+  retries: 3
   ignore_errors: true
 
 - name: SDKMAN | Install Groovy
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install groovy"
   args:
     executable: /bin/bash
+  retries: 3
   ignore_errors: true

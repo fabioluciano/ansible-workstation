@@ -6,6 +6,7 @@
   register: zsh_exists
 
 - name: ZSH | Install and configure
+  when: zsh_exists.stat.exists == false
   block:
     - name: ZSH | Install the package
       package:
@@ -13,8 +14,7 @@
         state: present
         force_apt_get: true
       become: true
-  when: zsh_exists.stat.exists == false
-
+      retries: 3
 
 - name:  ZSH | Antigen | Check if the binary is present
   stat:
@@ -27,6 +27,7 @@
     dest: "{{ ansible_env.HOME }}/.local-antigen.zsh"
     mode: 771
     validate_certs: false
+  retries: 3
   when: antigen_exists.stat.exists == false
 
 

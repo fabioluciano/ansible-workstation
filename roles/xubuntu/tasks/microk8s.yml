@@ -4,6 +4,7 @@
     name: microk8s
     state: present
     classic: true
+  retries: 3
   become: true
 
 - name: Microk8 | Disable startup

@@ -4,3 +4,4 @@
     name: com.getpostman.Postman
     state: present
     method: user
+  retries: 3

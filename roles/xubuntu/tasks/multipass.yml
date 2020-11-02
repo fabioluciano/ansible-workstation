@@ -9,5 +9,6 @@
     name: multipass
     state: present
     classic: yes
+  retries: 3
   become: true
   when: multipass_bin_path.stat.exists == false

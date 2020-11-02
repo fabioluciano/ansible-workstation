@@ -1,0 +1,20 @@
+---
+- name: Fonts | Check if MS Fonts exists
+  stat:
+    path: "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"
+  register: msttcorefonts_exists
+
+- name: Fonts | Configure and install MS Fonts
+  block:
+    - name: Fonts | Programaticaly accept the eula agreement
+      shell: echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+      become: true
+
+    - name: Fonts | Ensures that the ttf-mscorefonts-installer is installed
+      package:
+        name: ttf-mscorefonts-installer
+        state: latest
+        force_apt_get: yes
+      retries: 3
+      become: true
+  when: msttcorefonts_exists.stat.exists == false

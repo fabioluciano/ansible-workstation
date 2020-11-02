@@ -4,3 +4,4 @@
     name: virtualenv
     state: latest
     extra_args: --user
+  retries: 3

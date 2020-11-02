@@ -9,6 +9,7 @@
     url: "http://ppa.launchpad.net/qbittorrent-team/qbittorrent-stable/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: qbittorrent_repo
 
 - name: Qbittorrent | Add package repository
@@ -18,6 +19,7 @@
     update_cache: yes
     state: present
   become: true
+  retries: 3
   when: qbittorrent_repo.status == 200
 
 - name: Qbittorrent | Install the package
@@ -26,4 +28,5 @@
     state: present
     force_apt_get: true
   become: true
+  retries: 3
   when: qbittorrent_bin_path.stat.exists == false

@@ -9,21 +9,24 @@
     url: "http://ppa.launchpad.net/wireshark-dev/stable/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: wireshark_repo
 
 - name: Wireshark | Add package repository
+  when: wireshark_repo.status == 200
   apt_repository:
     repo: "ppa:wireshark-dev/stable"
     filename: wireshark
     update_cache: yes
     state: present
   become: true
-  when: wireshark_repo.status == 200
+  retries: 3
 
 - name: Wireshark | Install the package
+  when: wireshark_bin_path.stat.exists == false
   package:
     name: wireshark
     state: present
     force_apt_get: true
+  retries: 3
   become: true
-  when: wireshark_bin_path.stat.exists == false

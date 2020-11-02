@@ -4,6 +4,7 @@
     url: "http://ppa.launchpad.net/atareao/atareao/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: atareao_atareao_repository_release_exists
 
 - name: Indicators | Atareao  | Check if repository is configured
@@ -18,6 +19,7 @@
     update_cache: yes
     state: present
   become: true
+  retries: 3
   when: atareao_atareao_repository_release_exists.status == 200 and atareao_atareao_repository_exists.stat.exists == false
   
 - name: Indicators | Atareao | Install the package
@@ -27,4 +29,5 @@
       - touchpad-indicator
     state: present
     force_apt_get: true
+  retries: 3
   become: true

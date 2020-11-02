@@ -9,6 +9,7 @@
     url: "http://ppa.launchpad.net/synapse-core/testing/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: synapse_repo
 
 - name: Synapse | Add package repository
@@ -18,6 +19,7 @@
     update_cache: yes
     state: present
   become: true
+  retries: 3
   when: synapse_repo.status == 200
 
 - name: Synapse | Install the package
@@ -26,4 +28,5 @@
     state: present
     force_apt_get: true
   become: true
+  retries: 3
   when: synapse_bin_path.stat.exists == false

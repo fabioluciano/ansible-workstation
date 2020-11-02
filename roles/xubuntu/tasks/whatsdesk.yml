@@ -4,3 +4,4 @@
     name: whatsdesk
     state: present
   become: true
+  retries: 3

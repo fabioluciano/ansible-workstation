@@ -19,3 +19,4 @@
     name: jmespath
     state: latest
     extra_args: --user
+  retries: 3

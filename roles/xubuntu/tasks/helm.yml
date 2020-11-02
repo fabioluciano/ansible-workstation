@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/helm/helm/releases/latest
     return_content: true
     body_format: json
+  retries: 3
   register: helm_releases_response
 
 - name: Helm | Get latest version URL
@@ -42,5 +43,6 @@
       - --wildcards
       - '*/helm'
     remote_src: True
+  retries: 3
   become: true
   when: helm_local_version != helm_remote_version or helm_bin_path.stat.exists == false

@@ -9,4 +9,5 @@
     name: ccom.jetbrains.PyCharm-Community
     state: present
     method: user
+  retries: 3
   when: pycharm_is_installed.stdout != 'PyCharm-Community'

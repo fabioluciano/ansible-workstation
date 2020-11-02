@@ -9,4 +9,5 @@
     name: nl.hjdskes.gcolor3
     state: present
     method: user
+  retries: 3
   when: gcolor3_is_installed.stdout != 'Color picker'

@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/lotabout/skim/releases
     return_content: true
     body_format: json
+  retries: 3
   register: sk_releases_response
 
 - name: Skim | Get latest version URL
@@ -39,4 +40,5 @@
     dest: /usr/local/bin
     remote_src: true
   become: true
+  retries: 3
   when: sk_local_version != sk_remote_version or sk_bin_path.stat.exists == false

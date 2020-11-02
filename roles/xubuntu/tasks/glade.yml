@@ -3,10 +3,12 @@
   stat:
     path: /usr/bin/glade
   register: glade_bin
+
 - name: Glade | Install the package
   package:
     name: glade
     state: latest
     force_apt_get: true
+  retries: 3
   become: true
   when: glade_bin.stat.exists == false

@@ -9,23 +9,28 @@
     url: "http://ppa.launchpad.net/papirus/papirus/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: papirus_repository_release_exists
 
 - name: Icon | Papirus | Install papirus
-  block:
-  - name: Icon | Papirus | Add package repository
-    apt_repository:
-      repo: "ppa:papirus/papirus"
-      filename: papirus
-      update_cache: yes
-      state: present
-    become: true
-    when: papirus_repository_exists.stat.exists == false
-  - name: Icon | Papirus | Install the package
-    package:
-      name:
-        - papirus-icon-theme
-      state: present
-      force_apt_get: true
-    become: true
   when: ansible_facts.packages['papirus-icon-theme'] is not defined and papirus_repository_release_exists.status == 200
+  block:
+    - name: Icon | Papirus | Add package repository
+      apt_repository:
+        repo: "ppa:papirus/papirus"
+        filename: papirus
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+      when: papirus_repository_exists.stat.exists == false
+
+    - name: Icon | Papirus | Install the package
+      package:
+        name:
+          - papirus-icon-theme
+        state: present
+        force_apt_get: true
+      retries: 3
+      become: true
+      

@@ -5,6 +5,7 @@
   register: telegram_exists
 
 - name: Telegram | Install the package
+  when: telegram_exists.stat.exists == false
   block:
     - name: Telegram | Add package repository
       apt_repository:
@@ -13,10 +14,13 @@
         update_cache: yes
         filename: telegram
       become: true
+      retries: 3
+
     - name: Telegram | Install the package
       package:
         name: telegram
         state: present
         force_apt_get: true
-      become:  yes
-  when: telegram_exists.stat.exists == false
+      become: yes
+      retries: 3
+      

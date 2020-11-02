@@ -15,6 +15,7 @@
     uri:
       url: https://www.vagrantup.com/downloads.html
       return_content: yes
+    retries: 3
     register: vagrant_download_page
 
   - name: HashiCorp | Vagrant | Define latest avaliable version fact
@@ -23,17 +24,15 @@
       vagrant_latest_avaliable_version: "{{ vagrant_download_page.content | regex_findall('vagrant_([\\d.]+)_linux_amd64.zip') | first }}"
 
   - name: HashiCorp | Vagrant | If installed, set the local version fact
+    when: vagrant_is_installed.rc == 0 and vagrant_local_version.rc == 0
     set_fact:
       vagrant_local_version: "{{ vagrant_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
-    when: vagrant_is_installed.rc == 0 and vagrant_local_version.rc == 0
 
   - name: HashiCorp | Vagrant | Ensure that the binary is avaliable on /usr/local/bin directory
+    when: vagrant_latest_avaliable_version != vagrant_local_version
     unarchive:
       src: "{{ vagrant_download_url }}"
       dest: /usr/local/bin/
       remote_src: true
     become: true
-    when: vagrant_latest_avaliable_version != vagrant_local_version
-  tags:
-    - hashicorp
-    - vagrant
+    retries: 3
