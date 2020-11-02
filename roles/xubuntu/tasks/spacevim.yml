@@ -9,13 +9,14 @@
   - name: SpaceVim | Ensure that vim package is installed
     package: 
       name:
-        - vim
+        - neovim
         - git 
         - curl
         - global
       state: present 
       force_apt_get: yes
     become: true
+    retries: 3
 
   - name: SpaceVim | Download the installer
     get_url:
@@ -23,6 +24,8 @@
       dest: /tmp/spacevim-installer.sh
       mode: '0555'
       validate_certs: false
+    retries: 3
+
   - name: SpaceVim | Execute the installer
     shell: bash /tmp/spacevim-installer.sh
 
@@ -39,12 +42,15 @@
 
 - name: Spacevim | Layers | Ensure that the html dependency is present
   shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g vscode-html-languageserver-bin"
+  retries: 3
 
 - name: Spacevim | Layers | Ensure that the markdown dependency is present
   shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g prettier"
+  retries: 3
 
 - name: Spacevim | Layers | Ensure that the typescript dependency is present
   shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g typescript"
+  retries: 3
 
 - name: Spacevim | Layers | Ensure that the python dependency is present
   pip:
@@ -55,3 +61,4 @@
       - isort
       - coverage
     extra_args: --user
+  retries: 3

@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/canop/broot/releases
     return_content: true
     body_format: json
+  retries: 3
   register: broot_releases_response
 
 - name: Broot | Get latest version URL
@@ -40,4 +41,5 @@
     mode: 0755
     validate_certs: false
   become: true
+  retries: 3
   when: broot_local_version != broot_remote_version or broot_bin_path.stat.exists == false

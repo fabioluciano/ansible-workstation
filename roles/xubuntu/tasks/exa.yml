@@ -18,6 +18,7 @@
     url: https://api.github.com/repos/ogham/exa/releases
     return_content: true
     body_format: json
+  retries: 3
   register: exa_releases_response
 
 - name: Exa | Get latest version URL
@@ -36,7 +37,9 @@
         dest: /usr/local/bin
         remote_src: true
       become: true
+      retries: 3
     - name: Exa | Rename the binary
       shell: mv /usr/local/bin/exa-linux* /usr/local/bin/exa
       become: true
+      retries: 3
   when: exa_remote_version != exa_local_version or exa_bin_path.stat.exists == false

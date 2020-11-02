@@ -4,3 +4,4 @@
     name: org.gnome.Builder
     state: present
     method: user
+  retries: 3

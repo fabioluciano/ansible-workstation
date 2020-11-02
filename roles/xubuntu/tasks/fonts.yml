@@ -3,61 +3,15 @@
   file:
     state: directory
     path: "{{ ansible_env.HOME }}/.fonts"
-  tags:
-    - fonts
 
-- name: Browser | Include related tasks
-  include_tasks: "cascadiacode.yml"
-
-- name: Fonts | Check if FiraCode font exists
-  stat:
-    path: "{{ ansible_env.HOME }}/.fonts/FiraCode-Regular.ttf"
-  register: fontsfiracode_exists
-
-- name: Fonts | Downloads and install FiraCode font
-  block:
-    - name: Fonts | Create temporary directory
-      tempfile:
-        state: directory
-      register: firacode_tempdirectory
-    - name: Fonts | Unarchive the FiraCode zip
-      unarchive:
-        src: https://github.com/tonsky/FiraCode/releases/download/2/FiraCode_2.zip
-        dest: "{{ firacode_tempdirectory.path }}"
-        remote_src: true
-    - name: Fonts | Ensure that the ttf fonts are moved to the fonts directory
-      synchronize:
-        src: "{{ firacode_tempdirectory.path }}/ttf/"
-        dest: "{{ ansible_env.HOME }}/.fonts"
-    - name: Fonts | Ensure that the temporary dictory is removed
-      file:
-        path: "{{ firacode_tempdirectory.path }}"
-        state: absent
-  tags:
-    - fonts
-    - firacode
-  when: fontsfiracode_exists.stat.exists == false
-
-- name: Fonts | Check if MS Fonts exists
-  stat:
-    path: "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"
-  register: msttcorefonts_exists
-
-- name: Fonts | Configure and install MS Fonts
-  block:
-    - name: Fonts | Programaticaly accept the eula agreement
-      shell: echo ttf-mscorefonts-installer msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
-      become: true
-    - name: Fonts | Ensures that the ttf-mscorefonts-installer is installed
-      package:
-        name: ttf-mscorefonts-installer
-        state: latest
-        force_apt_get: yes
-      become: true
-  tags:
-    - fonts
-    - mscorefonts
-  when: msttcorefonts_exists.stat.exists == false
+- name: Fonts | Include related tasks
+  include_tasks: "{{ fonts_tasks }}.yml"
+  loop:
+    - font-cascadiacode
+    - font-firacode
+    - font-mscore
+  loop_control:
+    loop_var: fonts_tasks
 
 - name: Fonts | Ensure that the font cache is updated
   shell: fc-cache -f -v

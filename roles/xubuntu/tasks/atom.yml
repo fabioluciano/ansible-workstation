@@ -25,5 +25,6 @@
         name: atom
         state: present
         force_apt_get: true
+      retries: 3
       become: true
   when: atom_exists.stat.exists == false

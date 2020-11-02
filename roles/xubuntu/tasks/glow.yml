@@ -24,6 +24,7 @@
     url: https://api.github.com/repos/charmbracelet/glow/releases
     return_content: true
     body_format: json
+  retries: 3
   register: glow_releases_response
 
 - name: Glow | Get latest version URL
@@ -38,5 +39,6 @@
   apt:
     deb: "{{ glow_download_url }}"
     force_apt_get: yes
+  retries: 3
   become: true
   when: (glow_local_version is defined and glow_local_version != glow_remote_version) or glow_bin_path.stat.exists == false

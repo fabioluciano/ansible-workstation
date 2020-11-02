@@ -5,22 +5,28 @@
 
 - name: Spotify | Install Spotify
   block:
-  - name: Spotify | Add Spotify apt key
-    apt_key:
-      url: https://download.spotify.com/debian/pubkey.gpg
-      state: present
-    become: true
-  - name: Spotify | Add Spotify repository
-    apt_repository:
-      repo: "deb http://repository.spotify.com stable non-free"
-      filename: spotify
-      update_cache: yes
-      state: present
-    become: true
-  - name: Spotify | Install the package
-    package:
-      name: spotify-client
-      state: present
-      force_apt_get: true
-    become: true
+    - name: Spotify | Add Spotify apt key
+      apt_key:
+        url: https://download.spotify.com/debian/pubkey.gpg
+        state: present
+      become: true
+      retries: 3
+
+    - name: Spotify | Add Spotify repository
+      apt_repository:
+        repo: "deb http://repository.spotify.com stable non-free"
+        filename: spotify
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+    - name: Spotify | Install the package
+      package:
+        name: spotify-client
+        state: present
+        force_apt_get: true
+      become: true
+      retries: 3
+
   when: spotify_exists.stat.exists == false

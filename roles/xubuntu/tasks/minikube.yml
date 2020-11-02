@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/kubernetes/minikube/releases
     return_content: true
     body_format: json
+  retries: 3
   register: minikube_releases_response
 
 - name: Minikube | Get latest version URL
@@ -38,6 +39,7 @@
     deb: "{{ minikube_download_url }}"
     force_apt_get: yes
   become: true
+  retries: 3
   when: minikube_local_version != minikube_remote_version or minikube_bin_path.stat.exists == false
 
 - name: Minikube | Set KVM2 as driver

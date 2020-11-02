@@ -18,6 +18,7 @@
     url: https://api.github.com/repos/docker/compose/releases?prerelease=false
     return_content: true
     body_format: json
+  retries: 3
   register: dockercompose_releases_response
 
 - name: Docker Compose | Get latest version URL
@@ -34,5 +35,6 @@
     dest: /usr/local/bin/docker-compose
     mode: 0755
     validate_certs: false
+  retries: 3
   become: true
   when: dockercompose_bin_path.stat.exists == false or dockercompose_remote_version != dockercompose_local_version

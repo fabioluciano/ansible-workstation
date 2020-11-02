@@ -13,6 +13,7 @@
     url: https://api.github.com/repos/notable/notable/releases
     return_content: true
     body_format: json
+  retries: 3
   register: notable_releases_response
 
 - name: Notable | Get latest version URL
@@ -28,4 +29,5 @@
     deb: "{{ notable_download_url }}"
     force_apt_get: yes
   become: true
+  retries: 3
   when: (notable_local_version is defined and notable_local_version != notable_remote_version) or notable_bin_path.stat.exists == false

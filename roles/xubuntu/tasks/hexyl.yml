@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/sharkdp/hexyl/releases
     return_content: true
     body_format: json
+  retries: 3
   register: hexyl_releases_response
 
 - name: Hexyl | Get latest version URL
@@ -37,5 +38,6 @@
   apt:
     deb: "{{ hexyl_download_url }}"
     force_apt_get: yes
+  retries: 3
   become: true
   when: (hexyl_local_version is defined and hexyl_local_version != hexyl_remote_version) or hexyl_bin_path.stat.exists == false

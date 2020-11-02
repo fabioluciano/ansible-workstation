@@ -9,4 +9,5 @@
         - bridge-utils
       state: latest
       force_apt_get: yes
+    retries: 3
     become: true

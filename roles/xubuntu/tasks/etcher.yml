@@ -16,6 +16,7 @@
           - libpangox-1.0-0
         force_apt_get: true
       become: true
+      retries: 3
       when: etcher_exists.stat.exists == false
 
     - name: Etcher | Recover all releases
@@ -23,6 +24,7 @@
         url: https://api.github.com/repos/balena-io/etcher/releases
         return_content: true
         body_format: json
+      retries: 3
       register: etcher_releases_response
 
     - name: Etcher | Get deb latest version URL
@@ -43,4 +45,5 @@
         deb: "{{ etcher_deb_download_url }}"
         force_apt_get: true
       become: true
+      retries: 3
       when: (etcher_local_version is defined and etcher_local_version != etcher_latest_version) or etcher_exists.stat.exists == false

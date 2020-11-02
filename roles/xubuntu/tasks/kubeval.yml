@@ -24,6 +24,7 @@
     url: https://api.github.com/repos/instrumenta/kubeval/releases
     return_content: true
     body_format: json
+  retries: 3
   register: kubeval_cli_releases_response
 
 - name: Kubeval | Get latest version URL
@@ -43,4 +44,5 @@
     extra_opts:
       - --wildcards
       - "kubeval"
+  retries: 3
   when: (kubeval_cli_local_version is defined and kubeval_cli_local_version != kubeval_cli_remote_version) or kubeval_bin_path.stat.exists == false

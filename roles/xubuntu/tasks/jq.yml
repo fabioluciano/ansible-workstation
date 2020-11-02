@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/stedolan/jq/releases
     return_content: true
     body_format: json
+  retries: 3
   register: jq_releases_response
 
 - name: JQ | Get latest version URL
@@ -40,4 +41,5 @@
     mode: 0755
     validate_certs: false
   become: true
+  retries: 3
   when: jq_local_version != jq_remote_version or jq_bin_path.stat.exists == false

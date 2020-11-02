@@ -15,6 +15,7 @@
     uri:
       url: https://www.packer.io/downloads/
       return_content: yes
+    retries: 3
     register: packer_download_page
 
   - name: HashiCorp | Packer | Define latest avaliable version fact
@@ -33,7 +34,5 @@
       dest: /usr/local/bin/
       remote_src: true
     become: true
+    retries: 3
     when: packer_latest_avaliable_version != packer_local_version
-  tags:
-    - hashicorp
-    - packer

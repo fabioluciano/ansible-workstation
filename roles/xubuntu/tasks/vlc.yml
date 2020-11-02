@@ -9,6 +9,7 @@
     url: "http://ppa.launchpad.net/videolan/master-daily/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: vlc_repo
 
 - name: VLC | Add package repository
@@ -18,6 +19,7 @@
     update_cache: yes
     state: present
   become: true
+  retries: 3
   when: vlc_repo.status == 200
 
 - name: VLC | Install the package
@@ -26,4 +28,5 @@
     state: present
     force_apt_get: true
   become: true
+  retries: 3
   when: vlc_bin_path.stat.exists == false

@@ -6,17 +6,21 @@
 
 - name: OBS Studio | Install OBS Studio
   block:
-  - name: OBS Studio | Add package repository
-    apt_repository:
-      repo: "ppa:obsproject/obs-studio"
-      filename: obs-studio
-      update_cache: yes
-      state: present
-    become: true
-  - name: OBS Studio | Install the package
-    package:
-      name: obs-studio
-      state: present
-      force_apt_get: true
-    become: true
+    - name: OBS Studio | Add package repository
+      apt_repository:
+        repo: "ppa:obsproject/obs-studio"
+        filename: obs-studio
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+    - name: OBS Studio | Install the package
+      package:
+        name: obs-studio
+        state: present
+        force_apt_get: true
+      become: true
+      retries: 3
+
   when: obsstudio_exists.stat.exists == false

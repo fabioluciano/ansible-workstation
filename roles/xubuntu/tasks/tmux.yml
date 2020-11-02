@@ -6,6 +6,7 @@
   register: tmux_exists
 
 - name: Tmux | Install and configure
+  when: tmux_exists.stat.exists == false
   block:
     - name: Tmux | Install the package
       package:
@@ -15,11 +16,13 @@
         state: present
         force_apt_get: true
       become: true
+      retries: 3
+
     - name: Tmux | Install TMP
       git:
         repo: https://github.com/tmux-plugins/tpm
         dest: "{{ ansible_env.HOME }}/.tmux/plugins/tpm"
-  when: tmux_exists.stat.exists == false
+      retries: 3
 
 
 - name: Tmux | Install Tmux plugins dependencies
@@ -27,6 +30,7 @@
     name: xsel
     state: present
     force_apt_get: true
+  retries: 3
   become: true
 
 - name: Tmux | Copy configurations file

@@ -5,18 +5,21 @@
   register: whisker_exists
 
 - name: Whisker | Install Wisker
-  block:
-  - name: Whisker | Add the repository
-    apt_repository:
-      repo: "ppa:gottcode/gcppa"
-      filename: whisker
-      update_cache: yes
-      state: present
-    become: true
-  - name: Whisker | Install the package
-    package:
-      name: xfce4-whiskermenu-plugin
-      state: latest
-      force_apt_get: true
-    become: true
   when: whisker_exists.stat.exists == false
+  block:
+    - name: Whisker | Add the repository
+      apt_repository:
+        repo: "ppa:gottcode/gcppa"
+        filename: whisker
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+    - name: Whisker | Install the package
+      package:
+        name: xfce4-whiskermenu-plugin
+        state: latest
+        force_apt_get: true
+      become: true
+      retries: 3

@@ -8,29 +8,36 @@
   uri:
     url: "https://download.docker.com/linux/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
+  retries: 3
   ignore_errors: yes
   register: docker_repository_release_exists
 
 - name: Docker | Install or Upgrade
   block:
+
   - name: Docker | Add apt key
     apt_key:
       url: https://download.docker.com/linux/ubuntu/gpg
       state: present
+    retries: 3
     become: true
+
   - name: Docker | Add package repository
     apt_repository:
       repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
       filename: docker
       update_cache: yes
       state: present
+    retries: 3
     become: true
+
   - name: Docker | Install the package
     package:
       name: docker-ce
       state: present
       force_apt_get: true
     become: true
+    retries: 3
   when: docker_exists.stat.exists == false and docker_repository_release_exists.status == 200
 
 - name: Docker | Install or Upgrade
@@ -40,6 +47,7 @@
       name: docker.io
       state: present
       force_apt_get: true
+    retries: 3
     become: true
   when: docker_exists.stat.exists == false and docker_repository_release_exists.status != 200
 

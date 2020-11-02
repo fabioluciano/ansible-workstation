@@ -23,6 +23,7 @@
     url: https://api.github.com/repos/dandavison/delta/releases
     return_content: true
     body_format: json
+  retries: 3
   register: delta_releases_response
 
 - name: Delta | Get latest version URL
@@ -38,4 +39,5 @@
     deb: "{{ delta_download_url }}"
     force_apt_get: yes
   become: true
+  retries: 3
   when: (delta_local_version is defined and delta_local_version != delta_remote_version) or delta_bin_path.stat.exists == false

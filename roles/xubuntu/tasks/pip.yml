@@ -6,9 +6,12 @@
         state: present
         force_apt_get: true
       become: true
+      retries: 3
+
     - name: Python | Add pip3 package
       package:
         name: python3-pip
         state: present
         force_apt_get: true
       become: true
+      retries: 3

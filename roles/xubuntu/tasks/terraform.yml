@@ -15,6 +15,7 @@
     uri:
       url: https://www.terraform.io/downloads.html
       return_content: yes
+    retries: 3
     register: terraform_download_page
 
   - name: HashiCorp | Terraform | Define latest avaliable version
@@ -28,12 +29,10 @@
     when: terraform_is_installed.rc == 0 and terraform_local_version.rc == 0
 
   - name: HashiCorp | Terraform | Ensure that the binary is avaliable on /usr/local/bin directory
+    when: terraform_latest_avaliable_version != terraform_local_version
     unarchive:
       src: "{{ terraform_download_url }}"
       dest: /usr/local/bin/
       remote_src: true
     become: true
-    when: terraform_latest_avaliable_version != terraform_local_version
-  tags:
-    - hashicorp
-    - terraform
+    retries: 3

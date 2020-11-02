@@ -8,6 +8,7 @@
   uri:
     url: "http://ppa.launchpad.net/mc3man/mpv-tests/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
+  retries: 3
   ignore_errors: yes
   register: mpv_repo
 
@@ -17,6 +18,7 @@
     filename: mpv
     update_cache: yes
     state: present
+  retries: 3
   become: true
   when: mpv_repo.status == 200
 
@@ -25,5 +27,6 @@
     name: mpv
     state: present
     force_apt_get: true
+  retries: 3
   become: true
   when: mpv_bin_path.stat.exists == false

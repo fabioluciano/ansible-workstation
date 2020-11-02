@@ -11,12 +11,19 @@
         dest: /tmp/nvm.sh
         mode: 771
         validate_certs: false
+      retries: 3
+
     - name: NVM | Install the binary
       shell: bash /tmp/nvm.sh
       args:
         creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
     - name: NVM | Install stable version
       shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install stable"
+      retries: 3
+
     - name: NVM | Install Yarn
       shell: ". {{ ansible_env.HOME }}/.nvm/nvm.sh && npm i -g yarn"
+      retries: 3
+      
   when: nvm_bin_path.stat.exists == false

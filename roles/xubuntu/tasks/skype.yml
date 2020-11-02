@@ -9,26 +9,33 @@
     url: "https://repo.skype.com/deb/dists/stable/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: skype_repo
 
 - name: Skype | Install or Upgrade
   block:
-  - name: Skype | Add apt key
-    apt_key:
-      url: https://repo.skype.com/data/SKYPE-GPG-KEY
-      state: present
-    become: true
-  - name: Skype | Add package repository
-    apt_repository:
-      repo: "deb [arch=amd64] https://repo.skype.com/deb stable main"
-      filename: skype-stable
-      update_cache: yes
-      state: present
-    become: true
-  - name: Skype | Install the package
-    package:
-      name: skypeforlinux
-      state: present
-      force_apt_get: true
-    become: true
+    - name: Skype | Add apt key
+      apt_key:
+        url: https://repo.skype.com/data/SKYPE-GPG-KEY
+        state: present
+      become: true
+      retries: 3
+
+    - name: Skype | Add package repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://repo.skype.com/deb stable main"
+        filename: skype-stable
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+    - name: Skype | Install the package
+      package:
+        name: skypeforlinux
+        state: present
+        force_apt_get: true
+      become: true
+      retries: 3
+      
   when: skype_bin_path.stat.exists == false and skype_repo.status == 200

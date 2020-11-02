@@ -24,7 +24,7 @@ configure_ansible_cfg: install_crudini
 	crudini --set ansible.cfg defaults action_plugins $(shell python3 -m ara.setup.action_plugins)
 
 execute_playbook: configure_ansible_cfg
-	ansible-playbook workstation.yml
+	ansible-playbook workstation.yml -vvv
 
 serve:
 	ara-manage runserver

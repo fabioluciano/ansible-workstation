@@ -18,11 +18,12 @@
     url: https://api.github.com/repos/bootandy/dust/releases
     return_content: true
     body_format: json
+  retries: 3
   register: dust_releases_response
 
 - name: Dust | Get latest version URL
   set_fact:
-    dust_download_url: "{{ dust_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `linux-gnu.tar.gz`)].browser_download_url') | first }}"
+    dust_download_url: "{{ dust_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `unknown-linux-gnu.tar.gz`)].browser_download_url') | first }}"
 
 - name: Dust | Set latest remote version
   set_fact:
@@ -32,8 +33,12 @@
   block:
     - name: Dust | Unarchive the binary
       unarchive:
+        remote_src: yes
         src: "{{ dust_download_url }}"
         dest: /usr/local/bin
-        remote_src: true
+        extra_opts:
+          - --strip-components=1
+          - --wildcards
+          - "*/dust"
       become: true
   when: dust_bin_path.stat.exists == false or dust_remote_version != dust_local_version

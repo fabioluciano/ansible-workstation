@@ -3,10 +3,12 @@
   stat:
     path: /usr/bin/firefox
   register: firefox_exists
+
 - name: Firefox | Install the package
   package:
     name: firefox
     state: latest
     force_apt_get: true
   become: true
+  retries: 3
   when: firefox_exists.stat.exists == false

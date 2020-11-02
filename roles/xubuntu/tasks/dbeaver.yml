@@ -4,12 +4,13 @@
   register: dbeaver_exists
 
 - name: DBeaver | Install or Upgrade
-  block:     
+  block:
     - name: DBeaver | Recover all releases
       uri:
         url: https://api.github.com/repos/dbeaver/dbeaver/releases
         return_content: true
         body_format: json
+      retries: 3
       register: dbeaver_releases_response
 
     - name: DBeaver | Get deb latest version URL
@@ -30,4 +31,5 @@
         deb: "{{ dbeaver_deb_download_url }}"
         force_apt_get: yes
       become: true
+      retries: 3
       when: (dbeaver_local_version is defined and dbeaver_local_version != dbeaver_latest_version) or dbeaver_exists.stat.exists == false

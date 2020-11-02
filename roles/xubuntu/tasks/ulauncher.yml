@@ -9,21 +9,26 @@
     url: "http://ppa.launchpad.net/agornostal/ulauncher/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: ulauncher_repository_release_exists
 
 - name: Ulauncher | Install Ulauncher
-  block:
-  - name: Ulauncher | Add the repository
-    apt_repository:
-      repo: "ppa:agornostal/ulauncher"
-      filename: ulauncher
-      update_cache: yes
-      state: present
-    become: true
-  - name: Ulauncher | Install the package
-    package:
-      name: ulauncher
-      state: latest
-      force_apt_get: true
-    become: true
   when: ulauncher_exists.stat.exists == false and ulauncher_repository_release_exists.status == 200
+  block:
+    - name: Ulauncher | Add the repository
+      apt_repository:
+        repo: "ppa:agornostal/ulauncher"
+        filename: ulauncher
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+    - name: Ulauncher | Install the package
+      package:
+        name: ulauncher
+        state: latest
+        force_apt_get: true
+      become: true
+      retries: 3
+      

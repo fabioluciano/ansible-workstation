@@ -9,6 +9,7 @@
     url: "http://ppa.launchpad.net/libreoffice/ppa/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: libreoffice_repository_release_exists
 
 - name: Libre Office  | Check if repository is configured
@@ -23,6 +24,7 @@
     update_cache: yes
     state: present
   become: true
+  retries: 3
   when: libreoffice_repository_release_exists == True and libreoffice_repository_exists == false
   
 - name: Libre Office | Install the package
@@ -34,4 +36,5 @@
     state: present
     force_apt_get: true
   become: true
+  retries: 3
   when: libreoffice_exists.stat.exists == false

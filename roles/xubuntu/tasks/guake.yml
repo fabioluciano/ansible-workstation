@@ -9,6 +9,7 @@
     url: "http://ppa.launchpad.net/linuxuprising/guake/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
+  retries: 3
   register: guake_remote_repo
 
 - name: Guake | Add package repository
@@ -18,14 +19,16 @@
     update_cache: yes
     state: present
   become: true
+  retries: 3
   when: guake_remote_repo.status == 200
 
 - name: Guake | Install or Upgrade
   block:
-  - name: Guake | Install the package
-    package:
-      name: guake
-      state: present
-      force_apt_get: true
-    become: true
+    - name: Guake | Install the package
+      package:
+        name: guake
+        state: present
+        force_apt_get: true
+      retries: 3
+      become: true
   when: guake_bin_path.stat.exists == false

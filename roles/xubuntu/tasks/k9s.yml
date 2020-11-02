@@ -18,6 +18,7 @@
     url: https://api.github.com/repos/derailed/k9s/releases
     return_content: true
     body_format: json
+  retries: 3
   register: k9s_releases_response
 
 - name: K9s | Get latest version URL
@@ -36,4 +37,5 @@
         dest: /usr/local/bin
         remote_src: true
       become: true
+      retries: 3
   when: k9s_bin_path.stat.exists == false or k9s_remote_version != k9s_local_version
