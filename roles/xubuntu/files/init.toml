@@ -1,11 +1,15 @@
 [options]
-    colorscheme = "jellybeans"
-    enable_guicolors = true
-    statusline_separator = "arrow"
-    statusline_inactive_separator = "arrow"
-    buffer_index_type = 4
-    enable_tabline_filetype_icon = true
-    enable_statusline_mode = false
+  colorscheme = "dracula"
+  colorscheme_bg = "dark"
+  enable_guicolors = true
+  statusline_separator = "arrow"
+  statusline_inactive_separator = "arrow"
+  buffer_index_type = 4
+  enable_tabline_filetype_icon = true
+  enable_statusline_mode = false
+  autocomplete_method = "ycm"
+  filemanager = "nerdtree"
+  filetree_direction = "left"
 
 [[layers]]
   name = "colorscheme"
@@ -15,8 +19,6 @@
 
 [[layers]]
   name = 'autocomplete'
-  auto-completion-return-key-behavior = "complete"
-  auto-completion-tab-key-behavior = "smart"
 
 [[layers]]
   name = 'shell'
@@ -100,3 +102,10 @@
 
 [[layers]]
   name = "tools#zeal"
+
+[[custom_plugins]]
+  name = 'cespare/vim-toml'
+  merged = 0
+
+[[custom_plugins]]
+  name = "dracula/vim"

@@ -28,5 +28,5 @@
     state: present
     force_apt_get: true
   become: true
-  retriers: 3
+  retries: 3
   when: inkscape_bin_path.stat.exists == false

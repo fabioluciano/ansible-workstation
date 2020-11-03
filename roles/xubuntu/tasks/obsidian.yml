@@ -1,0 +1,7 @@
+---
+- name: Obsidian | Install the package
+  flatpak:
+    name: md.obsidian.Obsidian
+    state: present
+    method: user
+  retries: 3

@@ -10,7 +10,7 @@
 
 - name: Broot | Register local version
   set_fact:
-    broot_local_version: "{{ broot_bin_version.stdout | regex_findall('(\\d+\\.\\d+)') | first }}"
+    broot_local_version: "{{ broot_bin_version.stdout | regex_findall('(\\d+\\.\\d+.\\d+)') | first }}"
   when: broot_bin_version.rc == 0
 
 - name: Broot | Register local version
@@ -32,14 +32,15 @@
 
 - name: Broot | Set latest remote version
   set_fact:
-    broot_remote_version: "{{ broot_download_url | regex_findall('(\\d+\\.\\d+)') | first }}"
+    broot_remote_version: "{{ broot_download_url | regex_findall('(\\d+\\.\\d+.\\d+)') | first }}"
 
-- name: Broot | Install or Upgrade
+- name: Broot | get the zip file
+  when: broot_local_version != broot_remote_version or broot_bin_path.stat.exists == false
   get_url:
     url: "{{ broot_download_url }}"
-    dest: /usr/local/bin/broot
-    mode: 0755
-    validate_certs: false
+    dest: "/tmp"
+
+- name: Broot | Install or Upgrade
+  shell: "unzip -j /tmp/{{ broot_download_url | basename }} build/x86_64-linux/broot -d /usr/local/bin"
   become: true
-  retries: 3
   when: broot_local_version != broot_remote_version or broot_bin_path.stat.exists == false

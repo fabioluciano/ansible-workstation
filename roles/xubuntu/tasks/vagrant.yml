@@ -1,38 +1,45 @@
 ---
-- name: HashiCorp | Vagrant | Install or Upgrade
-  block:
-  - name: HashiCorp | Vagrant | Verify the existence of binary
-    command: which vagrant
-    register: vagrant_is_installed
-    ignore_errors: yes
+- name: HashiCorp | Vagrant | Check if is present
+  stat:
+    path: /usr/local/bin/
+  register: vagrant_bin_path
 
-  - name: HashiCorp | Vagrant | Check avaliable version
-    command: vagrant -v
-    when: vagrant_is_installed.rc == 0
-    register: vagrant_local_version
+- name: HashiCorp | Vagrant | Check avaliable version
+  command: /usr/local/bin/vagrant --version
+  register: vagrant_bin_version
+  ignore_errors: true
 
-  - name: HashiCorp | Vagrant | Request download page content
-    uri:
-      url: https://www.vagrantup.com/downloads.html
-      return_content: yes
-    retries: 3
-    register: vagrant_download_page
+- name: HashiCorp | Vagrant | Register local version
+  set_fact:
+    vagrant_local_version: "{{ vagrant_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: vagrant_bin_version.rc == 0
 
-  - name: HashiCorp | Vagrant | Define latest avaliable version fact
-    set_fact:
-      vagrant_download_url: "{{ vagrant_download_page.content | regex_findall('(https://.*?vagrant_[\\d.]+_linux_amd64.zip)') | first }}"
-      vagrant_latest_avaliable_version: "{{ vagrant_download_page.content | regex_findall('vagrant_([\\d.]+)_linux_amd64.zip') | first }}"
+- name: HashiCorp | Vagrant | Register local version
+  set_fact:
+    vagrant_local_version: ""
+  when: vagrant_bin_version.rc != 0
 
-  - name: HashiCorp | Vagrant | If installed, set the local version fact
-    when: vagrant_is_installed.rc == 0 and vagrant_local_version.rc == 0
-    set_fact:
-      vagrant_local_version: "{{ vagrant_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
+- name: HashiCorp | Vagrant | Request download page content
+  uri:
+    url: https://www.vagrantup.com/downloads.html
+    return_content: yes
+  retries: 3
+  register: vagrant_download_page
 
-  - name: HashiCorp | Vagrant | Ensure that the binary is avaliable on /usr/local/bin directory
-    when: vagrant_latest_avaliable_version != vagrant_local_version
-    unarchive:
-      src: "{{ vagrant_download_url }}"
-      dest: /usr/local/bin/
-      remote_src: true
-    become: true
-    retries: 3
+- name: HashiCorp | Vagrant | Define latest avaliable version fact
+  set_fact:
+    vagrant_url_matches: "{{ vagrant_download_page.content | regex_findall('(https?:\/\/releases.*?vagrant_[\\d.]+_linux_amd64.zip)') }}"
+
+- name: HashiCorp | Vagrant | Define latest avaliable version fact
+  set_fact:
+    vagrant_download_url: "{{ vagrant_url_matches.1  }}"
+    vagrant_remote_version: "{{ vagrant_url_matches.1 | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: HashiCorp | Vagrant | Ensure that the binary is avaliable on /usr/local/bin directory
+  when: vagrant_remote_version != vagrant_local_version
+  unarchive:
+    src: "{{ vagrant_download_url }}"
+    dest: /usr/local/bin/
+    remote_src: true
+  become: true
+  retries: 3

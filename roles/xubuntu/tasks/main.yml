@@ -4,18 +4,17 @@
     - name: Includes the Xubuntu related tasks
       include_tasks: "{{ item }}.yml"
       with_items:
-        - font-firacode
-        # - prepare
-        # - essential
-        # - upgrade
-        # - fonts
-        # - terminal
-        # - browser
-        # - development
-        # - container
-        # - ide
-        # - clitools
-        # - tools
-        # - design
-        # - multimedia
-        # - other
+        - prepare
+        - essential
+        - upgrade
+        - fonts
+        - terminal
+        - browser
+        - development
+        - container
+        - ide
+        - clitools
+        - tools
+        - design
+        - multimedia
+        - other

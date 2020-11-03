@@ -11,6 +11,7 @@
         return_content: true
         body_format: json
       retries: 3
+      until: dbeaver_releases_response.status == 200
       register: dbeaver_releases_response
 
     - name: DBeaver | Get deb latest version URL
