@@ -1,0 +1,46 @@
+---
+- name: Duf | Check if is present
+  stat:
+    path: /usr/local/bin/gh
+  register: duf_bin_path
+
+- name: Duf | Check avaliable version
+  command: /usr/local/bin/duf --version
+  register: duf_bin_version
+  ignore_errors: true
+
+- name: Duf | Register local version
+  set_fact:
+    duf_local_version: "{{ duf_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: duf_bin_version.rc == 0
+
+- name: Duf | Register local version
+  set_fact:
+    duf_local_version: ""
+  when: duf_bin_version.rc != 0
+
+- name: Duf | Recover all releases
+  uri:
+    url: https://api.github.com/repos/muesli/duf/releases
+    return_content: true
+    body_format: json
+  register: duf_releases_response
+
+- name: Duf | Get latest version URL
+  set_fact:
+    duf_download_url: "{{  duf_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `duf_`) && ends_with(name, `linux_x86_64.tar.gz`)].browser_download_url') | first }}"
+
+- name: Duf | Set latest remote version
+  set_fact:
+    duf_remote_version: "{{  duf_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Duf | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{  duf_download_url }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --wildcards
+      - "duf"
+  when: ( duf_local_version is defined and  duf_local_version !=  duf_remote_version) or  duf_bin_path.stat.exists == false

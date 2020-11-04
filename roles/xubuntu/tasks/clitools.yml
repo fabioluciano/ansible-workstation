@@ -6,6 +6,7 @@
     - fd
     - bat
     - jq
+    - duf
     - skim
     - dust
     - broot
