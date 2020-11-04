@@ -6,38 +6,38 @@
 
 - name: SpaceVim | Install or Upgrade SpaceVim
   block:
-  - name: SpaceVim | Ensure that vim package is installed
-    package: 
-      name:
-        - neovim
-        - git 
-        - curl
-        - global
-      state: present 
-      force_apt_get: yes
-    become: true
-    retries: 3
+    - name: SpaceVim | Ensure that vim package is installed
+      package:
+        name:
+          - neovim
+          - git
+          - curl
+          - global
+        state: present
+        force_apt_get: yes
+      become: true
+      retries: 3
 
-  - name: SpaceVim | Download the installer
-    get_url:
-      url: https://spacevim.org/install.sh
-      dest: /tmp/spacevim-installer.sh
-      mode: '0555'
-      validate_certs: false
-    retries: 3
+    - name: SpaceVim | Download the installer
+      get_url:
+        url: https://spacevim.org/install.sh
+        dest: /tmp/spacevim-installer.sh
+        mode: "0555"
+        validate_certs: false
+      retries: 3
 
-  - name: SpaceVim | Execute the installer
-    shell: bash /tmp/spacevim-installer.sh
+    - name: SpaceVim | Execute the installer
+      shell: bash /tmp/spacevim-installer.sh
 
-  - name: SpaceVim | Remove the installer
-    file:
-      state: absent
-      path: /tmp/spacevim-installer.sh
+    - name: SpaceVim | Remove the installer
+      file:
+        state: absent
+        path: /tmp/spacevim-installer.sh
 
-  - name: SpaceVim | Copy configuration file
-    synchronize:
-      src: "init.toml"
-      dest: "{{ ansible_env.HOME }}/.SpaceVim.d/"
+    - name: SpaceVim | Copy configuration file
+      synchronize:
+        src: "init.toml"
+        dest: "{{ ansible_env.HOME }}/.SpaceVim.d/"
   when: spacevim_exists.stat.exists == false
 
 - name: Spacevim | Layers | Ensure that the html dependency is present

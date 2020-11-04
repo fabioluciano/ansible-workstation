@@ -12,6 +12,7 @@
         return_content: true
         body_format: json
       retries: 3
+      until: firacode_releases_response.status == 200
       register: firacode_releases_response
 
     - name: Fonts | Fira Code | Get latest version URL

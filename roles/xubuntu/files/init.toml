@@ -10,15 +10,25 @@
   autocomplete_method = "ycm"
   filemanager = "nerdtree"
   filetree_direction = "left"
+  enable_statusline_mode = true
+
+[[layers]]
+  name = "format"
+  format_on_save = true
 
 [[layers]]
   name = "colorscheme"
 
 [[layers]]
   name = "git"
+  git-plugin = "fugitive"
 
 [[layers]]
   name = 'autocomplete'
+
+[[layers]]
+  name = 'ui'
+  enable_scrollbar = true
 
 [[layers]]
   name = 'shell'
@@ -26,23 +36,18 @@
   default_height = 30
 
 [[layers]]
-  name = "lang#php" 
+  name = "checkers"
+  enable_neomake = false
+  enable_ale = true
 
 [[layers]]
-  name = "lang#javascript"
-
-[[layers]]
-  name = "lang#python"
-  format-on-save = 1
-
-[[layers]]
-  name = "lang#java"
-
-[[layers]]
-  name = "VersionControl"
+  name = "leaderf"
 
 [[layers]]
   name = "core#statusline"
+
+[[layers]]
+  name = "VersionControl"
 
 [[layers]]
     name = "denite"
@@ -53,6 +58,12 @@
 [[layers]]
   name = "gtags"
   gtagslabel = "pygments"
+
+[[layers]]
+  name = "tmux"
+
+[[layers]]
+  name = "tools"
 
 [[layers]]
   name = "lang#asciidoc"
@@ -84,21 +95,9 @@
 [[layers]]
   name = "lang#typescript"
 
-[[layers]]
-  name = "checkers"
-  show_cursor_error = false
 
 [[layers]]
   name = "lang#vue"
-
-[[layers]]
-  name = "tmux"
-
-[[layers]]
-  name = "unite"
-
-[[layers]]
-  name = "tools"
 
 [[layers]]
   name = "tools#zeal"
@@ -109,3 +108,7 @@
 
 [[custom_plugins]]
   name = "dracula/vim"
+
+[[custom_plugins]]
+  name = "nathanaelkane/vim-indent-guides"
+  merged = 0
