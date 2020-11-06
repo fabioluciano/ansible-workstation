@@ -1,9 +1,9 @@
-- name: Fonts | Check if Cascadia Code font exists
+- name: Fonts | Cascadia Code | Check if the font exists
   stat:
     path: "{{ ansible_env.HOME }}/.fonts/CascadiaCode.ttf"
   register: cascadiacode_exists
 
-- name: Font Cascadia Code | Recover all releases
+- name: Fonts | Cascadia Code | Recover all releases
   when: cascadiacode_exists.stat.exists == false
   uri:
     url: https://api.github.com/repos/microsoft/cascadia-code/releases
@@ -12,17 +12,19 @@
   retries: 3
   register: cascadia_code_releases_response
 
-- name: Font Cascadia Code | Get latest version URL
+- name: Fonts | Cascadia Code | Get latest version URL
   when: cascadiacode_exists.stat.exists == false
   set_fact:
     cascadia_code_download_url: "{{ cascadia_code_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `.zip`)].browser_download_url') | first }}"
 
-- name: Fonts | Fira Code | Get the zip file
+- name: Fonts | Cascadia Code | Get the zip file
   when: cascadiacode_exists.stat.exists == false
   get_url:
     url: "{{ cascadia_code_download_url }}"
     dest: "/tmp"
 
-- name: Fonts | Fira Code | Install or Upgrade
+- name: Fonts | Cascadia Code | Install or Upgrade
   when: cascadiacode_exists.stat.exists == false
   shell: "unzip -j /tmp/{{ cascadia_code_download_url | basename }} ttf/*.ttf -d {{ ansible_env.HOME }}/.fonts"
+  args:
+    warn: false
