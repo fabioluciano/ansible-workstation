@@ -41,3 +41,4 @@ fi
 alias du="ncdu --color dark"
 alias ls='exa'
 alias cat='bat'
+alias df='duf'

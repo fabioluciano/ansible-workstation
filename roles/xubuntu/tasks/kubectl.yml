@@ -1,7 +1,39 @@
 ---
-- name: Kubectl | Install the snap
-  snap:
-    name: kubectl
-    state: present
-    classic: true
+- name: Kubectl | Check if is present
+  stat:
+    path: /usr/local/bin/kubectl
+  register: kubectl_bin_path
+
+- name: Kubectl | Check avaliable version
+  command: /usr/local/bin/kubectl version
+  register: kubectl_bin_version
+  ignore_errors: true
+
+- name: Kubectl | Register local version
+  set_fact:
+    kubectl_local_version: "{{ kubectl_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: kubectl_bin_version.rc == 0
+
+- name: Kubectl | Register local version
+  set_fact:
+    kubectl_local_version: ""
+  when: kubectl_bin_version.rc != 0
+
+- name: Kubectl | Recover stable release version
+  uri:
+    url: https://storage.googleapis.com/kubernetes-release/release/stable.txt
+    return_content: true
+  register: kubectl_releases_response
+
+- name: Kubectl | Register local version
+  set_fact:
+    kubectl_remote_version: "{{ kubectl_releases_response.content | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: JQ | Install or Upgrade
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_releases_response.content }}/bin/linux/amd64/kubectl"
+    dest: /usr/local/bin/kubectl
+    mode: 0755
   become: true
+  retries: 3
+  when: kubectl_local_version != kubectl_remote_version or kubectl_bin_path.stat.exists == false

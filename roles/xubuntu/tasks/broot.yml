@@ -41,6 +41,8 @@
     dest: "/tmp"
 
 - name: Broot | Install or Upgrade
-  shell: "unzip -j /tmp/{{ broot_download_url | basename }} build/x86_64-linux/broot -d /usr/local/bin"
+  shell: "unzip -j -o /tmp/{{ broot_download_url | basename }} build/x86_64-linux/broot -d /usr/local/bin"
+  args:
+    warn: false
   become: true
   when: broot_local_version != broot_remote_version or broot_bin_path.stat.exists == false
