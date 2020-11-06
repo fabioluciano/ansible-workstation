@@ -1,10 +1,10 @@
 - name: Minikube | Check if is present
   stat:
-    path: /usr/local/bin/minikube
+    path: /usr/bin/minikube
   register: minikube_bin_path
 
 - name: Minikube | Check avaliable version
-  command: /usr/local/bin/minikube version
+  command: /usr/bin/minikube version
   register: minikube_bin_version
   ignore_errors: true
 
@@ -24,6 +24,7 @@
     return_content: true
     body_format: json
   retries: 3
+  until: minikube_releases_response.status == 200
   register: minikube_releases_response
 
 - name: Minikube | Get latest version URL
