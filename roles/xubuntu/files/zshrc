@@ -10,6 +10,7 @@ antigen bundle pip
 antigen bundle lein
 antigen bundle nvm
 antigen bundle virtualenv
+antigen bundle wfxr/forgit 
 antigen bundle colored-man-pages
 antigen bundle desyncr/auto-ls
 antigen bundle lukechilds/zsh-nvm

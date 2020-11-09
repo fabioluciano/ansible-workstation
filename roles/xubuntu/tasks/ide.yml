@@ -3,6 +3,7 @@
   include_tasks: "{{ ide_tasks }}.yml"
   loop:
     - vscode
+    - vscodium
     - atom
     - sublimetext
     - androidstudio

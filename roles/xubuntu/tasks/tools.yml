@@ -29,5 +29,6 @@
     - whisker
     - notable
     - xubuntudev
+    - insomnia
   loop_control:
     loop_var: tools_tasks

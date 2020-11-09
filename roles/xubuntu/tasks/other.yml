@@ -53,6 +53,7 @@
       - file-roller
       - remmina
       - intel-microcode
+      - silversearcher-ag
     state: latest
     force_apt_get: yes
   become: true

@@ -8,5 +8,7 @@
     - helm
     - minikube
     - kubeval
+    - kind
+    - kube-linter
   loop_control:
     loop_var: kubernetes_tasks

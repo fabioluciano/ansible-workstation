@@ -1,0 +1,46 @@
+---
+- name: Sampler | Check if is present
+  stat:
+    path: /usr/local/bin/sampler
+  register: sampler_bin_path
+
+- name: Sampler | Check avaliable version
+  command: /usr/local/bin/sampler --version
+  register: sampler_bin_version
+  ignore_errors: true
+
+- name: Sampler | Register local version
+  set_fact:
+    sampler_local_version: "{{ sampler_bin_version.stderr | regex_findall('(\\d+.\\d+.\\d+)') | first }}"
+  when: sampler_bin_version.rc == 0
+
+- name: Sampler | Register local version
+  set_fact:
+    sampler_local_version: ""
+  when: sampler_bin_version.rc != 0
+
+- name: Sampler | Recover all releases
+  uri:
+    url: https://api.github.com/repos/sqshq/Sampler/releases
+    return_content: true
+    body_format: json
+  retries: 3
+  register: sampler_releases_response
+
+- name: Sampler | Get latest version URL
+  set_fact:
+    sampler_download_url: "{{ sampler_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `-linux-amd64`)].browser_download_url') | first }}"
+
+- name: Sampler | Set latest remote version
+  set_fact:
+    sampler_remote_version: "{{ sampler_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Sampler | Install or Upgrade
+  get_url:
+    url: "{{ sampler_download_url }}"
+    dest: /usr/local/bin/sampler
+    mode: 0755
+    validate_certs: false
+  become: true
+  retries: 3
+  when: sampler_local_version != sampler_remote_version or sampler_bin_path.stat.exists == false

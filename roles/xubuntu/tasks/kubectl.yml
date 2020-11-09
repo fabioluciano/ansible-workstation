@@ -29,7 +29,7 @@
   set_fact:
     kubectl_remote_version: "{{ kubectl_releases_response.content | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
-- name: JQ | Install or Upgrade
+- name: Kubectl | Install or Upgrade
   get_url:
     url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_releases_response.content }}/bin/linux/amd64/kubectl"
     dest: /usr/local/bin/kubectl

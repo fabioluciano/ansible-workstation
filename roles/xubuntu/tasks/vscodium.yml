@@ -1,0 +1,42 @@
+---
+- name: VsCodium | Check if is present
+  stat:
+    path: /usr/bin/codium
+  register: vscodium_bin_path
+
+- name: VsCodium | Check avaliable version
+  command: /usr/bin/codium --version
+  register: vscodium_bin_version
+  ignore_errors: true
+
+- name: VsCodium | Register local version
+  set_fact:
+    vscodium_local_version: "{{ vscodium_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: vscodium_bin_version.rc == 0
+
+- name: VsCodium | Register local version
+  set_fact:
+    vscodium_local_version: ""
+  when: vscodium_bin_version.rc != 0
+
+- name: VsCodium | Recover all releases
+  uri:
+    url: https://api.github.com/repos/VSCodium/vscodium/releases
+    return_content: true
+    body_format: json
+  register: vscodium_releases_response
+
+- name: VsCodium | Get latest version URL
+  set_fact:
+    vscodium_download_url: "{{  vscodium_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `codium_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: VsCodium | Set latest remote version
+  set_fact:
+    vscodium_remote_version: "{{  vscodium_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: VsCodium | Unarchive the binary
+  when: ( vscodium_local_version is defined and  vscodium_local_version !=  vscodium_remote_version) or  vscodium_bin_path.stat.exists == false
+  apt:
+    deb: "{{ vscodium_download_url }}"
+    force_apt_get: yes
+  become: true
