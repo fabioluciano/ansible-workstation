@@ -22,7 +22,7 @@
         update_cache: yes
         state: present
       become: true
-      retries: 3
+      retries: 3 
       when: papirus_repository_exists.stat.exists == false
 
     - name: Icon | Papirus | Install the package

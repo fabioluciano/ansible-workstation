@@ -1,0 +1,45 @@
+---
+- name: Kind | Check if is present
+  stat:
+    path: /usr/local/bin/kind
+  register: kind_bin_path
+
+- name: Kind | Check avaliable version
+  command: /usr/local/bin/kind version
+  register: kind_bin_version
+  ignore_errors: true
+
+- name: Kind | Register local version
+  set_fact:
+    kind_local_version: "{{ kind_bin_version.stdout | regex_findall('(\\d+\\.\\d+.\\d+)') | first }}"
+  when: kind_bin_version.rc == 0
+
+- name: Kind | Register local version
+  set_fact:
+    kind_local_version: ""
+  when: kind_bin_version.rc != 0
+
+- name: Kind | Recover all releases
+  uri:
+    url: https://api.github.com/repos/kubernetes-sigs/kind/releases
+    return_content: true
+    body_format: json
+  retries: 3
+  register: kind_releases_response
+
+- name: Kind | Get latest version URL
+  set_fact:
+    kind_download_url: "{{ kind_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `kind-linux-amd64`)].browser_download_url') | first }}"
+
+- name: Kind | Set latest remote version
+  set_fact:
+    kind_remote_version: "{{ kind_download_url | regex_findall('(\\d+\\.\\d+.\\d+)') | first }}"
+
+- name: Kind | Install or Upgrade
+  get_url:
+    url: "{{ kind_download_url }}"
+    dest: /usr/local/bin/kind
+    mode: 0755
+  become: true
+  retries: 3
+  when: kind_local_version != kind_remote_version or kind_bin_path.stat.exists == false

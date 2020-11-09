@@ -1,0 +1,44 @@
+---
+- name: RipGrep | Check if is present
+  stat:
+    path: /usr/bin/rg
+  register: ripgrep_bin_path
+
+- name: RipGrep | Check avaliable version
+  command: /usr/bin/rg --version
+  register: ripgrep_bin_version
+  ignore_errors: true
+
+- name: RipGrep | Register local version
+  set_fact:
+    ripgrep_local_version:  "{{ ripgrep_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: ripgrep_bin_version.rc == 0
+
+- name: RipGrep | Register local version
+  set_fact:
+    ripgrep_local_version: ""
+  when: ripgrep_bin_version.rc != 0
+
+- name: RipGrep | Recover all releases
+  uri:
+    url: https://api.github.com/repos/BurntSushi/ripgrep/releases
+    return_content: true
+    body_format: json
+  retries: 3
+  register: ripgrep_releases_response
+
+- name: RipGrep | Get latest version URL
+  set_fact:
+    ripgrep_download_url: "{{ ripgrep_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `ripgrep_`) && ends_with(name, `_amd64.deb`)].browser_download_url') | first }}"
+
+- name: RipGrep | Set latest remote version
+  set_fact:
+    ripgrep_remote_version: "{{ ripgrep_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: RipGrep | Install deb file
+  apt:
+    deb: "{{ ripgrep_download_url }}"
+    force_apt_get: yes
+  become: true
+  retries: 3
+  when: ripgrep_local_version != ripgrep_remote_version or ripgrep_bin_path.stat.exists == false

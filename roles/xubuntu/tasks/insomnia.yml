@@ -1,0 +1,32 @@
+---
+- name: Insomnia | Check if binary is present
+  stat:
+    path: /usr/bin/insomnia
+  register: insomnia_exists
+
+- name: Insomnia | Install the package
+  when: insomnia_exists.stat.exists == false
+  block:
+    - name: Insomnia | Add repository key
+      apt_key:
+        url: https://insomnia.rest/keys/debian-public.key.asc
+        state: present
+      become: true
+      retries: 3
+
+    - name: Insomnia | Add repository
+      apt_repository:
+        repo: "deb https://dl.bintray.com/getinsomnia/Insomnia /"
+        filename: insomnia
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+    - name: Insomnia | Install the binary
+      package:
+        name: insomnia
+        state: present
+        force_apt_get: true
+      become: true
+      retries: 3

@@ -1,0 +1,45 @@
+---
+- name: Dasel | Check if is present
+  stat:
+    path: /usr/local/bin/dasel
+  register: dasel_bin_path
+
+- name: Dasel | Check avaliable version
+  command: /usr/local/bin/dasel --version
+  register: dasel_bin_version
+  ignore_errors: true
+
+- name: Dasel | Register local version
+  set_fact:
+    dasel_local_version: "{{ dasel_bin_version.stdout | regex_findall('(\\d+.\\d+.\\d+)') | first }}"
+  when: dasel_bin_version.rc == 0
+
+- name: Dasel | Register local version
+  set_fact:
+    dasel_local_version: ""
+  when: dasel_bin_version.rc != 0
+
+- name: Dasel | Recover all releases
+  uri:
+    url: https://api.github.com/repos/TomWright/dasel/releases
+    return_content: true
+    body_format: json
+  retries: 3
+  register: dasel_releases_response
+
+- name: Dasel | Get latest version URL
+  set_fact:
+    dasel_download_url: "{{ dasel_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `dasel_linux_amd64`)].browser_download_url') | first }}"
+
+- name: Dasel | Set latest remote version
+  set_fact:
+    dasel_remote_version: "{{ dasel_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Dasel | Install or Upgrade
+  when: dasel_local_version != dasel_remote_version or dasel_bin_path.stat.exists == false
+  get_url:
+    url: "{{ dasel_download_url }}"
+    dest: /usr/local/bin/dasel
+    mode: 0755
+  become: true
+  retries: 3

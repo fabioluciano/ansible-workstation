@@ -1,0 +1,44 @@
+- name: KubeLinter | Check if is present
+  stat:
+    path: /usr/local/bin/kube-linter
+  register: kubelinter_bin_path
+
+- name: KubeLinter | Check avaliable version
+  command: /usr/local/bin/kube-linter version
+  register: kubelinter_bin_version
+  ignore_errors: true
+
+- name: KubeLinter | Register local version
+  set_fact:
+    kubelinter_local_version: "{{ kubelinter_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: kubelinter_bin_version.rc == 0
+
+- name: KubeLinter | Register local version
+  set_fact:
+    kubelinter_local_version: ""
+  when: kubelinter_bin_version.rc != 0
+
+- name: KubeLinter | Recover all releases
+  uri:
+    url: https://api.github.com/repos/stackrox/kube-linter/releases
+    return_content: true
+    body_format: json
+  retries: 3
+  register: kubelinter_releases_response
+
+- name: KubeLinter | Get latest version URL
+  set_fact:
+    kubelinter_download_url: "{{ kubelinter_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `kube-linter-linux.tar.gz`)].browser_download_url') | first }}"
+
+- name: KubeLinter | Set latest remote version
+  set_fact:
+    kubelinter_remote_version: "{{ kubelinter_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: KubeLinter | Install or Upgrade
+  unarchive:
+    src: "{{ kubelinter_download_url }}"
+    dest: /usr/local/bin
+    remote_src: true
+  become: true
+  retries: 3
+  when: kubelinter_local_version != kubelinter_remote_version or kubelinter_bin_path.stat.exists == false

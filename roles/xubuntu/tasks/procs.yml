@@ -1,0 +1,47 @@
+---
+# TODO: Create configuration file
+# eg. https://github.com/dalance/procs#configuration
+- name: Procs | Check if is present
+  stat:
+    path: /usr/local/bin/procs
+  register: procs_bin_path
+
+- name: Procs | Check avaliable version
+  command: /usr/local/bin/procs --version
+  register: procs_bin_version
+  ignore_errors: true
+
+- name: Procs | Register local version
+  set_fact:
+    procs_local_version: "{{ procs_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: procs_bin_version.rc == 0
+
+- name: Procs | Register local version
+  set_fact:
+    procs_local_version: ""
+  when: procs_bin_version.rc != 0
+
+- name: Procs | Recover all releases
+  uri:
+    url: https://api.github.com/repos/dalance/procs/releases
+    return_content: true
+    body_format: json
+  retries: 3
+  register: procs_releases_response
+
+- name: Procs | Get latest version URL
+  set_fact:
+    procs_download_url: "{{ procs_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `procs`) && ends_with(name, `-x86_64-lnx.zip`)].browser_download_url') | first }}"
+
+- name: Procs | Set latest remote version
+  set_fact:
+    procs_remote_version: "{{ procs_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Procs | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{ procs_download_url }}"
+    dest: /usr/local/bin
+  retries: 3
+  when: (procs_local_version is defined and procs_local_version != procs_remote_version) or kubeval_bin_path.stat.exists == false

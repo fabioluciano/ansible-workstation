@@ -6,18 +6,18 @@
 
 - name: Kubeval | Check avaliable version
   command: /usr/local/bin/kubeval --version
-  register: kubeval_cli_bin_version
+  register: kubeval_bin_version
   ignore_errors: true
 
 - name: Kubeval | Register local version
   set_fact:
-    kubeval_cli_local_version: "{{ kubeval_cli_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-  when: kubeval_cli_bin_version.rc == 0
+    kubeval_local_version: "{{ kubeval_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: kubeval_bin_version.rc == 0
 
 - name: Kubeval | Register local version
   set_fact:
-    kubeval_cli_local_version: ""
-  when: kubeval_cli_bin_version.rc != 0
+    kubeval_local_version: ""
+  when: kubeval_bin_version.rc != 0
 
 - name: Kubeval | Recover all releases
   uri:
@@ -25,24 +25,24 @@
     return_content: true
     body_format: json
   retries: 3
-  register: kubeval_cli_releases_response
+  register: kubeval_releases_response
 
 - name: Kubeval | Get latest version URL
   set_fact:
-    kubeval_cli_download_url: "{{ kubeval_cli_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `kubeval`) && ends_with(name, `linux-amd64.tar.gz`)].browser_download_url') | first }}"
+    kubeval_download_url: "{{ kubeval_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `kubeval`) && ends_with(name, `linux-amd64.tar.gz`)].browser_download_url') | first }}"
 
 - name: Kubeval | Set latest remote version
   set_fact:
-    kubeval_cli_remote_version: "{{ kubeval_cli_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+    kubeval_remote_version: "{{ kubeval_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: Kubeval | Unarchive the binary
   become: true
   unarchive:
     remote_src: yes
-    src: "{{ kubeval_cli_download_url }}"
+    src: "{{ kubeval_download_url }}"
     dest: /usr/local/bin
     extra_opts:
       - --wildcards
       - "kubeval"
   retries: 3
-  when: (kubeval_cli_local_version is defined and kubeval_cli_local_version != kubeval_cli_remote_version) or kubeval_bin_path.stat.exists == false
+  when: (kubeval_local_version is defined and kubeval_local_version != kubeval_remote_version) or kubeval_bin_path.stat.exists == false

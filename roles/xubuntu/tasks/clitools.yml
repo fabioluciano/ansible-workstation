@@ -16,5 +16,9 @@
     - cfssl
     - delta
     - github_cli
+    - sampler
+    - ripgrep
+    - procs
+    - dasel
   loop_control:
     loop_var: clitools_tasks

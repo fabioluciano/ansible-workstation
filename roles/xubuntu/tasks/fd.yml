@@ -1,3 +1,4 @@
+---
 - name: Fd | Check if is present
   stat:
     path: /usr/bin/fd
