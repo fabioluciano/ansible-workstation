@@ -1,0 +1,50 @@
+---
+- name: FZF | Check if is present
+  stat:
+    path: /usr/local/bin/fzf
+  register: fzf_bin_path
+
+- name: FZF | Check avaliable version
+  command: /usr/local/bin/fzf --version
+  register: fzf_bin_version
+  ignore_errors: true
+
+- name: FZF | Register local version
+  set_fact:
+    fzf_local_version: "{{ fzf_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: fzf_bin_version.rc == 0
+
+- name: FZF | Register local version
+  set_fact:
+    fzf_local_version: ""
+  when: fzf_bin_version.rc != 0
+
+- name: FZF | Recover all releases
+  uri:
+    url: https://api.github.com/repos/junegunn/fzf/releases
+    return_content: true
+    body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
+  retries: 3
+  register: fzf_releases_response
+
+- name: FZF | Get latest version URL
+  set_fact:
+    fzf_download_url: "{{ fzf_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `fzf`) && ends_with(name, `-linux_amd64.tar.gz`)].browser_download_url') | first }}"
+
+- name: FZF | Set latest remote version
+  set_fact:
+    fzf_remote_version: "{{ fzf_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: FZF | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{ fzf_download_url }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --wildcards
+      - "fzf"
+  retries: 3
+  when: (fzf_local_version is defined and fzf_local_version != fzf_remote_version) or fzf_bin_path.stat.exists == false

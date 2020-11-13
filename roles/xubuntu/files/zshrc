@@ -7,6 +7,7 @@ antigen bundle aws
 antigen bundle docker
 antigen bundle vagrant
 antigen bundle pip
+antigen bundle fzf
 antigen bundle lein
 antigen bundle nvm
 antigen bundle virtualenv
@@ -43,3 +44,6 @@ alias du="ncdu --color dark"
 alias ls='exa'
 alias cat='bat'
 alias df='duf'
+alias k='kubectl'
+alias kn='kubens'
+alias kx='kubectx'

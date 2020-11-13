@@ -4,15 +4,17 @@
 - name: Upgrade | Execute all apt related tasks
   block:
     - name: Upgrade | Update cache
-      apt: 
+      apt:
         update_cache: yes
         cache_valid_time: 600
         force_apt_get: yes
       become: true
+      register: upgrade_cache
       retries: 3
+      until: "'Failed' not in upgrade_cache"
 
     - name: Upgrade | Ensure that all packages are upgraded
-      apt: 
+      apt:
         upgrade: dist
         force_apt_get: yes
       register: apt_result
@@ -20,7 +22,7 @@
       retries: 3
 
     - name: Upgrade | Autoremove unused packages
-      apt: 
+      apt:
         autoremove: yes
         force_apt_get: yes
       register: apt_result

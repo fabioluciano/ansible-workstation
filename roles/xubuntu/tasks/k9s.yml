@@ -18,6 +18,8 @@
     url: https://api.github.com/repos/derailed/k9s/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   retries: 3
   register: k9s_releases_response
 

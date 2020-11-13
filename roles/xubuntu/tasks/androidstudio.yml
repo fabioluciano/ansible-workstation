@@ -10,9 +10,11 @@
     method: HEAD
   ignore_errors: yes
   retries: 3
+  until: androidstudio_repo.status == 200
   register: androidstudio_repo
 
 - name: Android Studio | Add package repository
+  when: androidstudio_repo.status == 200
   apt_repository:
     repo: "ppa:maarten-fonville/android-studio"
     filename: androidstudio
@@ -20,13 +22,12 @@
     state: present
   become: true
   retries: 3
-  when: androidstudio_repo.status == 200
 
 - name: Android Studio | Install the package
+  when: androidstudio_bin_path.stat.exists == false and androidstudio_repo.status == 200
   package:
     name: android-studio
     state: present
     force_apt_get: true
   become: true
   retries: 3
-  when: androidstudio_bin_path.stat.exists == false and androidstudio_repo.status == 200

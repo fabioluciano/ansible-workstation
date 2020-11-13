@@ -20,5 +20,7 @@
     - ripgrep
     - procs
     - dasel
+    - shellcheck
+    # - fzf
   loop_control:
     loop_var: clitools_tasks

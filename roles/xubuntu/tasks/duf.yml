@@ -24,6 +24,8 @@
     url: https://api.github.com/repos/muesli/duf/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   register: duf_releases_response
 
 - name: Duf | Get latest version URL

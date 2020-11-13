@@ -24,6 +24,7 @@
     return_content: true
     body_format: json
   retries: 3
+  until: bat_releases_response.status == 200
   register: bat_releases_response
 
 - name: Bat | Get latest version URL

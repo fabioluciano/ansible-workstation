@@ -5,6 +5,7 @@
   register: atom_exists
 
 - name: Atom | Install Atom
+  when: atom_exists.stat.exists == false
   block:
     - name: Atom | Add apt key
       apt_key:
@@ -12,6 +13,7 @@
         state: present
       retries: 3
       become: true
+
     - name: Atom | Add the repository
       apt_repository:
         repo: "deb [arch=amd64] https://packagecloud.io/AtomEditor/atom/any/ any main"
@@ -20,6 +22,7 @@
         state: present
       retries: 3
       become: true
+
     - name: Atom | Install the package
       package:
         name: atom
@@ -27,4 +30,3 @@
         force_apt_get: true
       retries: 3
       become: true
-  when: atom_exists.stat.exists == false

@@ -5,7 +5,6 @@
 
 - name: Etcher | Install or Upgrade
   block:
-  
     - name: Etcher | Install dependencies
       package:
         state: present
@@ -24,6 +23,8 @@
         url: https://api.github.com/repos/balena-io/etcher/releases
         return_content: true
         body_format: json
+        headers:
+          Authorization: "token {{ GH_TOKEN }}"
       retries: 3
       register: etcher_releases_response
 

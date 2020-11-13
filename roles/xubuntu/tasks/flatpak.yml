@@ -22,13 +22,14 @@
       become: true
       ignore_errors: yes
       when: flatpak_repository_exists.stat.exists == false and flatpack_repository_release_exists.status == 200
+
     - name: Flatpak | Ensures that the package flatpak is installed
       package:
         name:
           - flatpak
           - gnome-software-plugin-flatpak
         state: latest
-        force_apt_get: yes
+      force_apt_get: yes
       become: true
 
     - name: Flatpak | Add the flathub repository remote to the user installation

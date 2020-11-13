@@ -24,6 +24,8 @@
     url: https://api.github.com/repos/VSCodium/vscodium/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   register: vscodium_releases_response
 
 - name: VsCodium | Get latest version URL
