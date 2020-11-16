@@ -29,7 +29,7 @@
           - flatpak
           - gnome-software-plugin-flatpak
         state: latest
-      force_apt_get: yes
+        force_apt_get: yes
       become: true
 
     - name: Flatpak | Add the flathub repository remote to the user installation
