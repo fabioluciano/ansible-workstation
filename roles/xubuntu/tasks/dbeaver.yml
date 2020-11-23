@@ -10,6 +10,8 @@
         url: https://api.github.com/repos/dbeaver/dbeaver/releases
         return_content: true
         body_format: json
+        headers:
+          Authorization: "token {{ GH_TOKEN }}"
       retries: 3
       until: dbeaver_releases_response.status == 200
       register: dbeaver_releases_response

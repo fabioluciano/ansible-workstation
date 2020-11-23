@@ -15,9 +15,11 @@
     method: HEAD
   ignore_errors: yes
   retries: 3
+  until: alacritty_repository_release_exists.status == 200
   register: alacritty_repository_release_exists
 
 - name: Alacritty | Install Alacritty
+  when: alacritty_bin_path.stat.exists == false and alacritty_repository_release_exists.status == 200
   block:
     - name: Allacritty | Add package repository
       apt_repository:
@@ -27,6 +29,7 @@
         state: present
       become: true
       retries: true
+
     - name: Allacritty | Install the package
       package:
         name: alacritty
@@ -34,7 +37,6 @@
         force_apt_get: true
       retries:
       become: true
-  when: alacritty_bin_path.stat.exists == false and alacritty_repository_release_exists.status == 200
 
 - name: Alacritty | Configure the application
   block:
@@ -42,6 +44,7 @@
       file:
         state: directory
         path: "{{ ansible_env.HOME }}/.config/alacritty/"
+
     - name: Alacritty | Copy configuration file
       copy:
         src: alacritty.yml

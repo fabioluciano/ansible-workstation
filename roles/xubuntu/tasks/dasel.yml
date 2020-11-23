@@ -24,6 +24,8 @@
     url: https://api.github.com/repos/TomWright/dasel/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   retries: 3
   register: dasel_releases_response
 

@@ -23,7 +23,10 @@
     url: https://api.github.com/repos/sharkdp/bat/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   retries: 3
+  until: bat_releases_response.status == 200
   register: bat_releases_response
 
 - name: Bat | Get latest version URL

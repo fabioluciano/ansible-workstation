@@ -23,6 +23,8 @@
     url: https://api.github.com/repos/dandavison/delta/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   retries: 3
   register: delta_releases_response
 

@@ -11,6 +11,8 @@
         url: https://api.github.com/repos/tonsky/FiraCode/releases
         return_content: true
         body_format: json
+        headers:
+          Authorization: "token {{ GH_TOKEN }}"
       retries: 3
       until: firacode_releases_response.status == 200
       register: firacode_releases_response

@@ -5,6 +5,7 @@
     method: HEAD
   ignore_errors: yes
   retries: 3
+  until: azurecli_repository_release_exists.status == 200
   register: azurecli_repository_release_exists
 
 - name: Azure CLI | Check if Azure Cli is present

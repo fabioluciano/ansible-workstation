@@ -24,6 +24,8 @@
     url: https://api.github.com/repos/cli/cli/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   register: github_cli_releases_response
 
 - name: Github Cli | Get latest version URL

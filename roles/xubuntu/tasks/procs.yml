@@ -26,6 +26,8 @@
     url: https://api.github.com/repos/dalance/procs/releases
     return_content: true
     body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
   retries: 3
   register: procs_releases_response
 
