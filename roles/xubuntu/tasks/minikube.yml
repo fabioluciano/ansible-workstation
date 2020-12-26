@@ -31,11 +31,14 @@
 
 - name: Minikube | Get latest version URL
   set_fact:
-    minikube_download_url: "{{ minikube_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `minikube_`) && ends_with(name, `.deb`)].browser_download_url') | first }}"
+    minikube_download_url: "{{ minikube_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `minikube_`) && ends_with(name, `amd64.deb`)].browser_download_url') | first }}"
 
 - name: Minikube | Set latest remote version
   set_fact:
     minikube_remote_version: "{{ minikube_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Minikube | debug
+  debug: var=minikube_download_url
 
 - name: Minikube | Install deb file
   apt:
