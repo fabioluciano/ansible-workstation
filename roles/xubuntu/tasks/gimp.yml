@@ -6,7 +6,7 @@
 
 - name: GIMP | Ensure that exists a version in this release
   uri:
-    url: "http://ppa.launchpad.net/otto-kesselgulasch/gimp/ubuntu/dists/{{ ansible_distribution_release }}/"
+    url: "http://ppa.launchpad.net/ubuntuhandbook1/gimp/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   ignore_errors: yes
   retries: 3
@@ -14,7 +14,7 @@
 
 - name: GIMP | Add package repository
   apt_repository:
-    repo: "ppa:otto-kesselgulasch/gimp"
+    repo: "ppa:ubuntuhandbook1/gimp"
     filename: gimp
     update_cache: yes
     state: present

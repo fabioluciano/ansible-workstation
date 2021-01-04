@@ -10,7 +10,7 @@
   cron:
     name: "Update all workstation"
     special_time: daily
-    user: "{{ ansible_user }}"
+    user: "{{ ansible_user_id }}"
     job: "make --directory={{ playbook_dir }}"
     state: present
 
