@@ -37,6 +37,9 @@
   set_fact:
     minikube_remote_version: "{{ minikube_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
+- name: Minikube | debug
+  debug: var=minikube_download_url
+
 - name: Minikube | Install deb file
   apt:
     deb: "{{ minikube_download_url }}"
