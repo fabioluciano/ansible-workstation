@@ -27,7 +27,6 @@
         url: "{{ firacode_download_url }}"
         dest: "/tmp"
       retries: 3
-      until: fontsfiracode_download_file.status == 200
       register: fontsfiracode_download_file
 
     - name: Fonts | Fira Code | Install or Upgrade

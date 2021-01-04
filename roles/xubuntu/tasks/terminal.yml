@@ -14,8 +14,8 @@
   loop_control:
     loop_var: terminal_tasks
 
-- name: Terminal | Copy configurations file
-  copy:
-    src: terminalrc
-    dest: "{{ ansible_env.HOME }}/.config/xfce4/terminal"
-  ignore_errors: true
+# - name: Terminal | Copy configurations file
+#   copy:
+#     src: terminalrc
+#     dest: "{{ ansible_env.HOME }}/.config/xfce4/terminal"
+#   ignore_errors: true

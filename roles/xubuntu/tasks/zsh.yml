@@ -38,6 +38,6 @@
 
 - name: Terminal | ZSH | Change default shell to zsh
   user:
-    name: "{{ ansible_user }}"
+    name: "{{ ansible_user_id }}"
     shell: /usr/bin/zsh
   become: true

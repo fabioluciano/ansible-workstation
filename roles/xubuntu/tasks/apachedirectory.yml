@@ -37,7 +37,7 @@
         jid: "{{ apachestudio_download_action.ansible_job_id }}"
       register: apachestudio_job_result
       until: apachestudio_job_result.finished
-      retries: 3
+      retries: 10
 
     - name: Apache Directory | Unarchive file
       unarchive:
