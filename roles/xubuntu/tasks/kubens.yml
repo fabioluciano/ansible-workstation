@@ -1,0 +1,50 @@
+---
+- name: Kubens | Check if is present
+  stat:
+    path: /usr/local/bin/kubens
+  register: kubens_bin_path
+
+- name: Kubens | Check avaliable version
+  command: /usr/local/bin/kubens --version
+  register: kubens_bin_version
+  ignore_errors: true
+
+- name: Kubens | Register local version
+  set_fact:
+    kubens_local_version: "{{ kubens_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: kubens_bin_version.rc == 0
+
+- name: Kubens | Register local version
+  set_fact:
+    kubens_local_version: ""
+  when: kubens_bin_version.rc != 0
+
+- name: Kubens | Recover all releases
+  uri:
+    url: https://api.github.com/repos/ahmetb/kubectx/releases
+    return_content: true
+    body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
+  retries: 3
+  register: kubens_releases_response
+
+- name: Kubens | Get latest version URL
+  set_fact:
+    kubens_download_url: "{{ kubens_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `kubens`) && ends_with(name, `linux_x86_64.tar.gz`)].browser_download_url') | first }}"
+
+- name: Kubens | Set latest remote version
+  set_fact:
+    kubens_remote_version: "{{ kubens_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Kubens | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{ kubens_download_url }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --wildcards
+      - "kubens"
+  retries: 3
+  when: (kubens_local_version is defined and kubens_local_version != kubens_remote_version) or kubens_bin_path.stat.exists == false
