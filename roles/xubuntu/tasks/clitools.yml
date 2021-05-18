@@ -7,13 +7,13 @@
     - bat
     - jq
     - duf
-    - skim
+    # - skim
     - dust
     - broot
     - glow
     - hexyl
     - clitoolscloudprovider
-    - cfssl
+    # - cfssl
     - delta
     - github_cli
     - sampler
