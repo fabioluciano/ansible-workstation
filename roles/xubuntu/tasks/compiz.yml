@@ -20,13 +20,16 @@
         force_apt_get: true
       retries: 3
       become: true
+
     - name: Compiz | Ensure that configuration directory exists
       file:
         state: directory
         path: "{{ ansible_env.HOME }}/.config/compiz-1/compizconfig/"
+
     - name: Compiz | Copy configuration file
       copy:
         src: compiz.profile
         dest: "{{ ansible_env.HOME }}/.config/compiz-1/compizconfig/Default.ini"
+        
     - name: Compiz | Define as default session manager
       shell: "xfconf-query -c xfce4-session -p /sessions/Failsafe/Client0_Command -t string -t string -s compiz -s ccp"

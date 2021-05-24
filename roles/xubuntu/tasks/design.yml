@@ -3,7 +3,7 @@
   include_tasks: "{{ design_tasks }}.yml"
   loop:
     - gimp
-    - inkscape
+    # - inkscape
     - shutter
   loop_control:
     loop_var: design_tasks

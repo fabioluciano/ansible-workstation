@@ -6,7 +6,7 @@
 
 - name: MPV | Ensure that exists a version in this release
   uri:
-    url: "http://ppa.launchpad.net/mc3man/mpv-tests/ubuntu/dists/{{ ansible_distribution_release }}/"
+    url: "http://ppa.launchpad.net/savoury1/mpv/ubuntu/dists/{{ ansible_distribution_release }}/"
     method: HEAD
   retries: 3
   ignore_errors: yes
@@ -14,7 +14,7 @@
 
 - name: MPV | Add package repository
   apt_repository:
-    repo: "ppa:mc3man/mpv-tests"
+    repo: "ppa:savoury1/mpv"
     filename: mpv
     update_cache: yes
     state: present

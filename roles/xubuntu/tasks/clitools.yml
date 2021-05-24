@@ -21,6 +21,7 @@
     - procs
     - dasel
     - shellcheck
+    - hugo
     # - fzf
   loop_control:
     loop_var: clitools_tasks
