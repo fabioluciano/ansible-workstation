@@ -7,14 +7,15 @@
         - prepare
         - essential
         - upgrade
-        - fonts
-        - terminal
-        - browser
-        - development
-        - container
-        - ide
-        - clitools
-        - tools
-        - design
-        - multimedia
-        - other
+        - rustup
+        # - fonts
+        # - terminal
+        # - browser
+        # - development
+        # - container
+        # - ide
+        # - clitools
+        # - tools
+        # - design
+        # - multimedia
+        # - other
