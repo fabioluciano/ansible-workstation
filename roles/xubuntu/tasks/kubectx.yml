@@ -1,0 +1,50 @@
+---
+- name: Kubectx | Check if is present
+  stat:
+    path: /usr/local/bin/kubectx
+  register: kubectx_bin_path
+
+- name: Kubectx | Check avaliable version
+  command: /usr/local/bin/kubectx --version
+  register: kubectx_bin_version
+  ignore_errors: true
+
+- name: Kubectx | Register local version
+  set_fact:
+    kubectx_local_version: "{{ kubectx_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: kubectx_bin_version.rc == 0
+
+- name: Kubectx | Register local version
+  set_fact:
+    kubectx_local_version: ""
+  when: kubectx_bin_version.rc != 0
+
+- name: Kubectx | Recover all releases
+  uri:
+    url: https://api.github.com/repos/ahmetb/kubectx/releases
+    return_content: true
+    body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
+  retries: 3
+  register: kubectx_releases_response
+
+- name: Kubectx | Get latest version URL
+  set_fact:
+    kubectx_download_url: "{{ kubectx_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `kubectx`) && ends_with(name, `linux_x86_64.tar.gz`)].browser_download_url') | first }}"
+
+- name: Kubectx | Set latest remote version
+  set_fact:
+    kubectx_remote_version: "{{ kubectx_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Kubectx | Unarchive the binary
+  become: true
+  unarchive:
+    remote_src: yes
+    src: "{{ kubectx_download_url }}"
+    dest: /usr/local/bin
+    extra_opts:
+      - --wildcards
+      - "kubectx"
+  retries: 3
+  when: (kubectx_local_version is defined and kubectx_local_version != kubectx_remote_version) or kubectx_bin_path.stat.exists == false

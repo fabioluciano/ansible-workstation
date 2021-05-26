@@ -1,0 +1,10 @@
+---
+- name:  RustUp | Check if exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.cargo/bin/rustup"
+  register: rustup_exists
+
+- name: RustUp | Layers | Ensure that the html dependency is present
+  when: rustup_exists.stat.exists == false
+  shell: "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+  retries: 3

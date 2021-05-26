@@ -4,6 +4,8 @@
   loop:
     - kvm
     - kubectl
+    - kubectx
+    - kubens
     - k9s
     - helm
     - minikube

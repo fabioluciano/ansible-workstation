@@ -25,23 +25,24 @@
 
 - name: Exa | Get latest version URL
   set_fact:
-    exa_download_url: "{{ exa_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `.zip`)].browser_download_url') | first }}"
+    exa_download_url: "{{ exa_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `exa-linux-x86_64-v`) && ends_with(name, `.zip`)].browser_download_url') | first }}"
 
 - name: Exa | Set latest remote version
   set_fact:
     exa_remote_version: "{{ exa_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
+- name:  Exa | Get the zip file
+  when: exa_remote_version != exa_local_version or exa_bin_path.stat.exists == false
+  get_url:
+    url: "{{ exa_download_url }}"
+    dest: "/tmp"
+
 - name: Exa | Install or Upgrade
+  when: exa_remote_version != exa_local_version or exa_bin_path.stat.exists == false
   block:
     - name: Exa | Get and unarchive the binary
-      unarchive:
-        src: "{{ exa_download_url }}"
-        dest: /usr/local/bin
-        remote_src: true
+      shell: "unzip -j -o /tmp/{{ exa_download_url | basename }} bin/exa -d /usr/local/bin"
+      args:
+        warn: false
       become: true
       retries: 3
-    - name: Exa | Rename the binary
-      shell: mv /usr/local/bin/exa-linux* /usr/local/bin/exa
-      become: true
-      retries: 3
-  when: exa_remote_version != exa_local_version or exa_bin_path.stat.exists == false
