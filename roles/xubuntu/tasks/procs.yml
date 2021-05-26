@@ -46,4 +46,4 @@
     src: "{{ procs_download_url }}"
     dest: /usr/local/bin
   retries: 3
-  when: (procs_local_version is defined and procs_local_version != procs_remote_version) or kubeval_bin_path.stat.exists == false
+  when: (procs_local_version is defined and procs_local_version != procs_remote_version) or procs_bin_path.stat.exists == false

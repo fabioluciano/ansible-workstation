@@ -21,6 +21,7 @@
     - procs
     - dasel
     - shellcheck
+    - hugo
     - rustup
     # - fzf
   loop_control:

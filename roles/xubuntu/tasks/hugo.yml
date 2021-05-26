@@ -1,0 +1,46 @@
+- name: Hugo | Check if is present
+  stat:
+    path: /usr/local/bin/hugo
+  register: hugo_bin_path
+
+- name: Hugo | Check avaliable version
+  command: /usr/local/bin/hugo version
+  register: hugo_bin_version
+  ignore_errors: true
+
+- name: Hugo | Register local version
+  set_fact:
+    hugo_local_version: "{{ hugo_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+  when: hugo_bin_version.rc == 0
+
+- name: Hugo | Register local version
+  set_fact:
+    hugo_local_version: ""
+  when: hugo_bin_version.rc != 0
+
+- name: Hugo | Recover all releases
+  uri:
+    url: https://api.github.com/repos/gohugoio/hugo/releases
+    return_content: true
+    body_format: json
+    headers:
+      Authorization: "token {{ GH_TOKEN }}"
+  retries: 3
+  until: hugo_releases_response.status == 200
+  register: hugo_releases_response
+
+- name: Hugo | Get latest version URL
+  set_fact:
+    hugo_download_url: "{{ hugo_releases_response.content | from_json | first | json_query('assets[?starts_with(name, `hugo_`) && ends_with(name, `Linux-64bit.deb`)].browser_download_url') | first }}"
+
+- name: Hugo | Set latest remote version
+  set_fact:
+    hugo_remote_version: "{{ hugo_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
+
+- name: Hugo | Install deb file
+  apt:
+    deb: "{{ hugo_download_url }}"
+    force_apt_get: yes
+  retries: 3
+  become: true
+  when: (hugo_local_version is defined and hugo_local_version != hugo_remote_version) or hugo_bin_path.stat.exists == false

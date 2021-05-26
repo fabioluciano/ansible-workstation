@@ -18,7 +18,7 @@
     - discord
     - etcher
     - indicator
-    - obsstudio
+    # - obsstudio
     - obsidian
     - papirus
     - peek
@@ -29,6 +29,6 @@
     - whisker
     - notable
     - xubuntudev
-    - insomnia
+    # - insomnia
   loop_control:
     loop_var: tools_tasks

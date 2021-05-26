@@ -4,8 +4,6 @@
     name:
       - tree
       - pidgin
-      - adobe-flashplugin
-      - pgadmin3
       - subversion
       - meld
       - git-flow
@@ -54,6 +52,7 @@
       - remmina
       - intel-microcode
       - silversearcher-ag
+      - ncdu
     state: latest
     force_apt_get: yes
   become: true

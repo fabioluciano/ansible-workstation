@@ -8,14 +8,14 @@
         - essential
         - upgrade
         - rustup
-        # - fonts
-        # - terminal
-        # - browser
-        # - development
-        # - container
-        # - ide
-        # - clitools
-        # - tools
-        # - design
-        # - multimedia
-        # - other
+        - fonts
+        - terminal
+        - browser
+        - development
+        - container
+        - ide
+        - clitools
+        - tools
+        - design
+        - multimedia
+        - other
