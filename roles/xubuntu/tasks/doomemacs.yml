@@ -1,0 +1,27 @@
+---
+- name: Doom Emacs | Install emacs package
+  package:
+    name:
+      - emacs
+    state: present
+    force_apt_get: true
+  become: true
+  retries: 3
+
+- name: Doom Emacs | Check if Doom Emacs is present
+  stat:
+    path: "{{ ansible_env.HOME }}/.emacs.d"
+  register: doomemacs_exists
+
+- name: Doom Emacs | Clone repository
+  when: doomemacs_exists.stat.exists == false
+  git:
+    repo: https://github.com/hlissner/doom-emacs
+    dest: "{{ ansible_env.HOME }}/.emacs.d"
+    depth: 1
+  retries: 3
+
+- name: Doom Emacs | Install TMP
+  shell: "{{ ansible_env.HOME }}/.emacs.d/bin/doom --yes install"
+  retries: 3
+  when: doomemacs_exists.stat.exists == false
