@@ -21,7 +21,7 @@
     depth: 1
   retries: 3
 
-- name: Doom Emacs | Install TMP
+- name: Doom Emacs | Install dependencies
   shell: "{{ ansible_env.HOME }}/.emacs.d/bin/doom --yes install"
   retries: 3
   when: doomemacs_exists.stat.exists == false
