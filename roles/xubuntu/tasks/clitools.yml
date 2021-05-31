@@ -23,6 +23,7 @@
     - shellcheck
     - hugo
     - rustup
+    - doomemacs
     # - fzf
   loop_control:
     loop_var: clitools_tasks

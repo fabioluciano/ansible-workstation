@@ -7,7 +7,6 @@
         - prepare
         - essential
         - upgrade
-        - rustup
         - fonts
         - terminal
         - browser
