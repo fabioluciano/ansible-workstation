@@ -1,0 +1,48 @@
+---
+- name: Cawbird | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/cawbird.list
+  register: cawbird_repository_file_path
+
+- name: Cawbird | Check if the binary is present
+  stat:
+    path: "/usr/bin/cawbird"
+  register: cawbird_bin_path
+
+- name: Install the package
+  when: cawbird_bin_path.stat.exists == false
+  block:
+    - name: Cawbird | Ensure that exists a version in this release
+      uri:
+        url: "http://download.opensuse.org/repositories/home:/IBBoard:/cawbird/xUbuntu_{{ansible_distribution_version}}"
+        method: HEAD
+      ignore_errors: yes
+      retries: 3
+      register: cawbird_repository_release_exists
+
+    - name: Cawbird | Add an Apt signing key
+      apt_key:
+        url: https://download.opensuse.org/repositories/home:IBBoard:cawbird/xUbuntu_{{ansible_distribution_version}}/Release.key
+        state: present
+      retries: 3
+      become: true
+      when: cawbird_repository_release_exists.status == 200
+
+    - name: Cawbird | Configure the repository
+      apt_repository:
+        repo: "deb https://download.opensuse.org/repositories/home:IBBoard:cawbird/xUbuntu_{{ansible_distribution_version}}/ /"
+        state: present
+        filename: cawbird
+        update_cache: true
+      become: true
+      retries: 3
+      when: cawbird_repository_file_path.stat.exists == false and cawbird_repository_release_exists.status == 200
+
+    - name: Cawbird | Install or Upgrade
+      package:
+        name: cawbird
+        state: latest
+        force_apt_get: yes
+      become: true
+      retries: 3
+      when: cawbird_repository_release_exists.status == 200
