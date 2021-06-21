@@ -30,5 +30,6 @@
     - notable
     - xubuntudev
     # - insomnia
+    - cawbird
   loop_control:
     loop_var: tools_tasks
