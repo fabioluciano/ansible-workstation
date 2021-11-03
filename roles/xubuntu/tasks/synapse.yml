@@ -23,10 +23,10 @@
   when: synapse_repo.status == 200
 
 - name: Synapse | Install the package
+  when: synapse_bin_path.stat.exists == false
   package:
     name: synapse
     state: present
     force_apt_get: true
   become: true
   retries: 3
-  when: synapse_bin_path.stat.exists == false

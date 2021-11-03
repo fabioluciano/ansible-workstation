@@ -4,6 +4,7 @@
   register: opera_exists
 
 - name: Opera | Install the package
+  when: opera_exists.stat.exists == false
   block:
     - name: Opera | Add the key for apt
       apt_key:
@@ -28,5 +29,3 @@
         force_apt_get: true
       become: true
       retries: 3
-      
-  when: opera_exists.stat.exists == false

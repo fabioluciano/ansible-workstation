@@ -1,3 +1,4 @@
+---
 - name: .NET Cli | Check if is present
   stat:
     path: /usr/bin/dotnet
@@ -14,6 +15,7 @@
   apt:
     deb: "https://packages.microsoft.com/config/ubuntu/{{ ansible_distribution_version }}/packages-microsoft-prod.deb"
     force_apt_get: yes
+  ignore_errors: yes
   become: true
   retries: 3
 
@@ -31,4 +33,5 @@
     state: present
     force_apt_get: yes
   retries: 3
+  ignore_errors: yes
   become: true

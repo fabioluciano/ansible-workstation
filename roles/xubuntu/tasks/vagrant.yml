@@ -1,45 +1,40 @@
 ---
-- name: HashiCorp | Vagrant | Check if is present
+- name: Vagrant | Check if is installed
   stat:
-    path: /usr/local/bin/
-  register: vagrant_bin_path
+    path: /usr/bin/vagrant
+  register: vagrant_exists
 
-- name: HashiCorp | Vagrant | Check avaliable version
-  command: /usr/local/bin/vagrant --version
-  register: vagrant_bin_version
-  ignore_errors: true
-
-- name: HashiCorp | Vagrant | Register local version
-  set_fact:
-    vagrant_local_version: "{{ vagrant_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-  when: vagrant_bin_version.rc == 0
-
-- name: HashiCorp | Vagrant | Register local version
-  set_fact:
-    vagrant_local_version: ""
-  when: vagrant_bin_version.rc != 0
-
-- name: HashiCorp | Vagrant | Request download page content
+- name: Podman | Ensure that exists a version in this release
   uri:
-    url: https://www.vagrantup.com/downloads.html
-    return_content: yes
+    url: "https://apt.releases.hashicorp.com/dists/{{ ansible_distribution_release }}/InRelease"
+    method: HEAD
+  ignore_errors: yes
   retries: 3
-  register: vagrant_download_page
+  register: vagrant_repository_release_exists
 
-- name: HashiCorp | Vagrant | Define latest avaliable version fact
-  set_fact:
-    vagrant_url_matches: "{{ vagrant_download_page.content | regex_findall('(https?:\/\/releases.*?vagrant_[\\d.]+_linux_amd64.zip)') }}"
+- name: Vagrant | Install the package
+  when: vagrant_repository_release_exists.status == 200 and vagrant_exists.stat.exists == false
+  block:
+    - name: Vagrant | Add apt key
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+      retries: 3
+      become: true
+      
+    - name: Vagrant | Add package repository
+      apt_repository:
+        repo: "deb [arch=amd64] https://apt.releases.hashicorp.com {{ ansible_distribution_release }} main"
+        filename: vagrant
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
 
-- name: HashiCorp | Vagrant | Define latest avaliable version fact
-  set_fact:
-    vagrant_download_url: "{{ vagrant_url_matches.1  }}"
-    vagrant_remote_version: "{{ vagrant_url_matches.1 | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-
-- name: HashiCorp | Vagrant | Ensure that the binary is avaliable on /usr/local/bin directory
-  when: vagrant_remote_version != vagrant_local_version
-  unarchive:
-    src: "{{ vagrant_download_url }}"
-    dest: /usr/local/bin/
-    remote_src: true
-  become: true
-  retries: 3
+    - name: Vagrant | Install the package
+      package:
+        name: vagrant
+        state: present
+        force_apt_get: true
+      retries: 3
+      become: true

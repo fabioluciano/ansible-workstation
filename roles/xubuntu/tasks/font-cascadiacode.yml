@@ -1,3 +1,4 @@
+---
 - name: Fonts | Cascadia Code | Check if the font exists
   stat:
     path: "{{ ansible_env.HOME }}/.fonts/CascadiaCode.ttf"

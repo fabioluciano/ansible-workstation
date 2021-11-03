@@ -13,6 +13,7 @@
   register: skype_repo
 
 - name: Skype | Install or Upgrade
+  when: skype_bin_path.stat.exists == false and skype_repo.status == 200
   block:
     - name: Skype | Add apt key
       apt_key:
@@ -37,5 +38,3 @@
         force_apt_get: true
       become: true
       retries: 3
-      
-  when: skype_bin_path.stat.exists == false and skype_repo.status == 200

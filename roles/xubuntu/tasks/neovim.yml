@@ -1,0 +1,34 @@
+---
+- name: Neovim | Check if Neovim is present
+  stat:
+    path: /usr/bin/nvim
+  register: neovim_exists
+
+- name: Neovim | Ensure that exists a version in this release
+  when: neovim_exists.stat.exists == false
+  uri:
+    url: "http://ppa.launchpad.net/neovim-ppa/unstable/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
+  ignore_errors: yes
+  retries: 3
+  register: neovim_repository_release_exists
+
+- name: Neovim | Install Neovim
+  when: neovim_exists.stat.exists == false and neovim_repository_release_exists.status == 200
+  block:
+    - name: Neovim | Add the repository
+      apt_repository:
+        repo: "ppa:neovim-ppa/unstable"
+        filename: neovim
+        update_cache: yes
+        state: present
+      become: true
+      retries: 3
+
+- name: Neovim | Install the package
+  package:
+    name: neovim
+    state: latest
+    force_apt_get: true
+  become: true
+  retries: 3

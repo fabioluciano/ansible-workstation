@@ -3,13 +3,11 @@
   package:
     name:
       - libavcodec-extra
-      - icedax
       - ffmpeg
       - easytag
       - id3tool
       - lame
       - libmad0
-      - mpg321
       - faac
       - faad
       - ffmpeg2theora

@@ -15,6 +15,7 @@
 - name: Microk8 | Add current user to microk8s group
   user: 
     name: "{{ ansible_user_id }}"
-    groups: microk8s
+    groups: 
+      - microk8s
     append: yes
   become: true

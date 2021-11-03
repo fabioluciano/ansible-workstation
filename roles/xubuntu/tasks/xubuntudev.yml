@@ -16,13 +16,3 @@
     state: present
   become: true
   retries: 3
-
-- name: Xubuntu Dev | Install or Upgrade
-  when: xubuntudev_remote_repo.status == 200
-  block:
-  - name: Xubuntu Dev | Install the package
-    package:
-      name: thunar-shares-plugin
-      state: present
-      force_apt_get: true
-    become: true

@@ -8,7 +8,6 @@
     - nvm
     - postman
     - sdkman
-    - spacevim
     - hashicorp
     - dotnetcli
   loop_control:

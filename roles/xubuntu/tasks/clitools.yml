@@ -7,13 +7,12 @@
     - bat
     - jq
     - duf
-    # - skim
+    - skim
     - dust
     - broot
     - glow
     - hexyl
     - clitoolscloudprovider
-    # - cfssl
     - delta
     - github_cli
     - sampler
@@ -24,6 +23,6 @@
     - hugo
     - rustup
     - doomemacs
-    # - fzf
+    - fzf
   loop_control:
     loop_var: clitools_tasks

@@ -1,3 +1,4 @@
+---
 - name: Minikube | Check if is present
   stat:
     path: /usr/bin/minikube
@@ -36,9 +37,6 @@
 - name: Minikube | Set latest remote version
   set_fact:
     minikube_remote_version: "{{ minikube_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-
-- name: Minikube | debug
-  debug: var=minikube_download_url
 
 - name: Minikube | Install deb file
   apt:

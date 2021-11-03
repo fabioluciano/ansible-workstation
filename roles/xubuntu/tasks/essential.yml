@@ -2,7 +2,6 @@
 - name: Essential | Install essential packages
   package:
     name:
-      - neovim
       - curl
       - wget
       - git

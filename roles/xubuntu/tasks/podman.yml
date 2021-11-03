@@ -10,7 +10,7 @@
   register: podman_bin_path
 
 - name: Install the package
-  when: podman_bin_path.stat.exists == false
+  when: podman_repository_file_path.stat.exists == false
   block:
     - name: Podman | Ensure that exists a version in this release
       uri:
@@ -38,11 +38,11 @@
       retries: 3
       when: podman_repository_file_path.stat.exists == false and podman_repository_release_exists.status == 200
 
-    - name: Podman | Install or Upgrade
-      package:
-        name: podman
-        state: latest
-        force_apt_get: yes
-      become: true
-      retries: 3
-      when: podman_repository_release_exists.status == 200
+- name: Podman | Install or Upgrade
+  when: podman_bin_path.stat.exists == false
+  package:
+    name: podman
+    state: latest
+    force_apt_get: yes
+  become: true
+  retries: 3

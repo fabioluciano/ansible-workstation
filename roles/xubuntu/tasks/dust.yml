@@ -1,3 +1,4 @@
+---
 - name: Dust | Check if is present
   stat:
     path: /usr/local/bin/dust

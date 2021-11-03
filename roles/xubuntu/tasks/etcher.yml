@@ -1,3 +1,4 @@
+---
 - name: Etcher | Check if is present
   stat:
     path: /opt/balenaEtcher/balena-etcher-electron

@@ -4,5 +4,6 @@
   loop:
     - firefox
     - googlechrome
+    - opera
   loop_control:
     loop_var: browser_tasks

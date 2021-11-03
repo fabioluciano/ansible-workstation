@@ -1,3 +1,4 @@
+---
 - name: Hugo | Check if is present
   stat:
     path: /usr/local/bin/hugo

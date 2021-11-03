@@ -13,6 +13,7 @@
   register: inkscape_repo
 
 - name: Inkscape | Add package repository
+  when: inkscape_repo.status == 200 and inkscape_bin_path.stat.exists == false
   apt_repository:
     repo: "ppa:inkscape.dev/stable"
     filename: inkscape
@@ -20,13 +21,12 @@
     state: present
   become: true
   retries: 3
-  when: inkscape_repo.status == 200
 
 - name: Inkscape | Install the package
+  when: inkscape_bin_path.stat.exists == false
   package:
     name: inkscape
     state: present
     force_apt_get: true
   become: true
   retries: 3
-  when: inkscape_bin_path.stat.exists == false

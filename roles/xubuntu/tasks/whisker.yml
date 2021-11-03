@@ -4,22 +4,28 @@
     path: /etc/apt/sources.list.d/whisker.list
   register: whisker_exists
 
-- name: Whisker | Install Wisker
-  when: whisker_exists.stat.exists == false
-  block:
-    - name: Whisker | Add the repository
-      apt_repository:
-        repo: "ppa:gottcode/gcppa"
-        filename: whisker
-        update_cache: yes
-        state: present
-      become: true
-      retries: 3
+- name: Wireshark | Ensure that exists a version in this release
+  uri:
+    url: "http://ppa.launchpad.net/gottcode/gcppa/ubuntu/dists/{{ ansible_distribution_release }}/"
+    method: HEAD
+  ignore_errors: yes
+  retries: 3
+  register: whisker_remote_repo
 
-    - name: Whisker | Install the package
-      package:
-        name: xfce4-whiskermenu-plugin
-        state: latest
-        force_apt_get: true
-      become: true
-      retries: 3
+- name: Whisker | Add the repository
+  when: whisker_remote_repo.status == 200
+  apt_repository:
+    repo: "ppa:gottcode/gcppa"
+    filename: whisker
+    update_cache: yes
+    state: present
+  become: true
+  retries: 3
+
+- name: Whisker | Install the package
+  package:
+    name: xfce4-whiskermenu-plugin
+    state: latest
+    force_apt_get: true
+  become: true
+  retries: 3
