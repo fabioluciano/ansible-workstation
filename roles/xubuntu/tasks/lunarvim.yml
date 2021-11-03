@@ -1,0 +1,44 @@
+---
+- name: Check if lunarvim exists
+  stat:
+    path: "{{ ansible_env.HOME }}/.config/lvim"
+  register: lunarvim_exists
+
+- name: LunarVim | Install or Upgrade LunarVim
+  block:
+    - name: LunarVim | Ensure that vim package is installed
+      package:
+        name:
+          - neovim
+          - git
+          - curl
+          - global
+        state: present
+        force_apt_get: yes
+      become: true
+      retries: 3
+      when: lunarvim_exists.stat.exists == false
+
+    - name: LunarVim | Download the installer
+      get_url:
+        url: https://raw.githubusercontent.com/lunarvim/lunarvim/master/utils/installer/install.sh
+        dest: /tmp/lunarvim-installer.sh
+        mode: "0555"
+        validate_certs: false
+      retries: 3
+      when: lunarvim_exists.stat.exists == false
+
+    - name: LunarVim | Execute the installer
+      shell: yes | /tmp/lunarvim-installer.sh
+      when: lunarvim_exists.stat.exists == false
+
+    - name: LunarVim | Remove the installer
+      file:
+        state: absent
+        path: /tmp/lunarvim-installer.sh
+      when: lunarvim_exists.stat.exists == false
+
+    - name: LunarVim | Copy configuration file
+      synchronize:
+        src: "lunarvim-config.lua"
+        dest: "{{ ansible_env.HOME }}/.config/lvim/config.lua"

@@ -53,6 +53,7 @@
       - virtualbox
       - virtualbox-guest-additions-iso
       - virtualbox-guest-utils
+    state: present
   become: true
   retries: 3
 

@@ -1,5 +1,4 @@
 ---
-
 - name: Check if Tmux is present
   stat:
     path: /usr/bin/tmux

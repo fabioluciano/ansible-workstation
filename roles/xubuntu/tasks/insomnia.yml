@@ -16,7 +16,7 @@
 
     - name: Insomnia | Add repository
       apt_repository:
-        repo: "deb https://dl.bintray.com/getinsomnia/Insomnia /"
+        repo: "deb [trusted=yes arch=amd64] https://download.konghq.com/insomnia-ubuntu/ default all"
         filename: insomnia
         update_cache: yes
         state: present

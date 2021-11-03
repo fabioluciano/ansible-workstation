@@ -1,40 +1,42 @@
-source ~/.local-antigen.zsh
+source ~/.zplug/init.zsh
 
-antigen use oh-my-zsh
+zplug "zsh-users/zsh-syntax-highlighting"
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zsh-completions"
+zplug "joshskidmore/zsh-fzf-history-search"
+zplug "softmoth/zsh-vim-mode"
+zplug "woefe/git-prompt.zsh"
+zplug "Aloxaf/fzf-tab"
+zplug "desyncr/auto-ls"
+zplug "supercrabtree/k"
+zplug "lukechilds/zsh-nvm"
+zplug "chitoku-k/fzf-zsh-completions"
+zplug "plugins/kubectl", from:oh-my-zsh, defer:2
+zplug "bonnefoa/kubectl-fzf", defer:3
 
-antigen bundle git
-antigen bundle aws
-antigen bundle docker
-antigen bundle vagrant
-antigen bundle pip
-antigen bundle fzf
-antigen bundle lein
-antigen bundle nvm
-antigen bundle virtualenv
-antigen bundle wfxr/forgit 
-antigen bundle colored-man-pages
-antigen bundle desyncr/auto-ls
-antigen bundle lukechilds/zsh-nvm
-antigen bundle command-not-found
-antigen bundle gko/ssh-connect
-antigen bundle chrissicool/zsh-256color
-antigen bundle djui/alias-tips
-antigen bundle webyneter/docker-aliases
-antigen bundle zsh-users/zsh-syntax-highlighting
-antigen bundle zsh-users/zsh-autosuggestions
-antigen bundle zsh-users/zsh-completions
-antigen bundle zsh-users/zsh-history-substring-search
+zplug "dracula/zsh", as:theme
 
-antigen theme denysdovhan/spaceship-prompt
-
-antigen apply
-
-if test -f "$HOME/.sdkman/bin/sdkman-init.sh"; then
-    . $HOME/.sdkman/bin/sdkman-init.sh
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    else
+        echo
+    fi
 fi
+zplug load
+
+HISTFILE=~/.zsh_history
+HISTSIZE=1000000
+SAVEHIST=1000000
+
+. ~/.sdkman/bin/sdkman-init.sh
 
 alias du="ncdu --color dark"
-alias ls='exa'
+alias ls='exa --icons --git'
+alias ll='exa -l --icons --git'
+alias l='ll'
 alias cat='bat'
 alias df='duf'
 alias k='kubectl'

@@ -22,12 +22,12 @@
   retries: 3
   when: atareao_atareao_repository_release_exists.status == 200 and atareao_atareao_repository_exists.stat.exists == false
   
-# - name: Indicators | Atareao | Install the package
-#   package:
-#     name:
-#       - calendar-indicator
-#       - touchpad-indicator
-#     state: present
-#     force_apt_get: true
-#   retries: 3
-#   become: true
+- name: Indicators | Atareao | Install the package
+  package:
+    name:
+      # - calendar-indicator
+      - touchpad-indicator
+    state: present
+    force_apt_get: true
+  retries: 3
+  become: true

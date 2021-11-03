@@ -1,3 +1,4 @@
+---
 - name: Docker Compose | Check if is present
   stat:
     path: /usr/local/bin/docker-compose
@@ -25,7 +26,7 @@
 
 - name: Docker Compose | Get latest version URL
   set_fact:
-    dockercompose_download_url: "{{ dockercompose_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `-Linux-x86_64`)].browser_download_url') | first }}"
+    dockercompose_download_url: "{{ dockercompose_releases_response.content | from_json | first | json_query('assets[?ends_with(name, `-linux-x86_64`)].browser_download_url') | first }}"
 
 - name: Docker Compose | Set latest remote version
   set_fact:

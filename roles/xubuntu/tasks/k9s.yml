@@ -1,3 +1,4 @@
+---
 - name: K9s | Check if is present
   stat:
     path: /usr/local/bin/k9s

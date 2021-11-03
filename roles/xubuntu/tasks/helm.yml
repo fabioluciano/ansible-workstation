@@ -1,3 +1,4 @@
+---
 - name: Helm | Check if is present
   stat:
     path: /usr/local/bin/helm

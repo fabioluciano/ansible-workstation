@@ -3,7 +3,13 @@
     path: /usr/bin/spotify
   register: spotify_exists
 
+- name: Sound Switcher | Check if repository is configured
+  stat:
+    path: /etc/apt/sources.list.d/spotify.list
+  register: spotify_repo_file
+
 - name: Spotify | Install Spotify
+  when: spotify_repo_file.stat.exists == false and spotify_exists.stat.exists == false
   block:
     - name: Spotify | Add Spotify apt key
       apt_key:
@@ -28,5 +34,3 @@
         force_apt_get: true
       become: true
       retries: 3
-
-  when: spotify_exists.stat.exists == false

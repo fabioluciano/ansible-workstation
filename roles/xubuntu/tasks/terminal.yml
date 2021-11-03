@@ -5,6 +5,8 @@
     - tmux
     - zsh
     - alacritty
+    - neovim
+    - lunarvim
   loop_control:
     loop_var: terminal_tasks
 
@@ -12,4 +14,3 @@
   copy:
     src: terminalrc
     dest: "{{ ansible_env.HOME }}/.config/xfce4/terminal"
-  ignore_errors: true

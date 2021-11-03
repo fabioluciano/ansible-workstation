@@ -16,20 +16,29 @@
       become: true
       retries: 3
 
-- name:  ZSH | Antigen | Check if the binary is present
+- name:  ZSH | Zplug | Check if the binary is present
   stat:
-    path: "{{ ansible_env.HOME }}/.local-antigen.zsh"
-  register: antigen_exists
+    path: "{{ ansible_env.HOME }}/.zplug/init.zsh"
+  register: zplug_exists
 
-- name: ZSH | Antigen | Download
+- name: ZSH | Zplug | Download the installer
   get_url:
-    url: https://git.io/antigen
-    dest: "{{ ansible_env.HOME }}/.local-antigen.zsh"
-    mode: 771
+    url: https://raw.githubusercontent.com/zplug/installer/master/installer.zsh
+    dest: /tmp/zplug-installer.sh
+    mode: "0555"
     validate_certs: false
   retries: 3
-  when: antigen_exists.stat.exists == false
+  when: zplug_exists.stat.exists == false
 
+- name: ZSH | Zplug | Execute the installer
+  shell: zsh /tmp/zplug-installer.sh
+  when: zplug_exists.stat.exists == false
+
+- name: ZSH | Zplug | Remove the installer
+  file:
+    state: absent
+    path: /tmp/lunarvim-installer.sh
+  when: zplug_exists.stat.exists == false
 
 - name: ZSH | Copy configurations file
   copy:

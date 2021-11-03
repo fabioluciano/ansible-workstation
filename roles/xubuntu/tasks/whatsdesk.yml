@@ -1,7 +1,0 @@
----
-- name: Whatsdesk | Install the snap
-  snap:
-    name: whatsdesk
-    state: present
-  become: true
-  retries: 3

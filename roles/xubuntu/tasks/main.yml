@@ -4,17 +4,18 @@
     - name: Includes the Xubuntu related tasks
       include_tasks: "{{ item }}.yml"
       with_items:
-        - prepare
-        - essential
-        - upgrade
-        - fonts
-        - terminal
-        - browser
-        - development
-        - container
-        - ide
-        - clitools
-        - tools
-        - design
-        - multimedia
-        - other
+        - insomnia
+        # - prepare
+        # - essential
+        # - upgrade
+        # - fonts
+        # - terminal
+        # - browser
+        # - development
+        # - container
+        # - ide
+        # - clitools
+        # - tools
+        # - design
+        # - multimedia
+        # - other

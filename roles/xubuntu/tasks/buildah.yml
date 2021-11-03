@@ -10,7 +10,7 @@
   register: buildah_bin_path
 
 - name: Install the package
-  when: buildah_bin_path.stat.exists == false
+  when: podman_repository_file_path.stat.exists == false
   block:
     - name: Buildah | Ensure that exists a version in this release
       uri:
@@ -38,11 +38,11 @@
       retries: 3
       when: buildah_repository_file_path.stat.exists == false and buildah_repository_release_exists.status == 200
 
-    - name: Buildah | Install or Upgrade
-      package:
-        name: buildah
-        state: latest
-        force_apt_get: yes
-      become: true
-      retries: 3
-      when: buildah_repository_release_exists.status == 200
+- name: Buildah | Install or Upgrade
+  when: buildah_bin_path.stat.exists == false
+  package:
+    name: buildah
+    state: latest
+    force_apt_get: yes
+  become: true
+  retries: 3

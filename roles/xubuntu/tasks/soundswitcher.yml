@@ -13,6 +13,7 @@
   register: yktooo_remote_repo
 
 - name: Sound Switcher | Ensure that the updated repository is present
+  when: yktooo_repo.stat.exists == false and yktooo_remote_repo.status == 200
   block:
     - name: Sound Switcher | Ensure that the repository is present
       apt_repository:
@@ -30,5 +31,4 @@
         force_apt_get: yes
       become: true
       retries: 3
-  when: yktooo_repo.stat.exists == false and yktooo_remote_repo.status == 200
 

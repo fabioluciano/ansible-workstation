@@ -1,3 +1,4 @@
+---
 - name: KubeLinter | Check if is present
   stat:
     path: /usr/local/bin/kube-linter
