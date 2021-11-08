@@ -10,14 +10,14 @@
   ignore_errors: true
 
 - name: RipGrep | Register local version
+  when: ripgrep_bin_version.rc == 0
   set_fact:
     ripgrep_local_version: "{{ ripgrep_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-  when: ripgrep_bin_version.rc == 0
 
 - name: RipGrep | Register local version
+  when: ripgrep_bin_version.rc != 0
   set_fact:
     ripgrep_local_version: ""
-  when: ripgrep_bin_version.rc != 0
 
 - name: RipGrep | Recover all releases
   uri:
@@ -38,9 +38,9 @@
     ripgrep_remote_version: "{{ ripgrep_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: RipGrep | Install deb file
+  when: ripgrep_local_version != ripgrep_remote_version or ripgrep_bin_path.stat.exists == false
   apt:
     deb: "{{ ripgrep_download_url }}"
     force_apt_get: yes
   become: true
   retries: 3
-  when: ripgrep_local_version != ripgrep_remote_version or ripgrep_bin_path.stat.exists == false

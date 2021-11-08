@@ -10,7 +10,7 @@
     - synapse
     - wireshark
     - telegram
-    # - virtualbox
+    - virtualbox
     - multipass
     - discord
     - etcher

@@ -5,6 +5,7 @@
   register: obsstudio_exists
 
 - name: OBS Studio | Install OBS Studio
+  when: obsstudio_exists.stat.exists == false
   block:
     - name: OBS Studio | Add package repository
       apt_repository:
@@ -22,5 +23,3 @@
         force_apt_get: true
       become: true
       retries: 3
-
-  when: obsstudio_exists.stat.exists == false

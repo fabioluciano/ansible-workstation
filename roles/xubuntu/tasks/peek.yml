@@ -13,6 +13,7 @@
   register: peek_repo
 
 - name: Peek | Add package repository
+  when: peek_repo.status == 200
   apt_repository:
     repo: "ppa:peek-developers/stable"
     filename: peek
@@ -20,13 +21,12 @@
     state: present
   become: true
   retries: 3
-  when: peek_repo.status == 200
 
 - name: Peek | Install the package
+  when: peek_bin_path.stat.exists == false and peek_repo.status == 200
   package:
     name: peek
     state: present
     force_apt_get: true
   become: true
   retries: 3
-  when: peek_bin_path.stat.exists == false and peek_repo.status == 200

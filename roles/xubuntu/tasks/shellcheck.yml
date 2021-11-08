@@ -10,14 +10,14 @@
   ignore_errors: true
 
 - name: ShellCheck | Register local version
+  when: shellcheck_bin_version.rc == 0
   set_fact:
     shellcheck_local_version: "{{ shellcheck_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-  when: shellcheck_bin_version.rc == 0
 
 - name: ShellCheck | Register local version
+  when: shellcheck_bin_version.rc != 0
   set_fact:
     shellcheck_local_version: ""
-  when: shellcheck_bin_version.rc != 0
 
 - name: ShellCheck | Recover all releases
   uri:
@@ -38,6 +38,7 @@
     shellcheck_remote_version: "{{ shellcheck_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: ShellCheck | Install deb file
+  when: shellcheck_local_version != shellcheck_remote_version or shellcheck_bin_path.stat.exists == false
   unarchive:
     remote_src: yes
     src: "{{ shellcheck_download_url }}"
@@ -48,4 +49,3 @@
       - "shellcheck*/shellcheck"
   become: true
   retries: 3
-  when: shellcheck_local_version != shellcheck_remote_version or shellcheck_bin_path.stat.exists == false

@@ -22,23 +22,23 @@
   register: zplug_exists
 
 - name: ZSH | Zplug | Download the installer
+  when: zplug_exists.stat.exists == false
   get_url:
     url: https://raw.githubusercontent.com/zplug/installer/master/installer.zsh
     dest: /tmp/zplug-installer.sh
     mode: "0555"
     validate_certs: false
   retries: 3
-  when: zplug_exists.stat.exists == false
 
 - name: ZSH | Zplug | Execute the installer
-  shell: zsh /tmp/zplug-installer.sh
   when: zplug_exists.stat.exists == false
+  shell: zsh /tmp/zplug-installer.sh
 
 - name: ZSH | Zplug | Remove the installer
+  when: zplug_exists.stat.exists == false
   file:
     state: absent
     path: /tmp/lunarvim-installer.sh
-  when: zplug_exists.stat.exists == false
 
 - name: ZSH | Copy configurations file
   copy:
