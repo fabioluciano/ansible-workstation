@@ -10,14 +10,14 @@
   ignore_errors: true
 
 - name: Skim | Register local version
+  when: sk_bin_version.rc == 0
   set_fact:
     sk_local_version: "{{ sk_bin_version.stdout | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
-  when: sk_bin_version.rc == 0
 
 - name: Skim | Register local version
+  when: sk_bin_version.rc != 0
   set_fact:
     sk_local_version: ""
-  when: sk_bin_version.rc != 0
 
 - name: Skim | Recover all releases
   uri:
@@ -38,10 +38,10 @@
     sk_remote_version: "{{ sk_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: Skim | Install or Upgrade
+  when: sk_local_version != sk_remote_version or sk_bin_path.stat.exists == false
   unarchive:
     src: "{{ sk_download_url }}"
     dest: /usr/local/bin
     remote_src: true
   become: true
   retries: 3
-  when: sk_local_version != sk_remote_version or sk_bin_path.stat.exists == false

@@ -1,38 +1,36 @@
 ---
-- name: HashiCorp | Packer | Install or Upgrade
-  block:
-  - name: HashiCorp | Packer | Verify the existence of binary
-    command: which packer
-    register: packer_is_installed
-    ignore_errors: yes
+- name: HashiCorp | Packer | Verify the existence of binary
+  command: which packer
+  register: packer_is_installed
+  ignore_errors: yes
 
-  - name: HashiCorp | Packer | Check avaliable version
-    command: packer -v
-    when: packer_is_installed.rc == 0
-    register: packer_local_version
-    
-  - name: HashiCorp | Packer | Request download page content
-    uri:
-      url: https://www.packer.io/downloads/
-      return_content: yes
-    retries: 3
-    register: packer_download_page
+- name: HashiCorp | Packer | Check avaliable version
+  command: packer -v
+  when: packer_is_installed.rc == 0
+  register: packer_local_version
+  
+- name: HashiCorp | Packer | Request download page content
+  uri:
+    url: https://www.packer.io/downloads/
+    return_content: yes
+  retries: 3
+  register: packer_download_page
 
-  - name: HashiCorp | Packer | Define latest avaliable version fact
-    set_fact:
-      packer_download_url: "{{ packer_download_page.content | regex_findall('(https://[^\"]*packer_[\\d.]+_linux_amd64.zip)') | first }}"
-      packer_latest_avaliable_version: "{{ packer_download_page.content | regex_findall('https://[^\"]*packer_([\\d.]+)_linux_amd64.zip') | first }}"
+- name: HashiCorp | Packer | Define latest avaliable version fact
+  set_fact:
+    packer_download_url: "{{ packer_download_page.content | regex_findall('(https://[^\"]*packer_[\\d.]+_linux_amd64.zip)') | first }}"
+    packer_latest_avaliable_version: "{{ packer_download_page.content | regex_findall('https://[^\"]*packer_([\\d.]+)_linux_amd64.zip') | first }}"
 
-  - name: HashiCorp | Packer | If installed, set the local version fact
-    set_fact:
-      packer_local_version: "{{ packer_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
-    when: packer_is_installed.rc == 0 and packer_local_version.rc == 0
+- name: HashiCorp | Packer | If installed, set the local version fact
+  when: packer_is_installed.rc == 0 and packer_local_version.rc == 0
+  set_fact:
+    packer_local_version: "{{ packer_local_version.stdout | regex_findall('([\\d+.]+)') | first }}"
 
-  - name: HashiCorp | Packer | Ensure that the binary is avaliable on /usr/local/bin directory
-    unarchive:
-      src: "{{ packer_download_url }}"
-      dest: /usr/local/bin/
-      remote_src: true
-    become: true
-    retries: 3
-    when: packer_latest_avaliable_version != packer_local_version
+- name: HashiCorp | Packer | Ensure that the binary is avaliable on /usr/local/bin directory
+  when: packer_latest_avaliable_version != packer_local_version
+  unarchive:
+    src: "{{ packer_download_url }}"
+    dest: /usr/local/bin/
+    remote_src: true
+  become: true
+  retries: 3

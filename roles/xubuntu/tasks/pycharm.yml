@@ -5,9 +5,9 @@
   ignore_errors: true
 
 - name: PyCharm | Install the package
+  when: pycharm_is_installed.stdout != 'PyCharm-Community'
   flatpak:
     name: ccom.jetbrains.PyCharm-Community
     state: present
     method: user
   retries: 3
-  when: pycharm_is_installed.stdout != 'PyCharm-Community'

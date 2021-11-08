@@ -13,6 +13,7 @@
   register: qbittorrent_repo
 
 - name: Qbittorrent | Add package repository
+  when: qbittorrent_repo.status == 200
   apt_repository:
     repo: "ppa:qbittorrent-team/qbittorrent-stable"
     filename: qbittorrent
@@ -20,13 +21,12 @@
     state: present
   become: true
   retries: 3
-  when: qbittorrent_repo.status == 200
 
 - name: Qbittorrent | Install the package
+  when: qbittorrent_bin_path.stat.exists == false
   package:
     name: qbittorrent
     state: present
     force_apt_get: true
   become: true
   retries: 3
-  when: qbittorrent_bin_path.stat.exists == false

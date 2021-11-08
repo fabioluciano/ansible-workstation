@@ -10,14 +10,14 @@
   ignore_errors: true
 
 - name: Sampler | Register local version
+  when: sampler_bin_version.rc == 0
   set_fact:
     sampler_local_version: "{{ sampler_bin_version.stderr | regex_findall('(\\d+.\\d+.\\d+)') | first }}"
-  when: sampler_bin_version.rc == 0
 
 - name: Sampler | Register local version
+  when: sampler_bin_version.rc != 0
   set_fact:
     sampler_local_version: ""
-  when: sampler_bin_version.rc != 0
 
 - name: Sampler | Recover all releases
   uri:
@@ -38,6 +38,7 @@
     sampler_remote_version: "{{ sampler_download_url | regex_findall('(\\d+\\.\\d+\\.\\d+)') | first }}"
 
 - name: Sampler | Install or Upgrade
+  when: sampler_local_version != sampler_remote_version or sampler_bin_path.stat.exists == false
   get_url:
     url: "{{ sampler_download_url }}"
     dest: /usr/local/bin/sampler
@@ -45,4 +46,3 @@
     validate_certs: false
   become: true
   retries: 3
-  when: sampler_local_version != sampler_remote_version or sampler_bin_path.stat.exists == false

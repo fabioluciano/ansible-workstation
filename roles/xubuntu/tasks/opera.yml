@@ -1,3 +1,4 @@
+---
 - name: Opera | Check if is installed
   stat:
     path: /usr/bin/opera

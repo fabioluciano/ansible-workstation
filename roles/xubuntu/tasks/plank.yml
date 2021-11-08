@@ -13,6 +13,7 @@
   register: plank_repository_exists
 
 - name: Plank | Add package repository
+  when: plank_repository_release_exists == True and plank_repository_exists == false
   apt_repository:
     repo: "ricotz/docky"
     filename: plank
@@ -20,7 +21,6 @@
     state: present
   become: true
   retries: 3
-  when: plank_repository_release_exists == True and plank_repository_exists == false
   
 - name: Plank | Install the package
   package:
@@ -42,6 +42,7 @@
   register: plank_autostart_path
 
 - name: Plank | Ensure that there is a autostart file
+  when: plank_autostart_path.stat.exists == false
   template:
     src: application.desktop
     dest: "{{ ansible_env.HOME }}/.config/autostart/plank.desktop"
@@ -49,4 +50,3 @@
     name: Plank
     description: Plank
     executable: plank
-  when: plank_autostart_path.stat.exists == false

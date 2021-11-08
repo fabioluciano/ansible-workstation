@@ -13,6 +13,7 @@
   register: synapse_repo
 
 - name: Synapse | Add package repository
+  when: synapse_repo.status == 200
   apt_repository:
     repo: "ppa:synapse-core/testing"
     filename: synapse
@@ -20,7 +21,6 @@
     state: present
   become: true
   retries: 3
-  when: synapse_repo.status == 200
 
 - name: Synapse | Install the package
   when: synapse_bin_path.stat.exists == false

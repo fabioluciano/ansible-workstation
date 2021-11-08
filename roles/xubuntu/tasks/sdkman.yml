@@ -5,6 +5,7 @@
   register: sdkman_bin_path
 
 - name: SDKMAN | Download and Install
+  when: sdkman_bin_path.stat.exists == false
   block:
     - name: SDKMAN | Download the binary
       get_url:
@@ -15,7 +16,6 @@
       retries: 3
     - name: SDKMAN | Execute the binary
       shell: "/tmp/sdkman.sh"
-  when: sdkman_bin_path.stat.exists == false
 
 - name: SDKMAN | Check if Java 8 is present
   stat:
@@ -23,10 +23,10 @@
   register: sdkman_java8_bin_path
 
 - name: SDKMAN | Install Java 8
+  when: sdkman_java8_bin_path.stat.exists == false
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 8.0.265-open"
   args:
     executable: /bin/bash
-  when: sdkman_java8_bin_path.stat.exists == false
 
 - name: SDKMAN | Check if Java 14 is present
   stat:
@@ -34,11 +34,11 @@
   register: sdkman_java14_bin_path
 
 - name: SDKMAN | Install Java 14
+  when: sdkman_java14_bin_path.stat.exists == false
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java 14.0.2-open"
   args:
     executable: /bin/bash
   retries: 3
-  when: sdkman_java14_bin_path.stat.exists == false
 
 - name: SDKMAN | Install Maven
   shell: ". {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install maven"

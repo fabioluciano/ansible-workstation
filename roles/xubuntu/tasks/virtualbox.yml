@@ -82,6 +82,17 @@
     - name: VirtualBox Extensions | Install extension pack
       shell: "printf \"y\n\" | VBoxManage extpack install --replace {{ extension_pack_path.dest }}"
       become: true
+      ignore_errors: yes
+      register: extension_install_response
+
+    - set_fact: 
+        license_hash: "{{ extension_install_response.stdout | regex_findall('--accept-license=([0-9a-z]+)') | first }}"
+
+    - name: VirtualBox Extensions | Install extension pack
+      shell: "printf \"y\n\" | VBoxManage extpack install --replace {{ extension_pack_path.dest }} --accept-license={{ license_hash }}"
+      become: true
+      ignore_errors: yes
+      register: extension_install_response
 
     - name: VirtualBox Extensions | Remove local copy of extension pack
       file:
